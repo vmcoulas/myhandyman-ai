@@ -21,7 +21,7 @@ export function Header() {
                 <span className="text-muted-foreground">.ai</span>
               </h1>
               <p className="hidden sm:block text-xs text-muted-foreground leading-tight">
-                Snap a photo. Fix it with confidence.
+                Your AI-powered home repair assistant
               </p>
             </div>
           </Link>
