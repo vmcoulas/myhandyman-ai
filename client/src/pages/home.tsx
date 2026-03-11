@@ -118,17 +118,20 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <section className="hero-workshop relative">
-        <HeroBackdrop imageSrc="/assets/hero/workshop-hero.jpg" alt="" showPegboard />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-10 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/80 border border-[hsl(24,95%,53%)]/20 px-4 py-1.5 mb-6 text-xs text-muted-foreground font-medium shadow-sm">
-            <span className="inline-block size-1.5 rounded-full bg-[hsl(24,95%,53%)]" />
+        <div className="absolute inset-0 z-0">
+          <img src="/hero.jpg" alt="Woman using MyHandyman AI app to diagnose a plumbing issue" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B2430]/85 via-[#1B2430]/60 to-transparent" />
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-16 text-left">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/80 border border-[#2FA3A0]/30 px-4 py-1.5 mb-6 text-xs text-muted-foreground font-medium shadow-sm">
+            <span className="inline-block size-1.5 rounded-full bg-[#2FA3A0]" />
             Your AI-powered home repair assistant
           </div>
           <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-5 tracking-tight leading-[1.08]">
             <span className="text-white">Your AI-Powered</span><br />
             <span className="text-[#2FA3A0]">Home Repair Assistant</span>
           </h2>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto mb-10">
+          <p className="text-lg text-white/70 max-w-xl mb-10">
             Upload a photo of a broken item, damaged area, or home issue and get clear repair steps, tool recommendations, time estimates, and guidance on whether to DIY or call a pro.
           </p>
 
@@ -164,7 +167,7 @@ export default function Home() {
           <div className="card-premium rounded-2xl p-10 mb-8 text-center">
             <div className="relative inline-block mb-5">
               <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl opacity-70" />
-              <div className="relative rounded-full bg-white/80 border border-[hsl(24,95%,53%)]/20 p-6 shadow-sm">
+              <div className="relative rounded-full bg-white/80 border border-[#2FA3A0]/30 p-6 shadow-sm">
                 <Wrench className="text-primary w-12 h-12 animate-hammer origin-bottom-right" />
               </div>
             </div>
