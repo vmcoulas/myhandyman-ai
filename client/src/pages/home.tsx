@@ -119,7 +119,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero-workshop relative">
         <div className="absolute inset-0 z-0">
-          <img src="/hero.jpg" alt="Woman using MyHandyman AI app to diagnose a plumbing issue" className="w-full h-full object-cover" />
+          <img src="/hero.jpg" alt="Woman using MyHandyman AI app to diagnose a plumbing issue" className="w-full h-full object-cover object-right" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1B2430]/85 via-[#1B2430]/60 to-transparent" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-16 text-left">
