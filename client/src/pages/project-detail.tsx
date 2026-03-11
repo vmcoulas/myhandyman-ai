@@ -47,7 +47,7 @@ export default function ProjectDetail() {
       try {
         await navigator.share({
           title: `${projectData?.project.title} - Snap Builder AI`,
-          text: `Check out this DIY build plan: ${projectData?.project.title}`,
+          text: `Check out this DIY repair guide: ${projectData?.project.title}`,
           url: window.location.href,
         });
       } catch {
@@ -334,7 +334,7 @@ export default function ProjectDetail() {
         <div className="card-premium rounded-xl p-6 mb-8">
           <h3 className="font-display text-white font-bold text-lg mb-2 flex items-center gap-2">
             <List className="w-5 h-5 text-orange-400" />
-            Step-by-Step Build Plan
+            Step-by-Step Repair Guide
           </h3>
           <p className="text-white/40 text-sm mb-6">Follow each step carefully for the best results.</p>
 

@@ -202,7 +202,7 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
       a.download = `${project.title.replace(/[^a-zA-Z0-9]/g, "_")}_build_plan.txt`;
       a.click();
       URL.revokeObjectURL(url);
-      toast({ title: "Build Plan Downloaded!", description: "Your instructions are saved." });
+      toast({ title: "Repair Plan Downloaded!", description: "Your instructions are saved." });
     } catch {
       toast({ title: "Export Failed", description: "Please try again.", variant: "destructive" });
     }
@@ -214,7 +214,7 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
       try {
         await navigator.share({
           title: project.title,
-          text: `Check out this DIY build plan: ${project.title}`,
+          text: `Check out this DIY repair guide: ${project.title}`,
           url: shareUrl,
         });
       } catch {
@@ -698,7 +698,7 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
       <div className="px-6 pb-6">
         <h4 className="font-display text-foreground font-extrabold text-base mb-4 flex items-center gap-2 tracking-tight">
           <List className="w-4 h-4 text-primary" />
-          Step-by-step build plan
+          Step-by-step repair guidance
         </h4>
 
         <div className="space-y-3">

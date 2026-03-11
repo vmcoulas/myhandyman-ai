@@ -139,13 +139,13 @@ export default function Home() {
             className="max-w-4xl mx-auto mb-12"
             steps={[
               {
-                title: "Snap a photo",
-                description: "Leaky faucet, broken fence, cracked drywall — the clearer the better.",
+                title: "Upload a photo",
+                description: "Leaky faucet, cracked drywall, loose cabinet — the clearer the better.",
                 icon: <Camera className="size-5" />,
               },
               {
-                title: "Get a repair plan",
-                description: "Steps, tools, parts, and a realistic time estimate.",
+                title: "Get the fix",
+                description: "AI issue detection, repair steps, tools, parts + time estimates.",
                 icon: <FileText className="size-5" />,
               },
               {

@@ -41,7 +41,7 @@ export default function MyProjects() {
             </h2>
           </div>
           <p className="text-muted-foreground text-sm ml-[3.25rem]">
-            Your saved build plans, ready when you are.
+            Your saved repair guides, ready when you are.
           </p>
         </div>
 
@@ -125,7 +125,7 @@ export default function MyProjects() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                           <span className="text-white text-sm font-semibold flex items-center gap-1">
-                            View build plan <ArrowRight className="w-3.5 h-3.5" />
+                            View repair guide <ArrowRight className="w-3.5 h-3.5" />
                           </span>
                         </div>
                         {(project.totalRatings || 0) > 0 && (
@@ -172,7 +172,7 @@ export default function MyProjects() {
                           <div className="flex items-center gap-2">
                             <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/20">
                               <Hammer className="w-3 h-3 mr-1" />
-                              Ready to Build
+                              Ready to Fix
                             </Badge>
                             {project.estimatedCost && (
                               <div className="flex items-center text-primary text-sm font-semibold">
