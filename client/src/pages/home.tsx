@@ -126,7 +126,7 @@ export default function Home() {
           </div>
           <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-5 tracking-tight leading-[1.08]">
             <span className="text-white">Snap a photo.</span><br />
-            <span className="text-[hsl(24,95%,65%)]">Fix it with confidence.</span>
+            <span className="text-[#2FA3A0]">Fix it with confidence.</span>
           </h2>
           <p className="text-lg text-white/70 max-w-2xl mx-auto mb-10">
             Upload a photo of anything that needs fixing. MyHandyman.ai turns it into a clear, step-by-step repair plan with parts, tools, and cost guidance.

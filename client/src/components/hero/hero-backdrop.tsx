@@ -24,13 +24,13 @@ export function HeroBackdrop({
       />
 
       {/* Warm workshop tint + subtle vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(900px_520px_at_30%_15%,hsla(28,55%,53%,0.25),transparent_60%),radial-gradient(1000px_700px_at_70%_30%,hsla(150,30%,32%,0.10),transparent_62%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(900px_520px_at_30%_15%,rgba(31,78,121,0.15),transparent_60%),radial-gradient(1000px_700px_at_70%_30%,rgba(47,163,160,0.08),transparent_62%)]" />
 
       {/* Content readability scrim (keep photo visible, especially on mobile) */}
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,hsla(36,40%,95%,0.55),hsla(36,40%,95%,0.90))]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(244,247,250,0.55),rgba(244,247,250,0.90))]" />
 
       {/* Extra spotlight behind the headline for AA contrast without flattening the whole photo */}
-      <div className="absolute inset-0 bg-[radial-gradient(640px_420px_at_50%_10%,hsla(36,40%,96%,0.60),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(640px_420px_at_50%_10%,rgba(244,247,250,0.60),transparent_70%)]" />
 
       {/* Craft layer: subtle pegboard dots (optional) */}
       {showPegboard && (
@@ -38,7 +38,7 @@ export function HeroBackdrop({
           className="absolute inset-0 opacity-30 [mask-image:linear-gradient(180deg,black,transparent_70%)]"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 1px 1px, hsla(30, 35%, 40%, 0.08) 1px, transparent 1.6px)",
+              "radial-gradient(circle at 1px 1px, rgba(31,78,121,0.05) 1px, transparent 1.6px)",
             backgroundSize: "18px 18px",
           }}
         />
