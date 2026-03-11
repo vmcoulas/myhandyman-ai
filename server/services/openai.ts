@@ -47,6 +47,8 @@ CRITICAL RULES FOR INSTRUCTIONS:
 
 Response must be in JSON format with this exact structure:
 {
+  "safetyLevel": "DIY-friendly | Advanced repair | Professional required",
+  "safetyWarning": "string or null — if Professional required or Advanced repair, explain WHY (e.g. involves gas lines, electrical panel, load-bearing wall, mold, permits needed). Null if DIY-friendly.",
   "title": "string (descriptive name of the repair, e.g. 'Fix a Dripping Bathroom Faucet')",
   "description": "string (2-3 sentence description of what the problem is, its likely cause, and what success looks like)",
   "category": "plumbing|electrical|carpentry|drywall|painting|flooring|hvac|roofing|landscaping|appliances|other",

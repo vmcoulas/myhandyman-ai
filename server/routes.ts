@@ -284,6 +284,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         materials: analysis.materials,
         tools: analysis.tools,
         safetyNotes: analysis.safetyNotes,
+            safetyLevel: analysis.safetyLevel || "DIY-friendly",
+            safetyWarningProject: analysis.safetyWarning || null,
+            safetyLevel: analysis.safetyLevel || "DIY-friendly",
+            safetyWarningProject: analysis.safetyWarning || null,
       };
 
       const validatedProject = insertProjectSchema.parse(projectData);
@@ -447,6 +451,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         materials: analysis.materials,
         tools: analysis.tools,
         safetyNotes: analysis.safetyNotes,
+            safetyLevel: analysis.safetyLevel || "DIY-friendly",
+            safetyWarningProject: analysis.safetyWarning || null,
+            safetyLevel: analysis.safetyLevel || "DIY-friendly",
+            safetyWarningProject: analysis.safetyWarning || null,
       };
 
       const validatedProject = insertProjectSchema.parse(projectData);

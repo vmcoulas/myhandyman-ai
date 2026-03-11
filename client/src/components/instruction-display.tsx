@@ -36,6 +36,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { ProjectWithInstructions } from "@/lib/types";
 import { useFeedbackContext } from "@/lib/feedback-context";
 import { useInstructionStyle } from "@/hooks/use-instruction-style";
+import { ShieldAlert, ShieldCheck, AlertTriangle, Phone } from "lucide-react";
 import { useSpeechNarrator } from "@/hooks/use-speech-narrator";
 import { buildAmazonAffiliateUrl } from "@shared/amazonAffiliate";
 import { trackOutboundClick } from "@/lib/outboundTracking";
@@ -693,6 +694,57 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
           </div>
         </div>
       </div>
+
+
+      {/* Safety Assessment Banner */}
+      {(project as any).safetyLevel && (
+        <div className={`mx-6 mt-4 rounded-xl border-2 p-4 ${
+          (project as any).safetyLevel === 'Professional required' 
+            ? 'bg-red-50 border-red-200' 
+            : (project as any).safetyLevel === 'Advanced repair'
+            ? 'bg-amber-50 border-amber-200'
+            : 'bg-emerald-50 border-emerald-200'
+        }`}>
+          <div className="flex items-start gap-3">
+            {(project as any).safetyLevel === 'Professional required' ? (
+              <ShieldAlert className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+            ) : (project as any).safetyLevel === 'Advanced repair' ? (
+              <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+            ) : (
+              <ShieldCheck className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
+            )}
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className={`text-sm font-bold ${
+                  (project as any).safetyLevel === 'Professional required' 
+                    ? 'text-red-700' 
+                    : (project as any).safetyLevel === 'Advanced repair'
+                    ? 'text-amber-700'
+                    : 'text-emerald-700'
+                }`}>
+                  {(project as any).safetyLevel === 'Professional required' && '⛔ '}
+                  {(project as any).safetyLevel === 'Advanced repair' && '⚠️ '}
+                  {(project as any).safetyLevel === 'DIY-friendly' && '✅ '}
+                  {(project as any).safetyLevel}
+                </span>
+              </div>
+              {(project as any).safetyWarningProject && (
+                <p className={`text-sm ${
+                  (project as any).safetyLevel === 'Professional required' ? 'text-red-600' : 'text-amber-600'
+                }`}>
+                  {(project as any).safetyWarningProject}
+                </p>
+              )}
+              {(project as any).safetyLevel === 'Professional required' && (
+                <div className="mt-2 flex items-center gap-2 text-sm font-semibold text-red-700">
+                  <Phone className="w-4 h-4" />
+                  We recommend calling a licensed professional for this repair.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Step-by-Step Instructions */}
       <div className="px-6 pb-6">

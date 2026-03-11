@@ -44,6 +44,8 @@ export const projects = pgTable("projects", {
   materials: jsonb("materials").$type<{ name: string; quantity: string; estimatedCost: number; affiliateLink?: string }[]>().notNull(),
   tools: jsonb("tools").$type<string[]>().notNull(),
   safetyNotes: text("safety_notes"),
+  safetyLevel: text("safety_level"), // DIY-friendly, Advanced repair, Professional required
+  safetyWarningProject: text("safety_warning_project"),
   // Rating system
   averageRating: decimal("average_rating", { precision: 3, scale: 2 }).default("0"),
   totalRatings: integer("total_ratings").default(0),
