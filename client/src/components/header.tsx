@@ -13,10 +13,7 @@ export function Header() {
         <div className="flex h-16 items-center justify-between gap-3">
           <Link href="/" className="flex items-center space-x-3 no-text-decoration group min-w-0">
             <div className="relative">
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[hsl(var(--orange))] to-[hsl(var(--orange-dark))] blur-md opacity-35 transition-opacity group-hover:opacity-55" />
-              <div className="relative rounded-xl bg-primary p-2 text-primary-foreground shadow-sm">
-                <Wrench className="h-5 w-5" />
-              </div>
+              <img src="/logo.png" alt="MyHandyman AI" className="h-10 w-10 rounded-lg object-contain" />
             </div>
             <div className="flex min-w-0 flex-col justify-center">
               <h1 className="text-base sm:text-lg font-extrabold leading-tight tracking-tight">
