@@ -181,8 +181,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero-workshop relative">
         <div className="absolute inset-0 z-0">
-          <img src="/hero.jpg" alt="Woman using MyHandyman AI app to diagnose a plumbing issue" className="w-full h-full object-cover" style={{ objectPosition: "30% center" }} />
-          <div className="absolute inset-0 bg-gradient-to-b sm:bg-gradient-to-r from-[#1B2430]/70 via-[#1B2430]/40 to-[#1B2430]/20 sm:from-[#1B2430]/85 sm:via-[#1B2430]/60 sm:to-transparent" />
+          <img src="/hero.jpg" alt="Woman using MyHandyman AI app to diagnose a plumbing issue" className="w-full h-full object-cover object-right" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B2430]/85 via-[#1B2430]/60 to-transparent" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-16 text-left">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/80 border border-[#2FA3A0]/30 px-4 py-1.5 mb-6 text-xs text-muted-foreground font-medium shadow-sm">
