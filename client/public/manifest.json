@@ -1,0 +1,18 @@
+{
+  "name": "MyHandyman.ai — AI Home Repair Assistant",
+  "short_name": "MyHandyman",
+  "description": "Upload a photo of a home repair issue and get step-by-step fix instructions, tool recommendations, and safety assessments.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F7FA",
+  "theme_color": "#1F4E79",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
