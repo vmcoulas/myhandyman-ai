@@ -1,4 +1,4 @@
-export const AMAZON_ASSOCIATES_TAG = "vitalunahealth-20";
+export const AMAZON_ASSOCIATES_TAG = "myhandyman-20";
 
 export function buildAmazonAffiliateUrl(options: {
   /** What to search for on Amazon (e.g., material or tool name) */
