@@ -12,7 +12,7 @@ export default function SupportArticlePage() {
   const article = useMemo(() => getSupportArticleBySlug(slug), [slug]);
 
   useEffect(() => {
-    document.title = article ? `${article.title} | Support | SnapBuilder.ai` : "Support | SnapBuilder.ai";
+    document.title = article ? `${article.title} | Support | MyHandyman.ai` : "Support | MyHandyman.ai";
   }, [article]);
 
   const html = useMemo(() => {

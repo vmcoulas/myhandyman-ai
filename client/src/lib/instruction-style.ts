@@ -1,6 +1,6 @@
 export type InstructionStyle = "coach" | "pro";
 
-const STORAGE_KEY = "snapbuilder:instructionStyle";
+const STORAGE_KEY = "myhandyman:instructionStyle";
 
 export function getStoredInstructionStyle(): InstructionStyle {
   if (typeof window === "undefined") return "coach";

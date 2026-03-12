@@ -37,7 +37,7 @@ export const projects = pgTable("projects", {
   title: text("title").notNull(),
   description: text("description"),
   imageUrl: text("image_url").notNull(),
-  category: text("category").notNull(), // furniture, toys, gadgets
+  category: text("category").notNull(), // plumbing, electrical, carpentry, drywall, painting, flooring, hvac, roofing, appliances, other
   difficulty: text("difficulty").notNull(), // easy, medium, hard
   estimatedTime: integer("estimated_time").notNull(), // in minutes
   estimatedCost: decimal("estimated_cost", { precision: 10, scale: 2 }),

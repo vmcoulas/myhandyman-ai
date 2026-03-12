@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a family-friendly furniture building instruction generator called "Snap Builder AI". The application allows users to upload images of furniture and automatically generates step-by-step building instructions using OpenAI's GPT-5 model. The app focuses on creating safe, educational projects that parents and children can build together, with appropriate safety warnings and adult supervision indicators.
+This is a family-friendly furniture building instruction generator called "MyHandyman AI". The application allows users to upload images of furniture and automatically generates step-by-step building instructions using OpenAI's GPT-5 model. The app focuses on creating safe, educational projects that parents and children can build together, with appropriate safety warnings and adult supervision indicators.
 
 ## Recent Enhancements (MVP Features)
 
@@ -86,7 +86,7 @@ Preferred communication style: Simple, everyday language.
 ## External Dependencies
 
 ### AI Services
-- **OpenAI GPT-5**: Primary AI service for analyzing furniture images and generating detailed building instructions with safety considerations
+- **OpenAI GPT-5**: Primary AI service for analyzing repair images and generating detailed building instructions with safety considerations
 
 ### Database Services
 - **Neon Database**: Serverless PostgreSQL database provider for production data storage

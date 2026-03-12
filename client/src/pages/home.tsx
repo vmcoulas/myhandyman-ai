@@ -77,7 +77,7 @@ export default function Home() {
       const formData = new FormData();
       formData.append('image', file);
       if (currentUser?.id) formData.append('userId', currentUser.id.toString());
-      const response = await apiRequest('POST', '/api/analyze-furniture', formData);
+      const response = await apiRequest('POST', '/api/analyze-repair', formData);
       return response.json();
     },
     onSuccess: (data: ProjectWithInstructions) => {

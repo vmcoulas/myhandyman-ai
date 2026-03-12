@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function SupportLanding() {
   useEffect(() => {
-    document.title = "Support | SnapBuilder.ai";
+    document.title = "Support | MyHandyman.ai";
   }, []);
 
   const articles = useMemo(() => getAllSupportArticles(), []);

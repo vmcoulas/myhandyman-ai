@@ -45,7 +45,7 @@ export function FeedbackSheetTrigger({
           <SheetHeader className="text-left">
             <SheetTitle className="text-white">Send feedback</SheetTitle>
             <SheetDescription className="text-white/50">
-              Help us improve Snap Builder AI. This captures the page you’re on and the current step (if applicable).
+              Help us improve MyHandyman AI. This captures the page you’re on and the current step (if applicable).
             </SheetDescription>
           </SheetHeader>
           <div className="mt-5">

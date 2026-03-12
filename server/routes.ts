@@ -215,7 +215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Analyze furniture image and create project
-  app.post("/api/analyze-furniture", upload.single('image'), async (req, res) => {
+  app.post("/api/analyze-repair", upload.single('image'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No image file provided" });
@@ -312,9 +312,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ project, instructions });
     } catch (error) {
-      console.error("Error analyzing furniture:", error);
+      console.error("Error analyzing repair:", error);
       res.status(500).json({ 
-        message: error instanceof Error ? error.message : "Failed to analyze furniture image" 
+        message: error instanceof Error ? error.message : "Failed to analyze repair image" 
       });
     }
   });
