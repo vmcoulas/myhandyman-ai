@@ -154,3 +154,13 @@
     animation: hammer-swing 1.5s ease-in-out infinite;
   }
 }
+
+/* Hero image responsive positioning */
+#hero-img {
+  object-position: 30% center;
+}
+@media (min-width: 640px) {
+  #hero-img {
+    object-position: right center;
+  }
+}
