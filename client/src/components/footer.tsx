@@ -39,7 +39,7 @@ export function Footer() {
               <FeedbackSheetTrigger />
               <a href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</a>
               <a href="/terms" className="hover:text-foreground transition-colors">Terms of Service</a>
-              <a href="/support" className="hover:text-foreground transition-colors">Support</a>
+              <a href="/support" className="hover:text-foreground transition-colors">DIY Guides</a>
             </div>
             <div className="flex items-center justify-center md:justify-end gap-2 text-xs text-muted-foreground">
               <Mail className="h-3 w-3" />

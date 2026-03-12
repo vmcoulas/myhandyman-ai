@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function SupportLanding() {
   useEffect(() => {
-    document.title = "Support | MyHandyman.ai";
+    document.title = "DIY Guides | MyHandyman.ai";
   }, []);
 
   const articles = useMemo(() => getAllSupportArticles(), []);
@@ -39,7 +39,7 @@ export default function SupportLanding() {
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10">
       <header className="mb-8">
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Support</h1>
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">DIY Guides</h1>
         <p className="mt-2 text-muted-foreground">
           Quick, practical guides for common DIY build steps.
         </p>
