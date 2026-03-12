@@ -17,9 +17,9 @@ interface BuildLimitResponse {
   limitMessage: string;
   upgradeRequired: boolean;
   user: {
-    buildsUsed: number;
-    easyBuildsUsed: number;
-    maxBuilds: number;
+    repairsUsed: number;
+    easyRepairsUsed: number;
+    maxRepairs: number;
     isPremium: boolean;
   };
 }
@@ -31,16 +31,16 @@ export function BuildLimitChecker({ userId, difficulty = "Easy", onProceed, onUp
 
   const checkLimit = async () => {
     if (!userId) {
-      // For anonymous users, show upgrade prompt for non-easy builds
+      // For anonymous users, show upgrade prompt for non-free repairs
       if (difficulty.toLowerCase() !== 'easy') {
         setLimitInfo({
           canBuild: false,
-          limitMessage: "Medium and Hard builds require a Premium account. Sign up to get started!",
+          limitMessage: "Medium and Hard repairs require a Premium account. Sign up to get started!",
           upgradeRequired: true,
           user: {
-            buildsUsed: 0,
-            easyBuildsUsed: 0,
-            maxBuilds: 0,
+            repairsUsed: 0,
+            easyRepairsUsed: 0,
+            maxRepairs: 0,
             isPremium: false
           }
         });
@@ -114,11 +114,11 @@ export function BuildLimitChecker({ userId, difficulty = "Easy", onProceed, onUp
                   </div>
                   <div className="space-y-1 text-sm text-gray-600">
                     <div className="flex justify-between">
-                      <span>Easy builds used:</span>
-                      <span>{user.easyBuildsUsed} / 3</span>
+                      <span>free repairs used:</span>
+                      <span>{user.easyRepairsUsed} / 3</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Medium/Hard builds:</span>
+                      <span>Medium/Hard repairs:</span>
                       <span className="text-warning">Premium only</span>
                     </div>
                   </div>
@@ -132,7 +132,7 @@ export function BuildLimitChecker({ userId, difficulty = "Easy", onProceed, onUp
                     className="bg-primary text-white hover:bg-orange-600"
                   >
                     <Crown className="w-4 h-4 mr-2" />
-                    Upgrade to Premium - $4.99/month
+                    Go Pro — $4.99/month
                   </Button>
                 )}
                 <Button

@@ -10,7 +10,7 @@ interface UsageLimitBannerProps {
 }
 
 export function UsageLimitBanner({ usage, onUpgrade }: UsageLimitBannerProps) {
-  const progressPercentage = (usage.buildsUsed / usage.maxBuilds) * 100;
+  const progressPercentage = (usage.repairsUsed / usage.maxRepairs) * 100;
 
   // Don't show banner if user is premium and hasn't hit any limits
   if (usage.isPremium && !usage.isLimitReached) {
@@ -32,8 +32,8 @@ export function UsageLimitBanner({ usage, onUpgrade }: UsageLimitBannerProps) {
               </h3>
               <p className="text-sm text-gray-700 mb-4">
                 {!usage.isPremium 
-                  ? `You've used all ${usage.maxEasyBuilds} free Easy builds this month. Upgrade to Premium for unlimited builds of all difficulties!`
-                  : `You've used all ${usage.maxBuilds} Premium builds this month.`
+                  ? `You've used all ${usage.maxEasyRepairs} free free repairs this month. Go Pro for unlimited repairs of all difficulties!`
+                  : `You've used all ${usage.maxRepairs} Premium repairs this month.`
                 }
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
@@ -42,7 +42,7 @@ export function UsageLimitBanner({ usage, onUpgrade }: UsageLimitBannerProps) {
                   className="bg-primary text-white hover:bg-orange-600"
                 >
                   <Crown className="w-4 h-4 mr-2" />
-                  Upgrade to Premium - $4.99/month
+                  Go Pro — $4.99/month
                 </Button>
                 <Button variant="outline" size="sm">
                   Learn More
@@ -56,9 +56,9 @@ export function UsageLimitBanner({ usage, onUpgrade }: UsageLimitBannerProps) {
   }
 
   // Show usage progress for free users approaching limit
-  if (!usage.isPremium && usage.easyBuildsUsed > 0) {
-    const easyProgressPercentage = (usage.easyBuildsUsed / usage.maxEasyBuilds) * 100;
-    const remainingEasy = usage.maxEasyBuilds - usage.easyBuildsUsed;
+  if (!usage.isPremium && usage.easyRepairsUsed > 0) {
+    const easyProgressPercentage = (usage.easyRepairsUsed / usage.maxEasyRepairs) * 100;
+    const remainingEasy = usage.maxEasyRepairs - usage.easyRepairsUsed;
     const isNearLimit = remainingEasy <= 1;
     
     return (
@@ -81,7 +81,7 @@ export function UsageLimitBanner({ usage, onUpgrade }: UsageLimitBannerProps) {
             <div className="flex-1">
               <div className="flex items-center justify-between mb-2">
                 <h4 className="font-medium text-dark">
-                  Free Easy Builds: {usage.easyBuildsUsed} of {usage.maxEasyBuilds} used
+                  Free Easy Repairs: {usage.easyRepairsUsed} of {usage.maxEasyRepairs} used
                 </h4>
                 <span className="text-sm text-gray-600">
                   {remainingEasy} remaining
@@ -89,13 +89,13 @@ export function UsageLimitBanner({ usage, onUpgrade }: UsageLimitBannerProps) {
               </div>
               <Progress value={easyProgressPercentage} className="mb-3 h-2" />
               <div className="text-xs text-gray-500 mb-2">
-                Medium & Hard builds require Premium subscription
+                Medium & Hard repairs require Premium subscription
               </div>
               
               {isNearLimit ? (
                 <div className="flex flex-col sm:flex-row gap-2">
                   <p className="text-sm text-gray-700 flex-1">
-                    Almost at your limit! Upgrade for unlimited builds and premium features.
+                    Almost at your limit! Upgrade for unlimited repairs and pro features.
                   </p>
                   <Button
                     onClick={onUpgrade}
@@ -103,7 +103,7 @@ export function UsageLimitBanner({ usage, onUpgrade }: UsageLimitBannerProps) {
                     className="bg-primary text-white hover:bg-orange-600"
                   >
                     <Crown className="w-4 h-4 mr-2" />
-                    Upgrade Now
+                    Go Pro
                   </Button>
                 </div>
               ) : (
@@ -113,9 +113,9 @@ export function UsageLimitBanner({ usage, onUpgrade }: UsageLimitBannerProps) {
                     onClick={onUpgrade}
                     className="text-primary hover:underline ml-1"
                   >
-                    Upgrade to Premium
+                    Go Pro
                   </button> 
-                  for unlimited builds and export features.
+                  for unlimited repairs and export features.
                 </p>
               )}
             </div>

@@ -170,7 +170,7 @@ export class MemStorage implements IStorage {
         projectId: 1,
         stepNumber: 6,
         title: "Test Your Stool",
-        description: "Let the glue dry completely, then test the stool carefully. Congratulations on building your first piece of furniture together!",
+        description: "Let the glue dry completely, then test for leaks carefully. Congratulations on completing your first plumbing repair!",
         safetyWarning: null,
         adultSupervisionRequired: false
       }
@@ -183,7 +183,7 @@ export class MemStorage implements IStorage {
         projectId: 2,
         stepNumber: 1,
         title: "Plan Your Design",
-        description: "Look at the design together and discuss what toys will go inside. This makes the project more exciting for young builders!",
+        description: "Look at the design together and discuss what needs fixing first. This makes the project a good learning experience!",
         safetyWarning: null,
         adultSupervisionRequired: false
       },
@@ -237,7 +237,7 @@ export class MemStorage implements IStorage {
         projectId: 2,
         stepNumber: 7,
         title: "Final Assembly",
-        description: "Install the lid, test the hinges, and add any decorative elements you've chosen together. Fill with toys and celebrate your teamwork!",
+        description: "Test the repair, check for leaks, and clean up your workspace. Test everything works and celebrate your fix!",
         safetyWarning: null,
         adultSupervisionRequired: false
       }
