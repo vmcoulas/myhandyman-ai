@@ -62,7 +62,7 @@ export function PhotoUpload({ onImageSelected, isLoading }: PhotoUploadProps) {
         <h3 className="font-display text-2xl font-bold text-foreground mb-2">
           Upload a photo. Get the fix.
         </h3>
-        <p className="text-muted-foreground text-sm">Furniture, shelving, a workbench — you bring the idea. We’ll bring the steps.</p>
+        <p className="text-muted-foreground text-sm">Leaky faucet, cracked drywall, loose cabinet, broken fixture — upload the issue and get the fix.</p>
       </div>
 
       <div
