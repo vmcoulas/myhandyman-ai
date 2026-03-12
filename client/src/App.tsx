@@ -11,6 +11,8 @@ import Tools from "@/pages/tools";
 import SupportLanding from "@/pages/support";
 import SupportArticlePage from "@/pages/support/article";
 import NotFound from "@/pages/not-found";
+import Privacy from "@/pages/privacy";
+import Terms from "@/pages/terms";
 import { FeedbackProvider } from "@/lib/feedback-context";
 import { AppShell } from "@/components/navigation/app-shell";
 
@@ -24,6 +26,8 @@ function Router() {
       <Route path="/tools" component={Tools} />
       <Route path="/support" component={SupportLanding} />
       <Route path="/support/:slug" component={SupportArticlePage} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/terms" component={Terms} />
       <Route component={NotFound} />
     </Switch>
   );
