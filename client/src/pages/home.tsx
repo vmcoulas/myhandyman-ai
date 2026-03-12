@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart } from "lucide-react";
+import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart, ClipboardList, Zap } from "lucide-react";
 import { HeroBackdrop } from "@/components/hero/hero-backdrop";
 import { PhotoUpload } from "@/components/photo-upload";
 import { InstructionDisplay } from "@/components/instruction-display";
@@ -328,29 +328,33 @@ export default function Home() {
         {/* Features */}
         {!result && (
           <div className="grid md:grid-cols-3 gap-5 mt-4">
-            {[
-              {
-                icon: "🗂️",
-                title: "My Repairs",
-                desc: "All your repair history in one place. Never lose track of a fix again.",
-              },
-              {
-                icon: "🔗",
-                title: "Parts Links",
-                desc: "Every parts list includes direct links to buy exactly what you need.",
-              },
-              {
-                icon: "⚡",
-                title: "Instant Diagnosis",
-                desc: "AI analysis in seconds — full repair guide, tools list, and cost breakdown.",
-              },
-            ].map(({ icon, title, desc }, i) => (
-              <div key={i} className="card-premium rounded-xl p-6 shimmer">
-                <div className="text-3xl mb-4">{icon}</div>
-                <h4 className="font-display text-base font-bold text-foreground mb-2">{title}</h4>
-                <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
+            <div className="card-premium rounded-xl p-6">
+              <div className="mb-4">
+                <div className="w-12 h-12 rounded-xl bg-[#1F4E79]/10 flex items-center justify-center">
+                  <ClipboardList className="w-6 h-6 text-[#1F4E79]" />
+                </div>
               </div>
-            ))}
+              <h4 className="font-display text-base font-bold text-foreground mb-2">My Repairs</h4>
+              <p className="text-muted-foreground text-sm leading-relaxed">All your repair history in one place. Never lose track of a fix again.</p>
+            </div>
+            <div className="card-premium rounded-xl p-6">
+              <div className="mb-4">
+                <div className="w-12 h-12 rounded-xl bg-[#2FA3A0]/10 flex items-center justify-center">
+                  <ShoppingCart className="w-6 h-6 text-[#2FA3A0]" />
+                </div>
+              </div>
+              <h4 className="font-display text-base font-bold text-foreground mb-2">Parts & Tools</h4>
+              <p className="text-muted-foreground text-sm leading-relaxed">Every parts list includes direct links to buy exactly what you need.</p>
+            </div>
+            <div className="card-premium rounded-xl p-6">
+              <div className="mb-4">
+                <div className="w-12 h-12 rounded-xl bg-[#D99A2B]/10 flex items-center justify-center">
+                  <Zap className="w-6 h-6 text-[#D99A2B]" />
+                </div>
+              </div>
+              <h4 className="font-display text-base font-bold text-foreground mb-2">Instant Diagnosis</h4>
+              <p className="text-muted-foreground text-sm leading-relaxed">AI analysis in seconds — full repair guide, tools list, and cost breakdown.</p>
+            </div>
           </div>
         )}
       </main>
