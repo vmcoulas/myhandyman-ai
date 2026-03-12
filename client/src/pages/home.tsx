@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart, ClipboardList, Zap } from "lucide-react";
+import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart, ClipboardList, Zap, Droplets, Tv, Fan, PaintBucket, Lightbulb, Thermometer } from "lucide-react";
 import { HeroBackdrop } from "@/components/hero/hero-backdrop";
 import { PhotoUpload } from "@/components/photo-upload";
 import { InstructionDisplay } from "@/components/instruction-display";
@@ -14,6 +14,58 @@ import { Stepper } from "@/components/ui/stepper";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { ProjectWithInstructions, UsageInfo, User, Project } from "@/lib/types";
+
+
+const COMMON_REPAIRS = [
+  {
+    id: "ceiling-fan",
+    title: "Install Ceiling Fan",
+    icon: Fan,
+    description: "I need to install or replace a ceiling fan. Walk me through mounting, wiring, and balancing the fan blades.",
+    difficulty: "Medium",
+    time: "2-3 hrs",
+  },
+  {
+    id: "mount-tv",
+    title: "Mount a TV",
+    icon: Tv,
+    description: "I want to mount a TV on the wall. Help me find studs, choose the right wall mount, route cables cleanly, and secure it safely.",
+    difficulty: "Easy",
+    time: "1-2 hrs",
+  },
+  {
+    id: "running-toilet",
+    title: "Fix Running Toilet",
+    icon: Droplets,
+    description: "My toilet keeps running after flushing and won't stop. Help me diagnose whether it's the flapper, fill valve, or float and fix it.",
+    difficulty: "Easy",
+    time: "30-60 min",
+  },
+  {
+    id: "patch-drywall",
+    title: "Patch Drywall",
+    icon: PaintBucket,
+    description: "I have a hole or crack in my drywall that needs patching and repainting so it blends in with the surrounding wall.",
+    difficulty: "Easy",
+    time: "1-2 hrs",
+  },
+  {
+    id: "light-switch",
+    title: "Replace Light Switch",
+    icon: Lightbulb,
+    description: "I need to replace a light switch or electrical outlet. Guide me through safely turning off power, removing the old switch, and wiring the new one.",
+    difficulty: "Easy",
+    time: "30-45 min",
+  },
+  {
+    id: "leaky-faucet",
+    title: "Fix Leaky Faucet",
+    icon: Thermometer,
+    description: "My faucet is dripping constantly. Help me identify the faucet type, replace the worn washer or cartridge, and stop the leak.",
+    difficulty: "Easy",
+    time: "30-60 min",
+  },
+];
 
 export default function Home() {
   const [result, setResult] = useState<ProjectWithInstructions | null>(null);
@@ -114,6 +166,16 @@ export default function Home() {
   const handleTextSubmit = () => { if (textDescription.trim().length >= 5) { setResult(null); textMutation.mutate(textDescription); } };
   const handleUpgrade = () => toast({ title: "Upgrade Coming Soon!", description: "Premium features will be available soon. Thank you for your interest!" });
 
+  const handleQuickRepair = (description: string) => {
+    if (usageInfo && usageInfo.isLimitReached) {
+      toast({ title: "Repair limit reached", description: "Please upgrade to continue.", variant: "destructive" });
+      return;
+    }
+    setResult(null);
+    setInputMode('text');
+    textMutation.mutate(description);
+  };
+
   return (
     <>
       {/* Hero Section */}
@@ -177,6 +239,47 @@ export default function Home() {
             <p className="text-muted-foreground mb-6">Inspecting, planning, and assembling your repair guide.</p>
             <div className="bg-muted rounded-full h-1.5 w-full max-w-sm mx-auto overflow-hidden">
               <div className="bg-primary h-full rounded-full progress-bar" style={{ width: "65%" }} />
+            </div>
+          </div>
+        )}
+
+        {/* Common Repairs Quick-Select */}
+        {!result && !analyzeMutation.isPending && !textMutation.isPending && (
+          <div className="mb-8">
+            <div className="text-center mb-5">
+              <h3 className="font-display text-xl font-bold text-foreground mb-1">Common Repairs</h3>
+              <p className="text-muted-foreground text-sm">Tap a repair for an instant step-by-step guide — no photo needed.</p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {COMMON_REPAIRS.map((repair) => {
+                const Icon = repair.icon;
+                return (
+                  <button
+                    key={repair.id}
+                    onClick={() => handleQuickRepair(repair.description)}
+                    className="card-premium rounded-xl p-4 text-left hover:border-primary/40 hover:shadow-md transition-all group cursor-pointer"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                      <Icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <h4 className="font-semibold text-foreground text-sm leading-tight mb-1">{repair.title}</h4>
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${repair.difficulty === "Easy" ? "bg-green-500/15 text-green-600" : "bg-yellow-500/15 text-yellow-600"}`}>
+                        {repair.difficulty}
+                      </span>
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {repair.time}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="flex items-center gap-3 my-6">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-xs text-muted-foreground font-medium px-2">or use your own photo/description</span>
+              <div className="flex-1 h-px bg-border" />
             </div>
           </div>
         )}
