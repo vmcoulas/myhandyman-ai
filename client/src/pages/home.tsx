@@ -197,6 +197,12 @@ export default function Home() {
             Upload a photo of a broken item, damaged area, or home issue and get clear repair steps, tool recommendations, time estimates, and guidance on whether to DIY or call a pro.
           </p>
 
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="bg-white py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
           <Stepper
             className="max-w-4xl mx-auto mb-12"
             steps={[
