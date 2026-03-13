@@ -13,10 +13,10 @@ export function Header() {
         <div className="flex h-16 items-center justify-between gap-3">
           <Link href="/" className="flex items-center space-x-3 no-text-decoration group min-w-0">
             <div className="relative">
-              <img src="/logo.png" alt="MyHandyman AI" className="h-10 w-10 rounded-lg object-contain" />
+              <img src="/logo.png" alt="MyHandyman AI" className="h-12 w-12 rounded-lg object-contain" />
             </div>
             <div className="flex min-w-0 flex-col justify-center">
-              <h1 className="text-base sm:text-lg font-extrabold leading-tight tracking-tight">
+              <h1 className="text-lg sm:text-xl font-extrabold leading-tight tracking-tight">
                 <span className="text-foreground">MyHandyman</span>
                 <span className="text-muted-foreground">.ai</span>
               </h1>
