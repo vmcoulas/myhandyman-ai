@@ -344,36 +344,8 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
         </div>
 
         {/* Instruction Style + Hands-Free */}
-        <div className="mt-5 grid gap-3 md:grid-cols-2">
-          <div className="rounded-xl border border-border bg-muted/30 p-4">
-            <p className="text-muted-foreground text-xs mb-2">Instruction style</p>
-            <div className="inline-flex rounded-lg border border-border bg-background/70 p-1">
-              <Button
-                type="button"
-                size="sm"
-                variant={style === "coach" ? "default" : "ghost"}
-                onClick={() => setStyle("coach")}
-                className={
-                  style === "coach"
-                    ? "h-9 px-3"
-                    : "h-9 px-3 text-muted-foreground hover:text-foreground"
-                }
-              >
-                Coach
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant={style === "pro" ? "default" : "ghost"}
-                onClick={() => setStyle("pro")}
-                className={
-                  style === "pro" ? "h-9 px-3" : "h-9 px-3 text-muted-foreground hover:text-foreground"
-                }
-              >
-                Pro
-              </Button>
-            </div>
-          </div>
+        <div className="mt-5">
+
 
           <div className="rounded-xl border border-border bg-muted/30 p-4">
             <div className="flex items-center justify-between gap-2 mb-2">

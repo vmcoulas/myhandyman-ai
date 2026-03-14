@@ -164,7 +164,23 @@ export default function Home() {
 
   const handleImageSelected = (file: File) => { setResult(null); analyzeMutation.mutate(file); };
   const handleTextSubmit = () => { if (textDescription.trim().length >= 5) { setResult(null); textMutation.mutate(textDescription); } };
-  const handleUpgrade = () => toast({ title: "Upgrade Coming Soon!", description: "Premium features will be available soon. Thank you for your interest!" });
+  const handleUpgrade = async () => {
+    try {
+      const res = await fetch("/api/stripe/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user?.id || localStorage.getItem("myhandyman_user_id") }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast({ title: "Error", description: "Could not start checkout. Please try again." });
+      }
+    } catch {
+      toast({ title: "Error", description: "Could not connect to payment server." });
+    }
+  };
 
   const handleQuickRepair = (description: string) => {
     if (usageInfo && usageInfo.isLimitReached) {
@@ -184,12 +200,12 @@ export default function Home() {
           <img src="/hero.jpg" alt="Woman using MyHandyman AI app to diagnose a plumbing issue" className="w-full h-full object-cover" id="hero-img" />
           <div className="absolute inset-0 bg-gradient-to-b sm:bg-gradient-to-r from-[#1B2430]/70 via-[#1B2430]/40 to-[#1B2430]/20 sm:from-[#1B2430]/85 sm:via-[#1B2430]/60 sm:to-transparent" />
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-24 pb-16 text-left flex flex-col min-h-[65vh] sm:min-h-0">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-24 pb-16 text-left flex flex-col min-h-[75vh] sm:min-h-0">
           <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-5 tracking-tight leading-[1.08]">
             <span className="text-white">Your AI-Powered</span><br />
             <span className="text-[#2FA3A0]">Home Repair Assistant</span>
           </h2>
-          <p className="text-lg text-white/70 max-w-xl mb-10 mt-auto sm:mt-0 pt-16 sm:pt-0">
+          <p className="text-lg text-white/70 max-w-xl mb-10 mt-auto sm:mt-0 pt-32 sm:pt-0">
             Upload a photo of a broken item, damaged area, or home issue and get clear repair steps, tool recommendations, time estimates, and guidance on whether to DIY or call a pro.
           </p>
 
@@ -287,6 +303,7 @@ export default function Home() {
         )}
 
         {/* Upload or Results */}
+        <div id="upload-section" />
         {!result && !analyzeMutation.isPending && !textMutation.isPending && (
           <div>
             <div className="flex justify-center mb-6">

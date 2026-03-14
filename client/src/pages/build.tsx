@@ -1,9 +1,16 @@
+import { useEffect } from "react";
 import Home from "@/pages/home";
 
 /**
- * Build is the primary workflow (photo → plan).
- * For now we reuse the existing Home experience.
+ * Build route scrolls directly to the upload section.
  */
 export default function Build() {
+  useEffect(() => {
+    setTimeout(() => {
+      const el = document.getElementById("upload-section");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  }, []);
+
   return <Home />;
 }

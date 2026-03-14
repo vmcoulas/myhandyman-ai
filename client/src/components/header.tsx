@@ -45,9 +45,21 @@ export function Header() {
             <Button
               size="sm"
               className="min-h-11 bg-primary text-primary-foreground font-semibold shadow-sm hover:bg-primary/90"
+              onClick={async () => {
+                try {
+                  const userId = localStorage.getItem("myhandyman_user_id");
+                  const res = await fetch("/api/stripe/create-checkout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId }),
+                  });
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
+                } catch { /* silent */ }
+              }}
             >
               <Zap className="w-4 h-4 sm:mr-1.5" />
-              <span className="hidden sm:inline">Go Premium</span>
+              <span className="hidden sm:inline">Go Pro — $4.99/mo</span>
             </Button>
           </div>
         </div>
