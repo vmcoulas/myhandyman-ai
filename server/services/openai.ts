@@ -11,6 +11,7 @@ export interface FurnitureAnalysis {
   category: "plumbing" | "electrical" | "carpentry" | "drywall" | "painting" | "flooring" | "hvac" | "roofing" | "landscaping" | "appliances" | "other";
   difficulty: "easy" | "medium" | "hard";
   estimatedTime: number;
+  activeTime?: number;
   estimatedCost: number;
   materials: {
     name: string;
@@ -53,7 +54,8 @@ Response must be in JSON format with this exact structure:
   "description": "string (2-3 sentence description of what the problem is, its likely cause, and what success looks like)",
   "category": "plumbing|electrical|carpentry|drywall|painting|flooring|hvac|roofing|landscaping|appliances|other",
   "difficulty": "easy|medium|hard",
-  "estimatedTime": number (in minutes, be realistic including dry/cure time),
+  "estimatedTime": number (TOTAL time in minutes including ALL drying/curing/waiting time),
+  "activeTime": number (HANDS-ON working time only in minutes, excluding drying/curing/waiting),
   "estimatedCost": number (total estimated cost in USD based on current Home Depot/Lowes pricing),
   "materials": [
     {

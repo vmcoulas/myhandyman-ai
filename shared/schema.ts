@@ -39,7 +39,8 @@ export const projects = pgTable("projects", {
   imageUrl: text("image_url").notNull(),
   category: text("category").notNull(), // plumbing, electrical, carpentry, drywall, painting, flooring, hvac, roofing, appliances, other
   difficulty: text("difficulty").notNull(), // easy, medium, hard
-  estimatedTime: integer("estimated_time").notNull(), // in minutes
+  estimatedTime: integer("estimated_time").notNull(), // total time in minutes
+  activeTime: integer("active_time"), // hands-on time in minutes (excludes drying/curing)
   estimatedCost: decimal("estimated_cost", { precision: 10, scale: 2 }),
   materials: jsonb("materials").$type<{ name: string; quantity: string; estimatedCost: number; affiliateLink?: string }[]>().notNull(),
   tools: jsonb("tools").$type<string[]>().notNull(),

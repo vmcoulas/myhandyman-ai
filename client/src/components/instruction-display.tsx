@@ -321,7 +321,12 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
               )}
               <div className="flex items-center gap-1 text-muted-foreground text-sm">
                 <Clock className="w-3.5 h-3.5 text-primary" />
-                <span>{project.estimatedTime} min</span>
+                <span>
+                  {(project as any).activeTime && (project as any).activeTime !== project.estimatedTime
+                    ? `${(project as any).activeTime} min active · ${project.estimatedTime} min total`
+                    : `${project.estimatedTime} min`
+                  }
+                </span>
               </div>
               <Badge className={difficultyColor}>
                 <Star className="w-3 h-3 mr-1" />

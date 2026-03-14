@@ -238,6 +238,30 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Trust Badges */}
+      <section className="bg-[#F4F7FA] py-8 px-4 border-y border-[#D8E0E8]">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+            <div>
+              <div className="text-2xl font-extrabold text-[#1F4E79]">100%</div>
+              <div className="text-xs text-muted-foreground mt-1">AI-Powered Analysis</div>
+            </div>
+            <div>
+              <div className="text-2xl font-extrabold text-[#1F4E79]">30s</div>
+              <div className="text-xs text-muted-foreground mt-1">Average Diagnosis Time</div>
+            </div>
+            <div>
+              <div className="text-2xl font-extrabold text-[#2FA3A0]">Safe</div>
+              <div className="text-xs text-muted-foreground mt-1">DIY Safety Assessments</div>
+            </div>
+            <div>
+              <div className="text-2xl font-extrabold text-[#1F4E79]">Free</div>
+              <div className="text-xs text-muted-foreground mt-1">To Get Started</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 -mt-8">
 
         {usageInfo && <UsageLimitBanner usage={usageInfo} onUpgrade={handleUpgrade} />}
