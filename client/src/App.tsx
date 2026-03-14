@@ -11,6 +11,8 @@ import Tools from "@/pages/tools";
 import SupportLanding from "@/pages/support";
 import SupportArticlePage from "@/pages/support/article";
 import NotFound from "@/pages/not-found";
+import RepairsListing from "@/pages/repairs";
+import RepairDetail from "@/pages/repairs/repair-detail";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import { FeedbackProvider } from "@/lib/feedback-context";
@@ -28,6 +30,8 @@ function Router() {
       <Route path="/support/:slug" component={SupportArticlePage} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
+      <Route path="/repairs" component={RepairsListing} />
+      <Route path="/repairs/:slug" component={RepairDetail} />
       <Route component={NotFound} />
     </Switch>
   );

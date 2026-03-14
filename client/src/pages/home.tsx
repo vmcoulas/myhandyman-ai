@@ -19,6 +19,7 @@ import type { ProjectWithInstructions, UsageInfo, User, Project } from "@/lib/ty
 const COMMON_REPAIRS = [
   {
     id: "ceiling-fan",
+    slug: "install-ceiling-fan",
     title: "Install Ceiling Fan",
     icon: Fan,
     description: "I need to install or replace a ceiling fan. Walk me through mounting, wiring, and balancing the fan blades.",
@@ -27,6 +28,7 @@ const COMMON_REPAIRS = [
   },
   {
     id: "mount-tv",
+    slug: "mount-tv-on-wall",
     title: "Mount a TV",
     icon: Tv,
     description: "I want to mount a TV on the wall. Help me find studs, choose the right wall mount, route cables cleanly, and secure it safely.",
@@ -35,6 +37,7 @@ const COMMON_REPAIRS = [
   },
   {
     id: "running-toilet",
+    slug: "fix-running-toilet",
     title: "Fix Running Toilet",
     icon: Droplets,
     description: "My toilet keeps running after flushing and won't stop. Help me diagnose whether it's the flapper, fill valve, or float and fix it.",
@@ -43,6 +46,7 @@ const COMMON_REPAIRS = [
   },
   {
     id: "patch-drywall",
+    slug: "patch-drywall-hole",
     title: "Patch Drywall",
     icon: PaintBucket,
     description: "I have a hole or crack in my drywall that needs patching and repainting so it blends in with the surrounding wall.",
@@ -51,6 +55,7 @@ const COMMON_REPAIRS = [
   },
   {
     id: "light-switch",
+    slug: "replace-light-switch",
     title: "Replace Light Switch",
     icon: Lightbulb,
     description: "I need to replace a light switch or electrical outlet. Guide me through safely turning off power, removing the old switch, and wiring the new one.",
@@ -59,6 +64,7 @@ const COMMON_REPAIRS = [
   },
   {
     id: "leaky-faucet",
+    slug: "fix-leaky-faucet",
     title: "Fix Leaky Faucet",
     icon: Thermometer,
     description: "My faucet is dripping constantly. Help me identify the faucet type, replace the worn washer or cartridge, and stop the leak.",
@@ -296,10 +302,10 @@ export default function Home() {
               {COMMON_REPAIRS.map((repair) => {
                 const Icon = repair.icon;
                 return (
-                  <button
+                  <a
                     key={repair.id}
-                    onClick={() => handleQuickRepair(repair.description)}
-                    className="card-premium rounded-xl p-4 text-left hover:border-primary/40 hover:shadow-md transition-all group cursor-pointer"
+                    href={`/repairs/${repair.slug}`}
+                    className="card-premium rounded-xl p-4 text-left hover:border-primary/40 hover:shadow-md transition-all group cursor-pointer block"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
                       <Icon className="w-5 h-5 text-primary" />
@@ -314,7 +320,7 @@ export default function Home() {
                         {repair.time}
                       </span>
                     </div>
-                  </button>
+                  </a>
                 );
               })}
             </div>
