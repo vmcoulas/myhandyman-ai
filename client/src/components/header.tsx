@@ -47,7 +47,7 @@ export function Header() {
               className="min-h-11 bg-primary text-primary-foreground font-semibold shadow-sm hover:bg-primary/90"
               onClick={async () => {
                 try {
-                  const userId = localStorage.getItem("myhandyman_user_id");
+                  const userId = localStorage.getItem("anonymousUserId");
                   const res = await fetch("/api/stripe/create-checkout", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

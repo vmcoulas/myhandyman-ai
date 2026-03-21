@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart, ClipboardList, Zap, Droplets, Tv, Fan, PaintBucket, Lightbulb, Thermometer } from "lucide-react";
+import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart, ClipboardList, Zap, Droplets, Tv, Fan, PaintBucket, Lightbulb, Thermometer, ArrowRight, Mail, ShieldCheck } from "lucide-react";
 import { HeroBackdrop } from "@/components/hero/hero-backdrop";
 import { PhotoUpload } from "@/components/photo-upload";
 import { InstructionDisplay } from "@/components/instruction-display";
@@ -78,6 +78,8 @@ export default function Home() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [inputMode, setInputMode] = useState<'photo' | 'text'>('photo');
   const [textDescription, setTextDescription] = useState('');
+  const [leadEmail, setLeadEmail] = useState('');
+  const [isSavingLead, setIsSavingLead] = useState(false);
   const { toast } = useToast();
 
   const getCurrentUser = async () => {
@@ -110,9 +112,14 @@ export default function Home() {
       }
       setCurrentUser({
         id: fallbackId as any,
-        email: null, buildsUsed: 0, easyBuildsUsed: 0, maxBuilds: 3, maxEasyBuilds: 3,
-        isPremium: false, premiumExpiresAt: null, firstName: null, lastName: null,
-        profileImageUrl: null, createdAt: new Date(), updatedAt: new Date()
+        email: null,
+        buildsUsed: 0,
+        easyBuildsUsed: 0,
+        maxBuilds: 3,
+        maxEasyBuilds: 3,
+        isPremium: false,
+        premiumExpiresAt: null,
+        createdAt: new Date(),
       });
     }
   };
@@ -170,12 +177,41 @@ export default function Home() {
 
   const handleImageSelected = (file: File) => { setResult(null); analyzeMutation.mutate(file); };
   const handleTextSubmit = () => { if (textDescription.trim().length >= 5) { setResult(null); textMutation.mutate(textDescription); } };
+
+  const handleLeadCapture = async () => {
+    const email = leadEmail.trim();
+    if (!email) {
+      toast({ title: "Email required", description: "Enter your email to save updates and repair tips.", variant: "destructive" });
+      return;
+    }
+
+    setIsSavingLead(true);
+    try {
+      const res = await fetch('/api/users/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Could not save email');
+      }
+
+      setLeadEmail('');
+      toast({ title: 'You are on the list', description: 'We saved your email for repair tips and product updates.' });
+    } catch {
+      toast({ title: 'Could not save email', description: 'Please try again in a moment.', variant: 'destructive' });
+    } finally {
+      setIsSavingLead(false);
+    }
+  };
+
   const handleUpgrade = async () => {
     try {
       const res = await fetch("/api/stripe/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user?.id || localStorage.getItem("myhandyman_user_id") }),
+        body: JSON.stringify({ userId: currentUser?.id || localStorage.getItem("anonymousUserId") }),
       });
       const data = await res.json();
       if (data.url) {
@@ -207,12 +243,32 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b sm:bg-gradient-to-r from-[#1B2430]/70 via-[#1B2430]/40 to-[#1B2430]/20 sm:from-[#1B2430]/85 sm:via-[#1B2430]/60 sm:to-transparent" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-24 pb-16 text-left flex flex-col min-h-[75vh] sm:min-h-0">
-          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-5 tracking-tight leading-[1.08]">
-            <span className="text-white">Your AI-Powered</span><br />
-            <span className="text-[#2FA3A0]">Home Repair Assistant</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/85 mb-4 w-fit">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#7EE0D7]" />
+            Fix it yourself. Know when to call.
+          </div>
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-5 tracking-tight leading-[1.02] max-w-4xl">
+            <span className="text-white">Snap a photo.</span><br />
+            <span className="text-[#2FA3A0]">Know what’s wrong.</span>
           </h2>
-          <p className="text-lg text-white/70 max-w-xl mb-10 mt-auto sm:mt-0 pt-48 sm:pt-0">
-            Upload a photo of a broken item, damaged area, or home issue and get clear repair steps, tool recommendations, time estimates, and guidance on whether to DIY or call a pro.
+          <p className="text-lg text-white/80 max-w-2xl mb-6 mt-auto sm:mt-0 pt-40 sm:pt-0">
+            Get step-by-step repair guidance, parts and tools, time and cost estimates, and a clear read on whether this is a safe DIY fix or pro territory.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <Button
+              size="lg"
+              className="font-semibold"
+              onClick={() => document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+            >
+              Upload a photo
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+            <Button size="lg" variant="outline" asChild className="border-white/25 bg-white/10 text-white hover:bg-white/15 hover:text-white">
+              <a href="#common-repairs">Browse common repairs</a>
+            </Button>
+          </div>
+          <p className="text-sm text-white/65 max-w-xl">
+            Best for first-time homeowners, DIY beginners, and anyone who wants clarity before paying for a service call.
           </p>
 
         </div>
@@ -268,6 +324,38 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="bg-white px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="max-w-5xl mx-auto rounded-2xl border border-[#D8E0E8] bg-gradient-to-br from-white to-[#F4F7FA] p-6 sm:p-8 shadow-sm">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-5 lg:justify-between">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary mb-3">
+                <Mail className="w-3.5 h-3.5" />
+                Stay in the loop
+              </div>
+              <h3 className="font-display text-2xl font-bold text-foreground mb-2">Get repair tips, new guides, and product updates.</h3>
+              <p className="text-sm text-muted-foreground">
+                We’re building MyHandyman in public. Drop your email and we’ll send practical repair tips, new common-fix guides, and feature updates as the app gets better.
+              </p>
+            </div>
+            <div className="w-full lg:max-w-md">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="email"
+                  value={leadEmail}
+                  onChange={(e) => setLeadEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  className="flex-1 rounded-xl border border-input bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                />
+                <Button onClick={handleLeadCapture} disabled={isSavingLead} className="font-semibold whitespace-nowrap">
+                  {isSavingLead ? 'Saving...' : 'Get updates'}
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">No spam. Just useful repair content and product updates.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 -mt-8">
 
         {usageInfo && <UsageLimitBanner usage={usageInfo} onUpgrade={handleUpgrade} />}
@@ -293,7 +381,7 @@ export default function Home() {
 
         {/* Common Repairs Quick-Select */}
         {!result && !analyzeMutation.isPending && !textMutation.isPending && (
-          <div className="mb-8">
+          <div className="mb-8" id="common-repairs">
             <div className="text-center mb-5">
               <h3 className="font-display text-xl font-bold text-foreground mb-1">Common Repairs</h3>
               <p className="text-muted-foreground text-sm">Tap a repair for an instant step-by-step guide — no photo needed.</p>

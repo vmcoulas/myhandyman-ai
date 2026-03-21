@@ -280,15 +280,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         category: analysis.category,
         difficulty: analysis.difficulty,
         estimatedTime: analysis.estimatedTime,
-          activeTime: analysis.activeTime || null,
+        activeTime: (analysis as any).activeTime || null,
         estimatedCost: analysis.estimatedCost.toString(),
         materials: analysis.materials,
         tools: analysis.tools,
         safetyNotes: analysis.safetyNotes,
-            safetyLevel: analysis.safetyLevel || "DIY-friendly",
-            safetyWarningProject: analysis.safetyWarning || null,
-            safetyLevel: analysis.safetyLevel || "DIY-friendly",
-            safetyWarningProject: analysis.safetyWarning || null,
+        safetyLevel: (analysis as any).safetyLevel || "DIY-friendly",
+        safetyWarningProject: (analysis as any).safetyWarning || null,
       };
 
       const validatedProject = insertProjectSchema.parse(projectData);
@@ -448,15 +446,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         category: analysis.category,
         difficulty: analysis.difficulty,
         estimatedTime: analysis.estimatedTime,
-          activeTime: analysis.activeTime || null,
+        activeTime: (analysis as any).activeTime || null,
         estimatedCost: analysis.estimatedCost.toString(),
         materials: analysis.materials,
         tools: analysis.tools,
         safetyNotes: analysis.safetyNotes,
-            safetyLevel: analysis.safetyLevel || "DIY-friendly",
-            safetyWarningProject: analysis.safetyWarning || null,
-            safetyLevel: analysis.safetyLevel || "DIY-friendly",
-            safetyWarningProject: analysis.safetyWarning || null,
+        safetyLevel: (analysis as any).safetyLevel || "DIY-friendly",
+        safetyWarningProject: (analysis as any).safetyWarning || null,
       };
 
       const validatedProject = insertProjectSchema.parse(projectData);
