@@ -4,6 +4,31 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+
+// CORS – allow the Vercel-hosted frontend and any Vercel preview URLs.
+// The Railway backend URL is never exposed to end-users; all traffic arrives
+// through myhandyman.ai which Vercel proxies via vercel.json rewrites.
+const ALLOWED_ORIGINS = [
+  "https://myhandyman.ai",
+  "https://www.myhandyman.ai",
+];
+const VERCEL_PREVIEW_RE = /^https:\/\/[\w-]+\.vercel\.app$/;
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && (ALLOWED_ORIGINS.includes(origin) || VERCEL_PREVIEW_RE.test(origin))) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  }
+  if (req.method === "OPTIONS") {
+    res.sendStatus(204);
+    return;
+  }
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
