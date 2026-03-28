@@ -305,8 +305,8 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-2xl font-extrabold text-[#1F4E79]">100%</div>
-              <div className="text-xs text-muted-foreground mt-1">AI-Powered Analysis</div>
+              <div className="text-2xl font-extrabold text-[#1F4E79]">Instant</div>
+              <div className="text-xs text-muted-foreground mt-1">AI-Powered Diagnosis</div>
             </div>
             <div>
               <div className="text-2xl font-extrabold text-[#1F4E79]">30s</div>
@@ -334,7 +334,7 @@ export default function Home() {
               </div>
               <h3 className="font-display text-2xl font-bold text-foreground mb-2">Get repair tips, new guides, and product updates.</h3>
               <p className="text-sm text-muted-foreground">
-                We’re building MyHandyman in public. Drop your email and we’ll send practical repair tips, new common-fix guides, and feature updates as the app gets better.
+                Drop your email for practical repair tips, new fix guides, and product updates.
               </p>
             </div>
             <div className="w-full lg:max-w-md">
