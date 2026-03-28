@@ -300,6 +300,41 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Social Proof */}
+      <section className="bg-white py-8 px-4 sm:px-6 lg:px-8 border-b border-[#D8E0E8]">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div className="rounded-xl bg-[#F4F7FA] p-5">
+              <div className="flex items-center gap-1 mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3.5 h-3.5 fill-[#D99A2B] text-[#D99A2B]" />
+                ))}
+              </div>
+              <p className="text-sm text-foreground leading-relaxed mb-3">"Saved me a plumber visit. Turned out it was just the flapper — $6 fix instead of a $150 service call."</p>
+              <p className="text-xs text-muted-foreground">— Reddit user, r/HomeImprovement</p>
+            </div>
+            <div className="rounded-xl bg-[#F4F7FA] p-5">
+              <div className="flex items-center gap-1 mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3.5 h-3.5 fill-[#D99A2B] text-[#D99A2B]" />
+                ))}
+              </div>
+              <p className="text-sm text-foreground leading-relaxed mb-3">"First-time homeowner here. This told me exactly what tools I needed and what order to do things. Super clear."</p>
+              <p className="text-xs text-muted-foreground">— Early beta user</p>
+            </div>
+            <div className="rounded-xl bg-[#F4F7FA] p-5">
+              <div className="flex items-center gap-1 mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3.5 h-3.5 fill-[#D99A2B] text-[#D99A2B]" />
+                ))}
+              </div>
+              <p className="text-sm text-foreground leading-relaxed mb-3">"The parts list with prices and direct links is a game changer. No more guessing what to buy at the hardware store."</p>
+              <p className="text-xs text-muted-foreground">— DIY beginner</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Trust Badges */}
       <section className="bg-[#F4F7FA] py-8 px-4 border-y border-[#D8E0E8]">
         <div className="max-w-4xl mx-auto">
