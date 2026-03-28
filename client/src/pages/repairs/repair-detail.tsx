@@ -3,7 +3,25 @@ import { useEffect } from "react";
 import { getRepairBySlug, getAmazonLink, REPAIRS } from "@/content/repairs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, DollarSign, ShoppingCart, ExternalLink, AlertTriangle, Shield, ArrowLeft, Camera, ChevronRight } from "lucide-react";
+import { Clock, DollarSign, ShoppingCart, ExternalLink, AlertTriangle, Shield, ArrowLeft, Camera, ChevronRight, Wrench, Droplets, PaintBucket, Fan, Tv, Lightbulb, Cog, Thermometer, Bell, Paintbrush, RotateCcw } from "lucide-react";
+
+const REPAIR_ICONS: Record<string, React.ElementType> = {
+  "fix-running-toilet": Droplets,
+  "unclog-drain": Wrench,
+  "fix-leaky-faucet": Droplets,
+  "patch-drywall-hole": PaintBucket,
+  "install-ceiling-fan": Fan,
+  "mount-tv-on-wall": Tv,
+  "replace-light-switch": Lightbulb,
+  "fix-squeaky-door": Wrench,
+  "replace-shower-head": Droplets,
+  "recaulk-bathtub": Droplets,
+  "fix-garbage-disposal": Cog,
+  "install-smart-thermostat": Thermometer,
+  "fix-doorbell": Bell,
+  "paint-room": Paintbrush,
+  "replace-toilet-flapper": RotateCcw,
+};
 
 export default function RepairDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -45,7 +63,14 @@ export default function RepairDetail() {
 
       {/* Hero */}
       <div className="mb-8">
-        <div className="text-5xl mb-4">{repair.heroEmoji}</div>
+        {(() => {
+          const Icon = REPAIR_ICONS[repair.slug] || Wrench;
+          return (
+            <div className="w-14 h-14 rounded-xl bg-[#1F4E79]/10 flex items-center justify-center mb-4">
+              <Icon className="w-7 h-7 text-[#1F4E79]" />
+            </div>
+          );
+        })()}
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1F4E79] tracking-tight mb-4">{repair.title}</h1>
         <div className="flex flex-wrap gap-3 mb-4">
           <Badge className={
@@ -83,7 +108,7 @@ export default function RepairDetail() {
         <h2 className="text-xl font-bold text-[#1F4E79] mb-4">What You Need</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="rounded-xl border p-4">
-            <h3 className="text-sm font-semibold mb-3">🔧 Tools</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-1.5"><Wrench className="size-4 text-[#1F4E79]" /> Tools</h3>
             <ul className="space-y-1.5">
               {repair.toolsNeeded.map((tool, i) => (
                 <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
@@ -93,7 +118,7 @@ export default function RepairDetail() {
             </ul>
           </div>
           <div className="rounded-xl border p-4">
-            <h3 className="text-sm font-semibold mb-3">🛒 Materials</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-1.5"><ShoppingCart className="size-4 text-[#2FA3A0]" /> Materials</h3>
             <ul className="space-y-2">
               {repair.materialsNeeded.map((mat, i) => (
                 <li key={i} className="flex items-center justify-between gap-2">
@@ -173,7 +198,14 @@ export default function RepairDetail() {
             {related.map((r) => r && (
               <Link key={r.slug} href={`/repairs/${r.slug}`}>
                 <div className="rounded-xl border p-4 hover:shadow-md hover:border-[#2FA3A0]/40 transition-all cursor-pointer">
-                  <div className="text-2xl mb-2">{r.heroEmoji}</div>
+                  {(() => {
+                    const RIcon = REPAIR_ICONS[r.slug] || Wrench;
+                    return (
+                      <div className="w-10 h-10 rounded-lg bg-[#1F4E79]/10 flex items-center justify-center mb-2">
+                        <RIcon className="w-5 h-5 text-[#1F4E79]" />
+                      </div>
+                    );
+                  })()}
                   <h3 className="text-sm font-semibold">{r.title}</h3>
                   <span className="text-xs text-muted-foreground">{r.activeTime} min · {r.estimatedCost}</span>
                 </div>
