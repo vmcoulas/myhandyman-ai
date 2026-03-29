@@ -42,7 +42,7 @@ export function UsageLimitBanner({ usage, onUpgrade }: UsageLimitBannerProps) {
                   className="bg-primary text-white hover:bg-orange-600"
                 >
                   <Crown className="w-4 h-4 mr-2" />
-                  Go Pro — $4.99/month
+                  Go Pro — $9.99/month
                 </Button>
                 <Button variant="outline" size="sm">
                   Learn More

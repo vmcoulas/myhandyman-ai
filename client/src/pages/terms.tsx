@@ -36,7 +36,7 @@ export default function Terms() {
         <h2 className="text-xl font-semibold text-[#1F4E79] mt-8">4. Subscription Terms</h2>
         <ul className="list-disc pl-6 space-y-2">
           <li><strong>Free Tier:</strong> Limited number of AI repair analyses per month.</li>
-          <li><strong>Premium Plan:</strong> $4.99/month for unlimited AI repair analyses and additional features.</li>
+          <li><strong>Premium Plan:</strong> $9.99/month for unlimited AI repair analyses and additional features.</li>
           <li>Subscriptions are billed monthly through Stripe and renew automatically.</li>
           <li>You may cancel your subscription at any time. Cancellation takes effect at the end of your current billing period.</li>
           <li>No refunds are provided for partial billing periods.</li>
