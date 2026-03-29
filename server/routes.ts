@@ -5,7 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
   apiVersion: "2024-12-18.acacia" as any,
 });
 
-const PREMIUM_PRICE_ID = "price_1TGJIFFiJLf9jJBO95jag7lD";
+const PREMIUM_PRICE_ID = "price_1TGJwRC6GhDofzzOV1OXKMZg";
 
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
