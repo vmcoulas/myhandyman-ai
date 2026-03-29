@@ -645,6 +645,303 @@ export const REPAIRS: RepairGuide[] = [
     whenToCallPro: "You almost never need a plumber for a flapper. However, if the flush valve seat (the ring the flapper seals against) is pitted, corroded, or cracked, the new flapper won't seal properly. In that case, the entire flush valve needs replacing, which is a bigger job.",
     relatedRepairs: ["fix-running-toilet", "unclog-drain", "fix-leaky-faucet"],
   },
+  {
+    slug: "fix-garbage-disposal-humming",
+    title: "How to Fix a Garbage Disposal That Hums but Won't Spin",
+    metaDescription: "Fix a garbage disposal that hums but won't turn. Step-by-step guide to unjam the impellers, reset the motor, and get your disposal running in under 15 minutes.",
+    heroEmoji: "🗑️",
+    difficulty: "Easy",
+    activeTime: 15,
+    totalTime: 20,
+    estimatedCost: "$0-15",
+    safetyLevel: "DIY-friendly",
+    overview: "When your garbage disposal hums but won't spin, the motor is getting power but the grinding plate is jammed — usually by a hard object like a bone fragment, bottle cap, or piece of silverware that's lodged between the impeller and the grinding ring.\n\nThe humming sound means the motor windings are energized but stalled. If left in this state for more than a few seconds, the thermal overload protector trips and shuts the unit off completely (that's why your disposal sometimes goes completely silent after humming). This is a safety feature, not a failure.\n\nThe fix is almost always free: unjam the plate mechanically, reset the overload, and you're done. You'll only need a replacement if the motor itself is burned out — which is rare and usually accompanied by a burning smell.",
+    toolsNeeded: [
+      "1/4-inch hex (Allen) wrench",
+      "Wooden spoon or broom handle",
+      "Flashlight",
+      "Tongs or needle-nose pliers",
+    ],
+    materialsNeeded: [
+      { name: "Garbage disposal wrench (1/4\" hex key)", estimatedCost: "$3-6", amazonSearch: "garbage+disposal+hex+wrench+1%2F4" },
+      { name: "Garbage disposal cleaner tablets (optional)", estimatedCost: "$8-12", amazonSearch: "garbage+disposal+cleaner+tablets" },
+      { name: "Replacement garbage disposal (if motor is burned out)", estimatedCost: "$80-200", amazonSearch: "garbage+disposal+replacement+1%2F2+hp" },
+    ],
+    steps: [
+      {
+        title: "Turn off the disposal — do NOT put your hand in",
+        description: "Switch off the disposal at the wall switch. Then go under the sink and unplug the unit from the outlet (or flip the dedicated circuit breaker if it's hardwired). Never reach into a disposal with power connected, even if it seems off — switches can be toggled accidentally.",
+        safetyWarning: "NEVER put your hand into the disposal. Even with power off, the impeller blades are sharp enough to cause serious cuts.",
+      },
+      {
+        title: "Look for and remove the obstruction",
+        description: "Shine a flashlight into the drain opening. Look for any visible object — bones, silverware, a twist-off cap, fruit pit, or glass. Use tongs or needle-nose pliers to pull it out. Never use your fingers. If you can see something but can't grab it, proceed to the next step to free the plate first, then retrieve it.",
+      },
+      {
+        title: "Use the hex wrench to manually unjam the impeller",
+        description: "Most disposals have a 1/4-inch hex socket on the bottom center of the unit, accessible from under the sink. Insert the hex wrench and work it back and forth — clockwise and counterclockwise — until the jam breaks loose and the plate spins freely. You'll feel resistance then release. If you don't have a hex wrench, many disposals come with one attached to the unit with a clip.",
+      },
+      {
+        title: "Try the wooden spoon method (if no hex socket)",
+        description: "If your disposal doesn't have a hex socket on the bottom, insert a wooden spoon handle or broom handle into the drain from the top. Hook it against one of the impeller blades and lever it back and forth to break the jam. Apply firm pressure — jams are usually broken with a solid push rather than gentle wiggling.",
+      },
+      {
+        title: "Wait 10 minutes, then press the reset button",
+        description: "Once the impeller moves freely, wait at least 10 minutes for the thermal overload protector to cool down and reset. Look on the bottom of the disposal unit for a small red or black button — this is the reset button. Press it firmly until you feel a click. If it immediately pops back out, the motor is still too hot — wait longer and try again.",
+      },
+      {
+        title: "Restore power and test",
+        description: "Plug the disposal back in (or flip the breaker). Turn on cold water — always run cold water when operating the disposal. Turn on the switch. It should start immediately and run quietly. Run cold water for 30 seconds after use to flush the drain line. If it hums again immediately, there's still a jam — repeat the hex wrench step.",
+      },
+      {
+        title: "Clean out any remaining debris",
+        description: "With the disposal running and cold water flowing, drop a few ice cubes in to knock loose any residue on the grinding ring. Follow with a cut lemon half for odor control. For a deeper clean, use disposal cleaning tablets monthly to prevent buildup that contributes to jams.",
+      },
+    ],
+    whenToCallPro: "Call a plumber or appliance technician if you smell burning after the disposal runs (indicates motor damage), if the reset button won't stay in or trips immediately after resetting, if the unit leaks from the bottom (seal failure), or if the disposal is more than 10 years old and has had multiple jam issues — at that point, replacement is usually more cost-effective than repair.",
+    relatedRepairs: ["unclog-drain", "fix-leaky-faucet", "fix-dripping-kitchen-faucet"],
+  },
+  {
+    slug: "stop-toilet-running-after-flush",
+    title: "How to Stop a Toilet from Running After Flushing",
+    metaDescription: "Stop a toilet that keeps running after you flush. Fix the flapper, fill valve, or float in 20 minutes with no plumber. Includes diagnosis guide for each cause.",
+    heroEmoji: "🚿",
+    difficulty: "Easy",
+    activeTime: 20,
+    totalTime: 30,
+    estimatedCost: "$5-20",
+    safetyLevel: "DIY-friendly",
+    overview: "A toilet that keeps running for more than a minute after you flush has a specific problem: the tank isn't filling and sealing properly before the fill valve shuts off. This is different from a constantly running toilet — here, the toilet flushes normally but then water continues trickling or running for several minutes (or indefinitely) before stopping.\n\nThe three most common causes are: (1) the flapper closes too slowly or doesn't seal fully after flushing, (2) the chain connecting the flush handle to the flapper is too long and getting caught under the flapper, or (3) the fill valve is slow or partially malfunctioning and takes too long to refill the tank.\n\nDiagnosing which cause you have takes about 60 seconds, and the fix usually costs under $10. This guide walks you through each scenario.",
+    toolsNeeded: [
+      "Adjustable wrench",
+      "Towel or sponge",
+      "Bucket",
+    ],
+    materialsNeeded: [
+      { name: "Universal toilet flapper", estimatedCost: "$5-8", amazonSearch: "universal+toilet+flapper" },
+      { name: "Toilet fill valve (universal)", estimatedCost: "$10-18", amazonSearch: "toilet+fill+valve+fluidmaster" },
+      { name: "Complete toilet repair kit", estimatedCost: "$15-25", amazonSearch: "toilet+repair+kit+flapper+fill+valve" },
+    ],
+    steps: [
+      {
+        title: "Time how long the toilet runs after flushing",
+        description: "Flush the toilet and watch what happens. If it stops within 90 seconds, your fill valve is just slow — possibly normal for older valves but a sign it's wearing out. If it runs for 3+ minutes or indefinitely, you have a sealing or overflow problem. Note the sound: a hissing fill sound means the tank is filling; a trickling sound with no fill action means water is leaking past the flapper.",
+      },
+      {
+        title: "Remove the tank lid and diagnose",
+        description: "Remove the tank lid (set it somewhere safe — porcelain chips easily). Watch a full flush cycle. Check: Is the flapper dropping back into place quickly after flushing, or does it float up for a long time? Is the chain getting caught under the flapper? Is the water level rising all the way up to 1 inch below the overflow tube, or does it stop short? Is water running over the overflow tube into the bowl?",
+      },
+      {
+        title: "Fix a chain that's too long (easiest fix)",
+        description: "If the chain has too much slack, it can curl under the flapper and prevent it from sealing after the flush. The correct slack is about 1/2 inch — just enough that the flapper can close fully but the chain doesn't go slack and pool at the bottom. Shorten the chain by clipping it to a higher hole on the flush arm. Cut off excess chain length if needed.",
+      },
+      {
+        title: "Replace a worn flapper",
+        description: "Turn off the water supply valve behind the toilet (clockwise). Flush to drain the tank. Unhook the old flapper from the ears on the overflow tube and disconnect the chain. Take it to the hardware store to match the size, or buy a universal flapper. Hook the new flapper onto the overflow tube ears, attach the chain with 1/2 inch of slack. Turn water back on and test.",
+      },
+      {
+        title: "Adjust the float if water is overfilling",
+        description: "If water is running over the overflow tube into the bowl, lower the float. For a ball float on an arm, bend the arm slightly downward. For a cup float on the fill valve shaft, pinch the clip and slide it down 1 inch. The water level should settle at least 1 inch below the top of the overflow tube.",
+      },
+      {
+        title: "Replace a slow or malfunctioning fill valve",
+        description: "If the tank fills slowly (taking more than 3 minutes) and the running continues well after the tank is full, the fill valve's shut-off mechanism is worn. Turn off the water supply, flush, and sponge out remaining water. Disconnect the supply line, unscrew the fill valve locknut underneath the tank, and pull out the old valve. Install a new universal fill valve (adjust height to match), tighten the locknut, reconnect the supply line, and restore water.",
+      },
+      {
+        title: "Do a final leak test",
+        description: "After making repairs, add a few drops of food coloring to the tank. Wait 15 minutes without flushing. If color appears in the bowl, your flapper still isn't sealing fully — try a different brand or size. If no color appears, the repair is successful. Flush 3 times to confirm consistent, quick shutoff.",
+      },
+    ],
+    whenToCallPro: "Call a plumber if the shut-off valve behind the toilet is stuck, leaking, or stripped (you need the valve repaired before you can do any tank work), if you see water on the floor around the toilet base (wax ring leak — different problem entirely), or if you've replaced both the flapper and fill valve and the toilet still runs (may indicate a cracked overflow tube or flush valve seat).",
+    relatedRepairs: ["fix-running-toilet", "replace-toilet-flapper", "unclog-drain"],
+  },
+  {
+    slug: "fix-dripping-kitchen-faucet",
+    title: "How to Fix a Dripping Kitchen Faucet",
+    metaDescription: "Fix a dripping kitchen faucet yourself. Step-by-step guide for ball, cartridge, and ceramic disc faucets. Stop the drip and save $100+ on a plumber call.",
+    heroEmoji: "🚰",
+    difficulty: "Medium",
+    activeTime: 45,
+    totalTime: 60,
+    estimatedCost: "$10-35",
+    safetyLevel: "DIY-friendly",
+    overview: "A dripping kitchen faucet wastes up to 3,000 gallons of water per year and adds $20-35 to your annual water bill — for what's usually a $15 fix. Kitchen faucets drip for one reason: internal seals or components are worn and no longer hold back the water pressure when the handle is closed.\n\nKitchen faucets come in four main types: ball (a single handle that rotates over a rounded cap), cartridge (single or double handle with an internal cartridge), ceramic disc (single lever over a wide cylindrical body), and compression (older style with two handles that screw down). Each is fixed differently, but all follow the same basic approach: identify the faucet type, buy the right repair kit, replace the worn parts.\n\nThis guide focuses on the two most common kitchen faucet types — ball and cartridge — which cover about 80% of kitchen faucets in U.S. homes.",
+    toolsNeeded: [
+      "Adjustable wrench",
+      "Phillips and flathead screwdrivers",
+      "Hex (Allen) wrench set",
+      "Needle-nose pliers",
+      "Utility knife",
+      "Plumber's grease",
+      "Bucket or towels",
+    ],
+    materialsNeeded: [
+      { name: "Ball faucet repair kit (if you have a ball faucet)", estimatedCost: "$12-20", amazonSearch: "ball+faucet+repair+kit+kitchen" },
+      { name: "Cartridge replacement (if you have a cartridge faucet)", estimatedCost: "$10-25", amazonSearch: "kitchen+faucet+cartridge+replacement" },
+      { name: "Plumber's grease", estimatedCost: "$5-8", amazonSearch: "plumber%27s+grease+silicone" },
+      { name: "Teflon tape", estimatedCost: "$3-5", amazonSearch: "teflon+tape+plumber" },
+    ],
+    steps: [
+      {
+        title: "Identify your faucet type and locate the drip",
+        description: "Single-handle faucets that rotate on a ball: ball type. Single-handle faucets with a cartridge you can see if you remove the handle: cartridge type. Double-handle faucets with rubber seats: compression type. Note whether the drip comes from the spout (internal seal issue) or the base/handle area (O-ring issue). The spout drip is the most common complaint.",
+      },
+      {
+        title: "Turn off the water supply and drain the lines",
+        description: "Look under the sink for two shut-off valves (hot and cold). Turn both clockwise until they stop. Turn the faucet handle(s) to the on position to release remaining pressure and drain the lines — water will flow briefly then stop. Place a towel or bucket under the sink to catch drips. Close the drain so small parts don't fall in.",
+        safetyWarning: "Make sure both hot and cold supply valves are fully closed. Test by turning the faucet on — no water should flow.",
+      },
+      {
+        title: "Remove the handle",
+        description: "Look for a decorative cap on top of the handle — pop it off with a flathead screwdriver to reveal a screw. Remove the screw (usually Phillips or hex/Allen). Pull the handle straight up to remove it. Some handles have the screw at the back of the handle base; others are held by a set screw on the side. If the handle won't come off, don't force it — wiggle it gently while pulling up.",
+      },
+      {
+        title: "For ball faucets: replace the ball, seats, and springs",
+        description: "Unscrew the cap and collar by hand or with adjustable pliers (wrap with tape to protect the finish). Lift out the ball, noting its orientation. Inside you'll see two small rubber seats each held by a spring — remove them with needle-nose pliers. Install the new springs and seats from your repair kit. Insert the new ball, aligning the slot in the ball with the metal pin in the faucet body. Reassemble the collar and cap.",
+      },
+      {
+        title: "For cartridge faucets: pull and replace the cartridge",
+        description: "Once the handle is off, you'll see a cartridge held by a retaining clip or nut. Pull the clip straight up with pliers or unscrew the nut. Grasp the cartridge stem and pull straight up — it takes firm, even force. Note the cartridge's orientation (the ears should face forward). Take the old cartridge to the hardware store to match the brand and model, or note the faucet brand and look up the part number. Press the new cartridge straight down, aligning the ears. Reinstall the retaining clip or nut.",
+      },
+      {
+        title: "Replace O-rings if leaking at the base",
+        description: "If water was leaking around the base of the spout (not the tip), the O-rings on the faucet body are worn. With the ball or cartridge removed, you can slide the spout straight up off the faucet body. You'll see rubber O-rings — cut them off with a utility knife and roll on new ones of the same size. Coat the new O-rings with plumber's grease before sliding the spout back on.",
+      },
+      {
+        title: "Reassemble and test",
+        description: "Reassemble in reverse order — cartridge or ball, collar, cap, handle, decorative cap. Tighten everything snugly but don't overtighten (you can crack the faucet body). Slowly open both shut-off valves under the sink. Turn the faucet on and off a few times. Check for leaks at the base and under the sink at the supply connections. The drip should be gone.",
+      },
+    ],
+    whenToCallPro: "Call a plumber if the faucet body itself is cracked or corroded, if the shut-off valves under the sink are frozen or leaking (they need repair first), if you've replaced the cartridge and it still drips (may need a different cartridge size or the valve seat is damaged), or if you're considering replacing the entire faucet — that's a straightforward plumbing job that many homeowners do themselves with our replacement guide.",
+    relatedRepairs: ["replace-bathroom-faucet", "unclog-drain", "fix-leaky-faucet"],
+  },
+  {
+    slug: "patch-large-hole-drywall",
+    title: "How to Patch a Large Hole in Drywall",
+    metaDescription: "Patch a large hole in drywall (6 inches or bigger) with a professional-looking repair. Step-by-step guide using a drywall patch kit or California patch method.",
+    heroEmoji: "🪣",
+    difficulty: "Medium",
+    activeTime: 60,
+    totalTime: 300,
+    estimatedCost: "$25-60",
+    safetyLevel: "DIY-friendly",
+    overview: "Large holes in drywall — typically anything over 6 inches — can't be fixed with mesh tape and a little joint compound. You need a structural patch that bridges the gap and gives the joint compound something solid to bond to.\n\nThere are two reliable methods for large holes: the California patch (also called a butterfly patch), which uses the drywall itself as a backing and works well for holes up to about 8 inches, and the backer board method, which installs wood backing strips inside the wall that a new drywall piece screws into — this works for any size hole.\n\nBoth methods require multiple coats of joint compound with drying time between coats, which means this is a multi-day project. Budget 1 hour of active work spread over 2-3 days. The result, when done correctly, is invisible — the patch will blend seamlessly into the surrounding wall.",
+    toolsNeeded: [
+      "Drywall saw or utility knife",
+      "Drywall screws and drill/driver",
+      "6-inch and 10-inch drywall knives (taping knives)",
+      "Sanding block or pole sander",
+      "Mud pan",
+      "Tape measure and pencil",
+      "Safety glasses",
+    ],
+    materialsNeeded: [
+      { name: "Drywall panel (1/2\" or 5/8\" to match existing)", estimatedCost: "$12-18", amazonSearch: "drywall+panel+1%2F2+inch" },
+      { name: "1x3 or 1x4 wood boards for backing", estimatedCost: "$8-15", amazonSearch: "1x3+wood+board+furring+strip" },
+      { name: "All-purpose joint compound (premixed)", estimatedCost: "$10-15", amazonSearch: "all+purpose+joint+compound+premixed" },
+      { name: "Drywall mesh tape", estimatedCost: "$5-8", amazonSearch: "drywall+mesh+tape+fiberglass" },
+      { name: "Drywall screws (1-5/8\")", estimatedCost: "$6-10", amazonSearch: "drywall+screws+1+5%2F8+inch" },
+      { name: "Primer and matching wall paint", estimatedCost: "$10-20", amazonSearch: "drywall+primer+spray" },
+    ],
+    steps: [
+      {
+        title: "Cut the damaged area into a clean rectangle",
+        description: "Use a drywall saw or utility knife to cut the ragged hole into a clean rectangle or square. This makes it much easier to fit the patch. Use a speed square or level to keep the cuts straight. Make the rectangle slightly larger than the damaged area so you're cutting into undamaged drywall. Before cutting, check the area with a stud finder — if your hole is near a stud, you can use it as a natural edge.",
+        safetyWarning: "Before cutting, use a stud finder and check for electrical wires or plumbing behind the wall. Cut slowly and shallowly to avoid hitting anything inside the wall.",
+      },
+      {
+        title: "Install wood backer boards inside the wall",
+        description: "Cut two pieces of 1x3 or 1x4 lumber about 4-6 inches longer than the height of your hole. Slide each board into the hole vertically and position them behind the drywall edges on the left and right sides of the opening, overlapping each edge by about 1 inch. Hold each board tightly against the back of the drywall and drive two drywall screws through the existing drywall into the board. These boards are now your solid backing for the patch.",
+      },
+      {
+        title: "Cut the drywall patch to fit",
+        description: "Measure the opening precisely. Cut a piece of drywall to match — score the front face deeply with a utility knife, snap the board along the score, then cut the paper backing. Test the fit before applying any compound. It should drop in flush with the surrounding wall surface. If it's slightly high, sand the back or edges. If it's low, you'll build it up with extra compound coats.",
+      },
+      {
+        title: "Screw the patch into the backer boards",
+        description: "Hold the patch in the opening and drive drywall screws through the patch into the backer boards on each side, spacing screws about 6-8 inches apart. Drive screws just deep enough so the head dimples slightly below the surface — don't overdrive or you'll break through the paper face. The patch should be stable and not flex when pressed.",
+      },
+      {
+        title: "Apply mesh tape and first coat of joint compound",
+        description: "Apply fiberglass mesh tape over all four seams where the patch meets the existing wall. Mix your joint compound to a peanut butter consistency if it's too thick. Apply a thin first coat with a 6-inch knife, pressing compound firmly into the tape and feathering the edges outward 2-3 inches onto the surrounding wall. Also fill the screw dimples. Let dry completely — usually 24 hours. The compound will shrink as it dries and look lighter in color when ready.",
+      },
+      {
+        title: "Apply second and third coats, feathering wider each time",
+        description: "Sand the first coat lightly with 120-grit paper to knock down ridges (don't sand through the tape). Apply a second coat with a 10-inch knife, feathering 6-8 inches out from the seams. Let dry. Lightly sand again, then apply a thin finish coat feathered even wider — 10-12 inches. The goal is to create a transition so gradual that it's invisible under paint. Each coat should be thinner than the last.",
+      },
+      {
+        title: "Sand, prime, and paint",
+        description: "Once the final coat is completely dry, sand the entire patch area with 120-grit followed by 220-grit paper until the surface is smooth and the edges are imperceptible to touch. Wipe away all dust. Apply a coat of drywall primer — this is essential, because unpainted joint compound will absorb paint differently than the surrounding wall, creating a visible 'hot spot' even after painting. Let primer dry, then apply two coats of matching wall paint.",
+      },
+    ],
+    whenToCallPro: "Call a drywall contractor if the hole is the result of water damage (fix the leak first, then address any mold before closing the wall), if the damage involves multiple studs or structural members, if the hole is larger than 12 inches (still DIY-able but requires more precise framing), or if you simply want a guaranteed invisible result for a high-visibility area like a formal living room or hallway.",
+    relatedRepairs: ["patch-drywall-hole", "paint-room", "fix-squeaky-door"],
+  },
+  {
+    slug: "replace-bathroom-faucet",
+    title: "How to Replace a Bathroom Faucet",
+    metaDescription: "Replace a bathroom faucet yourself in 1-2 hours. Complete guide covering single-hole and three-hole faucets, supply line connections, and drain assembly installation.",
+    heroEmoji: "🪠",
+    difficulty: "Medium",
+    activeTime: 90,
+    totalTime: 120,
+    estimatedCost: "$40-200",
+    safetyLevel: "DIY-friendly",
+    overview: "Replacing a bathroom faucet is one of the most satisfying DIY plumbing upgrades — you're working in a confined space, but there's no soldering, no permits required, and the payoff is immediate. A new faucet can transform the look of an entire bathroom.\n\nThe most important thing before you start is buying the right faucet. You need to know your sink's hole configuration: single-hole (one faucet handle with integrated spout), centerset (two handles and spout as one unit, with holes 4 inches apart), or widespread (two separate handles and a spout, with holes 6-8 inches apart). Most bathroom sinks are centerset. Check under your sink and count the holes before buying.\n\nBudget 90-120 minutes for a first-timer. The hardest part is usually working under the sink in an awkward position — a basin wrench makes this dramatically easier.",
+    toolsNeeded: [
+      "Basin wrench (essential — makes under-sink work possible)",
+      "Adjustable wrench",
+      "Plumber's putty or silicone sealant",
+      "Bucket and towels",
+      "Flathead and Phillips screwdrivers",
+      "Flashlight or headlamp",
+      "Utility knife",
+    ],
+    materialsNeeded: [
+      { name: "New bathroom faucet (centerset, single-hole, or widespread to match your sink)", estimatedCost: "$40-200", amazonSearch: "bathroom+faucet+centerset+brushed+nickel" },
+      { name: "Basin wrench", estimatedCost: "$15-25", amazonSearch: "basin+wrench+plumbing" },
+      { name: "Flexible supply lines (10\" or 12\", if not included with faucet)", estimatedCost: "$8-15", amazonSearch: "braided+stainless+faucet+supply+lines" },
+      { name: "Plumber's putty", estimatedCost: "$4-7", amazonSearch: "plumber%27s+putty" },
+      { name: "Teflon tape", estimatedCost: "$3-5", amazonSearch: "teflon+tape+thread+seal" },
+    ],
+    steps: [
+      {
+        title: "Shut off water and clear out under the sink",
+        description: "Turn both shut-off valves (hot and cold) under the sink clockwise until fully closed. Turn the faucet handles on to release pressure and drain the lines. Place a bucket under the supply line connections to catch residual water. Clear everything out from under the sink — you'll need room to work.",
+      },
+      {
+        title: "Disconnect the supply lines",
+        description: "Using an adjustable wrench, unscrew the supply line nuts from the shut-off valves (bottom connection) and from the faucet tailpieces (top connection). These are usually 3/8-inch compression fittings. Have your bucket ready — each line will drain a cup or two of water. If the lines are old and stiff, this is a good time to replace them with new braided stainless lines.",
+      },
+      {
+        title: "Disconnect the drain linkage",
+        description: "Most bathroom faucets include a pop-up drain stopper that's connected to the faucet via a thin rod and pivot mechanism. Under the sink, look for a horizontal pivot rod going into the drain pipe, held in by a clip. Pull the clip and pull out the pivot rod. The vertical lift rod passes through the faucet body — you'll pull this out when you remove the faucet. Some faucets have a separate drain assembly — just loosen the pivot rod connection.",
+      },
+      {
+        title: "Remove the old faucet",
+        description: "Under the sink, use the basin wrench to unscrew the mounting nuts holding the faucet to the sink deck — there's usually one or two nuts, one per tailpiece. Basin wrenches are specifically designed to reach up in tight spaces where your hands can't reach. Once the nuts are off, lift the faucet out from the top. Scrape away any old putty or sealant from the sink surface with a plastic scraper or utility knife.",
+      },
+      {
+        title: "Install the new faucet",
+        description: "Read the instructions included with your new faucet — brands vary. Most faucets have a deck plate or gasket that goes between the faucet body and the sink. If the faucet uses plumber's putty, roll a rope of putty and press it under the deck plate before setting it in place. If it uses a rubber gasket (more common now), just set it in place dry. Insert the faucet through the hole(s) from the top, thread the mounting hardware from below, and tighten the mounting nuts with the basin wrench until snug.",
+        safetyWarning: "Don't overtighten the mounting nuts — you can crack a porcelain sink. Tighten until snug plus a quarter turn.",
+      },
+      {
+        title: "Connect the supply lines",
+        description: "Wrap the faucet tailpiece threads with 2-3 wraps of Teflon tape. Attach the new supply lines to the faucet tailpieces first (hand-tight plus a quarter turn with a wrench). Then connect the other ends to the shut-off valves. Don't overtighten — these are compression fittings and overtightening will damage them. Hand tight plus a quarter turn is usually sufficient.",
+      },
+      {
+        title: "Install the drain assembly",
+        description: "Your new faucet should include a new drain assembly. Apply plumber's putty around the underside of the drain flange, insert it through the drain hole from the top, and hand-tighten the drain nut from below. Insert the pivot rod through the horizontal opening in the drain pipe, hook it through the drain stopper loop, and secure the clip. Thread the lift rod down through the faucet body and clip it to the pivot rod connector bar. Test the stopper action before finishing.",
+      },
+      {
+        title: "Turn on water and check for leaks",
+        description: "Slowly open both shut-off valves. Turn on the faucet and let water run for 30 seconds. Shine a flashlight on every connection under the sink: supply line fittings at the valve and at the faucet, and the drain body connection. Any drip means a connection needs to be tightened slightly. A slow drip now will become a steady drip or leak within weeks — fix it before closing up.",
+      },
+    ],
+    whenToCallPro: "Call a plumber if the shut-off valves under the sink are frozen, corroded, or begin leaking when you try to close them (the valves need to be replaced before any faucet work can happen), if you discover corrosion or damage to the drain tailpiece or P-trap, or if you're replacing a faucet on an older home with galvanized or copper supply lines (connections to old pipe types require different fittings and more experience).",
+    relatedRepairs: ["fix-dripping-kitchen-faucet", "fix-leaky-faucet", "replace-shower-head"],
+  },
 ];
 
 export const getRepairBySlug = (slug: string): RepairGuide | undefined =>
