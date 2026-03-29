@@ -1,9 +1,32 @@
 import { useParams, Link } from "wouter";
 import { useEffect } from "react";
-import { getRepairBySlug, getAmazonLink, REPAIRS } from "@/content/repairs";
+import { getRepairBySlug, getAmazonLink, REPAIRS, type RepairGuide } from "@/content/repairs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, DollarSign, ShoppingCart, ExternalLink, AlertTriangle, Shield, ArrowLeft, Camera, ChevronRight, Wrench, Droplets, PaintBucket, Fan, Tv, Lightbulb, Cog, Thermometer, Bell, Paintbrush, RotateCcw } from "lucide-react";
+
+function buildHowToSchema(repair: RepairGuide) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": repair.title,
+    "description": repair.metaDescription,
+    "totalTime": `PT${repair.totalTime}M`,
+    "estimatedCost": {
+      "@type": "MonetaryAmount",
+      "currency": "USD",
+      "value": repair.estimatedCost,
+    },
+    "tool": repair.toolsNeeded.map((name) => ({ "@type": "HowToTool", "name": name })),
+    "supply": repair.materialsNeeded.map((m) => ({ "@type": "HowToSupply", "name": m.name })),
+    "step": repair.steps.map((step, i) => ({
+      "@type": "HowToStep",
+      "position": i + 1,
+      "name": step.title,
+      "text": step.description,
+    })),
+  };
+}
 
 const REPAIR_ICONS: Record<string, React.ElementType> = {
   "fix-running-toilet": Droplets,
@@ -32,6 +55,30 @@ export default function RepairDetail() {
       document.title = `${repair.title} — MyHandyman.ai`;
       const meta = document.querySelector('meta[name="description"]');
       if (meta) meta.setAttribute("content", repair.metaDescription);
+
+      // Canonical tag for this repair page
+      let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+      if (!canonical) {
+        canonical = document.createElement("link");
+        canonical.rel = "canonical";
+        document.head.appendChild(canonical);
+      }
+      canonical.href = `https://myhandyman.ai/repairs/${repair.slug}`;
+
+      // HowTo JSON-LD structured data
+      const existing = document.getElementById("howto-jsonld");
+      if (existing) existing.remove();
+      const script = document.createElement("script");
+      script.id = "howto-jsonld";
+      script.type = "application/ld+json";
+      script.text = JSON.stringify(buildHowToSchema(repair));
+      document.head.appendChild(script);
+
+      return () => {
+        document.getElementById("howto-jsonld")?.remove();
+        const canon = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+        if (canon) canon.href = "https://myhandyman.ai/";
+      };
     }
   }, [repair]);
 
