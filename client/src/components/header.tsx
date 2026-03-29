@@ -58,7 +58,8 @@ export function Header() {
                 } catch { /* silent */ }
               }}
             >
-              <Zap className="w-4 h-4 sm:mr-1.5" />
+              <Zap className="w-4 h-4 mr-1.5" />
+              <span className="sm:hidden">Go Pro</span>
               <span className="hidden sm:inline">Go Pro — $9.99/mo</span>
             </Button>
           </div>

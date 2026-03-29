@@ -57,7 +57,7 @@ export function PhotoUpload({ onImageSelected, isLoading }: PhotoUploadProps) {
   };
 
   return (
-    <div className="card-premium rounded-2xl p-8 mb-8">
+    <div className="card-premium rounded-2xl p-5 sm:p-8 mb-8">
       <div className="text-center mb-6">
         <h3 className="font-display text-2xl font-bold text-foreground mb-2">
           Upload a photo. Get the fix.
@@ -66,7 +66,7 @@ export function PhotoUpload({ onImageSelected, isLoading }: PhotoUploadProps) {
       </div>
 
       <div
-        className={`upload-zone rounded-xl p-12 mb-6 cursor-pointer ${dragActive ? 'active' : ''}`}
+        className={`upload-zone rounded-xl p-8 sm:p-12 mb-6 cursor-pointer ${dragActive ? 'active' : ''}`}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}

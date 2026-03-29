@@ -554,7 +554,7 @@ export default function Home() {
             {inputMode === 'photo' ? (
               <PhotoUpload onImageSelected={handleImageSelected} isLoading={analyzeMutation.isPending} />
             ) : (
-              <div className="card-premium rounded-2xl p-8 mb-8">
+              <div className="card-premium rounded-2xl p-5 sm:p-8 mb-8">
                 <h3 className="font-display text-xl font-bold text-foreground mb-2">What needs fixing?</h3>
                 <p className="text-muted-foreground text-sm mb-4">Describe the issue and we'll create a complete repair guide.</p>
                 <textarea
@@ -563,7 +563,7 @@ export default function Home() {
                   placeholder="e.g., My bathroom faucet is dripping constantly, it's a two-handle model about 10 years old..."
                   className="w-full h-32 rounded-xl border border-input bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
                 />
-                <div className="flex items-center justify-between mt-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
                   <span className="text-xs text-muted-foreground">{textDescription.length > 0 ? `${textDescription.length} characters` : 'Min 5 characters'}</span>
                   <button
                     onClick={handleTextSubmit}
