@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart, ClipboardList, Zap, Droplets, Tv, Fan, PaintBucket, Lightbulb, Thermometer, ArrowRight, Mail, ShieldCheck } from "lucide-react";
+import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart, ClipboardList, Zap, Droplets, Tv, Fan, PaintBucket, Lightbulb, Thermometer, ArrowRight, Mail, ShieldCheck, CheckCircle, X, AlertCircle } from "lucide-react";
 import { HeroBackdrop } from "@/components/hero/hero-backdrop";
 import { PhotoUpload } from "@/components/photo-upload";
 import { InstructionDisplay } from "@/components/instruction-display";
@@ -75,6 +75,8 @@ const COMMON_REPAIRS = [
 
 export default function Home() {
   const [result, setResult] = useState<ProjectWithInstructions | null>(null);
+  const [pendingResult, setPendingResult] = useState<ProjectWithInstructions | null>(null);
+  const [pendingImagePreview, setPendingImagePreview] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [inputMode, setInputMode] = useState<'photo' | 'text'>('photo');
   const [textDescription, setTextDescription] = useState('');
@@ -146,11 +148,11 @@ export default function Home() {
       return response.json();
     },
     onSuccess: (data: ProjectWithInstructions) => {
-      setResult(data);
+      setPendingResult(data);
       refetchUsage();
-      toast({ title: "Analysis Complete!", description: "Your repair plan is ready." });
     },
     onError: (error: Error) => {
+      setPendingImagePreview(prev => { if (prev) URL.revokeObjectURL(prev); return null; });
       toast({ title: "Analysis Failed", description: error.message || "Please try again with a clearer image.", variant: "destructive" });
     },
   });
@@ -175,7 +177,32 @@ export default function Home() {
     },
   });
 
-  const handleImageSelected = (file: File) => { setResult(null); analyzeMutation.mutate(file); };
+  const handleImageSelected = (file: File) => {
+    setResult(null);
+    setPendingResult(null);
+    if (pendingImagePreview) URL.revokeObjectURL(pendingImagePreview);
+    const previewUrl = URL.createObjectURL(file);
+    setPendingImagePreview(previewUrl);
+    analyzeMutation.mutate(file);
+  };
+
+  const handleConfirmDiagnosis = () => {
+    if (pendingResult) {
+      setResult(pendingResult);
+      setPendingResult(null);
+      toast({ title: "Repair plan ready!", description: "Your step-by-step guide is below." });
+    }
+  };
+
+  const handleRejectDiagnosis = () => {
+    setPendingResult(null);
+    if (pendingImagePreview) {
+      URL.revokeObjectURL(pendingImagePreview);
+      setPendingImagePreview(null);
+    }
+    toast({ title: "No problem", description: "Try uploading again or describe the issue in your own words." });
+  };
+
   const handleTextSubmit = () => { if (textDescription.trim().length >= 5) { setResult(null); textMutation.mutate(textDescription); } };
 
   const handleLeadCapture = async () => {
@@ -230,6 +257,7 @@ export default function Home() {
       return;
     }
     setResult(null);
+    setPendingResult(null);
     setInputMode('text');
     textMutation.mutate(description);
   };
@@ -414,8 +442,49 @@ export default function Home() {
           </div>
         )}
 
+        {/* Diagnosis Confirmation Step */}
+        {pendingResult && !result && (
+          <div className="card-premium rounded-2xl p-8 mb-8">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl bg-[#2FA3A0]/10 flex items-center justify-center flex-shrink-0">
+                <AlertCircle className="w-5 h-5 text-[#2FA3A0]" />
+              </div>
+              <div>
+                <h3 className="font-display text-xl font-bold text-foreground">Does this look right?</h3>
+                <p className="text-sm text-muted-foreground">Confirm what we found before we build your repair guide.</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-5 mb-6 p-5 rounded-xl bg-[#F4F7FA] border border-[#D8E0E8]">
+              {pendingImagePreview && (
+                <img
+                  src={pendingImagePreview}
+                  alt="Your uploaded photo"
+                  className="rounded-xl w-full sm:w-44 h-36 object-cover flex-shrink-0"
+                />
+              )}
+              <div className="flex flex-col justify-center">
+                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1 font-semibold">We identified</p>
+                <p className="font-display text-2xl font-bold text-foreground mb-2 leading-tight">{pendingResult.project.title}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{pendingResult.project.description}</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button onClick={handleConfirmDiagnosis} className="flex-1 font-semibold">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Yes, show me the fix
+              </Button>
+              <Button onClick={handleRejectDiagnosis} variant="outline" className="flex-1">
+                <X className="w-4 h-4 mr-2" />
+                Not quite — try again
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Common Repairs Quick-Select */}
-        {!result && !analyzeMutation.isPending && !textMutation.isPending && (
+        {!result && !pendingResult && !analyzeMutation.isPending && !textMutation.isPending && (
           <div className="mb-8" id="common-repairs">
             <div className="text-center mb-5">
               <h3 className="font-display text-xl font-bold text-foreground mb-1">Common Repairs</h3>
@@ -457,7 +526,7 @@ export default function Home() {
 
         {/* Upload or Results */}
         <div id="upload-section" />
-        {!result && !analyzeMutation.isPending && !textMutation.isPending && (
+        {!result && !pendingResult && !analyzeMutation.isPending && !textMutation.isPending && (
           <div>
             <div className="flex justify-center mb-6">
               <div className="inline-flex rounded-xl bg-muted p-1 gap-1">
