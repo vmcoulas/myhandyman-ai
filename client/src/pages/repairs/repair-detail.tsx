@@ -5,6 +5,29 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, DollarSign, ShoppingCart, ExternalLink, AlertTriangle, Shield, ArrowLeft, Camera, ChevronRight, Wrench, Droplets, PaintBucket, Fan, Tv, Lightbulb, Cog, Thermometer, Bell, Paintbrush, RotateCcw } from "lucide-react";
 
+/** Upsert a <meta> tag by property or name attribute */
+function setMetaTag(attr: "property" | "name", key: string, value: string) {
+  let el = document.querySelector(`meta[${attr}="${key}"]`) as HTMLMetaElement | null;
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute(attr, key);
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", value);
+}
+
+/** Reset a <meta> tag to its default value, or remove if no default */
+function resetMetaTag(attr: "property" | "name", key: string, defaultValue?: string) {
+  const el = document.querySelector(`meta[${attr}="${key}"]`) as HTMLMetaElement | null;
+  if (el) {
+    if (defaultValue) {
+      el.setAttribute("content", defaultValue);
+    } else {
+      el.remove();
+    }
+  }
+}
+
 function buildHowToSchema(repair: RepairGuide) {
   return {
     "@context": "https://schema.org",
@@ -52,9 +75,26 @@ export default function RepairDetail() {
 
   useEffect(() => {
     if (repair) {
-      document.title = `${repair.title} — MyHandyman.ai`;
+      const pageUrl = `https://myhandyman.ai/repairs/${repair.slug}`;
+      const pageTitle = `${repair.title} — MyHandyman.ai`;
+      const ogImage = "https://myhandyman.ai/hero.jpg";
+
+      // Page title & meta description
+      document.title = pageTitle;
       const meta = document.querySelector('meta[name="description"]');
       if (meta) meta.setAttribute("content", repair.metaDescription);
+
+      // Open Graph tags
+      setMetaTag("property", "og:title", pageTitle);
+      setMetaTag("property", "og:description", repair.metaDescription);
+      setMetaTag("property", "og:url", pageUrl);
+      setMetaTag("property", "og:image", ogImage);
+      setMetaTag("property", "og:type", "article");
+
+      // Twitter Card tags
+      setMetaTag("name", "twitter:card", "summary_large_image");
+      setMetaTag("name", "twitter:title", pageTitle);
+      setMetaTag("name", "twitter:description", repair.metaDescription);
 
       // Canonical tag for this repair page
       let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
@@ -63,7 +103,7 @@ export default function RepairDetail() {
         canonical.rel = "canonical";
         document.head.appendChild(canonical);
       }
-      canonical.href = `https://myhandyman.ai/repairs/${repair.slug}`;
+      canonical.href = pageUrl;
 
       // HowTo JSON-LD structured data
       const existing = document.getElementById("howto-jsonld");
@@ -75,6 +115,17 @@ export default function RepairDetail() {
       document.head.appendChild(script);
 
       return () => {
+        // Reset OG tags to homepage defaults
+        const defaultTitle = "MyHandyman AI — Snap a Photo. Know What's Wrong.";
+        const defaultDesc = "Get repair guidance, tools and parts, time and cost estimates, and a clear DIY-vs-pro recommendation from a single photo.";
+        resetMetaTag("property", "og:title", defaultTitle);
+        resetMetaTag("property", "og:description", defaultDesc);
+        resetMetaTag("property", "og:url", "https://myhandyman.ai/");
+        resetMetaTag("property", "og:image", ogImage);
+        resetMetaTag("property", "og:type", "website");
+        resetMetaTag("name", "twitter:title", defaultTitle);
+        resetMetaTag("name", "twitter:description", "Upload a photo, get the fix, and know whether to DIY or call a pro.");
+
         document.getElementById("howto-jsonld")?.remove();
         const canon = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
         if (canon) canon.href = "https://myhandyman.ai/";
