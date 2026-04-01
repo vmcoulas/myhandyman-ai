@@ -17,6 +17,7 @@ import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import { FeedbackProvider } from "@/lib/feedback-context";
 import { AppShell } from "@/components/navigation/app-shell";
+import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
 
 function Router() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Toaster />
           <AppShell>
             <Router />
+            <PwaInstallPrompt />
           </AppShell>
         </FeedbackProvider>
       </TooltipProvider>
