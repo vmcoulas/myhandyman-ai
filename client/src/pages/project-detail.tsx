@@ -22,6 +22,7 @@ import {
 import { ProjectRating } from "@/components/project-rating";
 import { ProjectImage } from "@/components/project-image";
 import { FeedbackForm } from "@/components/feedback-form";
+import { GuideFeedback } from "@/components/guide-feedback";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -424,6 +425,9 @@ export default function ProjectDetail() {
             </div>
           </div>
         </div>
+
+        {/* Inline Guide Feedback — lightweight thumbs up/down */}
+        <GuideFeedback projectId={project.id} />
 
         {/* Completion CTA */}
         {currentStep === instructions.length - 1 && (

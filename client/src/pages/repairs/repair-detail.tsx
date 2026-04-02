@@ -4,6 +4,7 @@ import { getRepairBySlug, getAmazonLink, REPAIRS, type RepairGuide } from "@/con
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, DollarSign, ShoppingCart, ExternalLink, AlertTriangle, Shield, ArrowLeft, Camera, ChevronRight, Wrench, Droplets, PaintBucket, Fan, Tv, Lightbulb, Cog, Thermometer, Bell, Paintbrush, RotateCcw } from "lucide-react";
+import { GuideFeedback } from "@/components/guide-feedback";
 
 /** Upsert a <meta> tag by property or name attribute */
 function setMetaTag(attr: "property" | "name", key: string, value: string) {
@@ -287,6 +288,11 @@ export default function RepairDetail() {
           </Link>
         </div>
       </section>
+
+      {/* Inline Guide Feedback */}
+      <div className="mt-8 mb-8">
+        <GuideFeedback />
+      </div>
 
       {/* Related Repairs */}
       {related.length > 0 && (
