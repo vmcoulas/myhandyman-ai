@@ -287,6 +287,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         safetyNotes: analysis.safetyNotes,
         safetyLevel: (analysis as any).safetyLevel || "DIY-friendly",
         safetyWarningProject: (analysis as any).safetyWarning || null,
+        confidence: analysis.confidence || "medium",
+        confidenceReason: analysis.confidenceReason || null,
       };
 
       const validatedProject = insertProjectSchema.parse(projectData);
@@ -453,6 +455,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         safetyNotes: analysis.safetyNotes,
         safetyLevel: (analysis as any).safetyLevel || "DIY-friendly",
         safetyWarningProject: (analysis as any).safetyWarning || null,
+        confidence: analysis.confidence || "high",
+        confidenceReason: analysis.confidenceReason || null,
       };
 
       const validatedProject = insertProjectSchema.parse(projectData);

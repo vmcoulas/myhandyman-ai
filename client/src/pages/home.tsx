@@ -6,6 +6,7 @@ import { HeroBackdrop } from "@/components/hero/hero-backdrop";
 import { PhotoUpload } from "@/components/photo-upload";
 import { InstructionDisplay } from "@/components/instruction-display";
 import { UsageLimitBanner } from "@/components/usage-limit-banner";
+import { ConfidenceIndicator } from "@/components/confidence-indicator";
 import { ProjectImage } from "@/components/project-image";
 import { ProjectRating } from "@/components/project-rating";
 import { Badge } from "@/components/ui/badge";
@@ -468,6 +469,15 @@ export default function Home() {
                 <p className="font-display text-2xl font-bold text-foreground mb-2 leading-tight">{pendingResult.project.title}</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">{pendingResult.project.description}</p>
               </div>
+            </div>
+
+            {/* Confidence Indicator */}
+            <div className="mb-6">
+              <ConfidenceIndicator
+                confidence={pendingResult.project.confidence}
+                confidenceReason={pendingResult.project.confidenceReason}
+                showReason={true}
+              />
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">

@@ -23,6 +23,7 @@ import { ProjectRating } from "@/components/project-rating";
 import { ProjectImage } from "@/components/project-image";
 import { FeedbackForm } from "@/components/feedback-form";
 import { GuideFeedback } from "@/components/guide-feedback";
+import { ConfidenceIndicator } from "@/components/confidence-indicator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -186,6 +187,9 @@ export default function ProjectDetail() {
                 <Star className="w-3 h-3 mr-1" />
                 {project.difficulty}
               </Badge>
+              {project.confidence && (
+                <ConfidenceIndicator confidence={project.confidence} size="sm" />
+              )}
             </div>
             <div className="absolute bottom-4 left-4 right-4">
               <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white leading-tight">
@@ -245,6 +249,17 @@ export default function ProjectDetail() {
             </div>
           </div>
         </div>
+
+        {/* Confidence Indicator */}
+        {project.confidence && (
+          <div className="mb-6">
+            <ConfidenceIndicator
+              confidence={project.confidence}
+              confidenceReason={project.confidenceReason}
+              showReason={true}
+            />
+          </div>
+        )}
 
         {/* Safety Notice */}
         {project.safetyNotes && (

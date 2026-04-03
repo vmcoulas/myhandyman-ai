@@ -10,6 +10,8 @@ export interface FurnitureAnalysis {
   description: string;
   category: "plumbing" | "electrical" | "carpentry" | "drywall" | "painting" | "flooring" | "hvac" | "roofing" | "landscaping" | "appliances" | "other";
   difficulty: "easy" | "medium" | "hard";
+  confidence: "high" | "medium" | "low";
+  confidenceReason: string;
   estimatedTime: number;
   activeTime?: number;
   estimatedCost: number;
@@ -54,6 +56,8 @@ Response must be in JSON format with this exact structure:
   "description": "string (2-3 sentence description of what the problem is, its likely cause, and what success looks like)",
   "category": "plumbing|electrical|carpentry|drywall|painting|flooring|hvac|roofing|landscaping|appliances|other",
   "difficulty": "easy|medium|hard",
+  "confidence": "high|medium|low (How confident are you in this diagnosis? HIGH = problem is clearly visible and unambiguous. MEDIUM = likely correct but image is partially obscured, angled, or could be one of a few issues. LOW = best guess based on limited visual info — user should verify.)",
+  "confidenceReason": "string (1 sentence explaining why confidence is at this level, e.g. 'Clear close-up photo shows obvious crack in wax ring seal' or 'Image is distant and problem area is partially hidden behind cabinet')",
   "estimatedTime": number (TOTAL time in minutes including ALL drying/curing/waiting time),
   "activeTime": number (HANDS-ON working time only in minutes, excluding drying/curing/waiting),
   "estimatedCost": number (total estimated cost in USD based on current Home Depot/Lowes pricing),

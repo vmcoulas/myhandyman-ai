@@ -28,6 +28,8 @@ export interface Project {
   }[];
   tools: string[];
   safetyNotes: string | null;
+  confidence: string | null;
+  confidenceReason: string | null;
   averageRating: string | null;
   totalRatings: number | null;
   ratingPercentage: number | null;

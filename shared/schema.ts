@@ -47,6 +47,8 @@ export const projects = pgTable("projects", {
   safetyNotes: text("safety_notes"),
   safetyLevel: text("safety_level"), // DIY-friendly, Advanced repair, Professional required
   safetyWarningProject: text("safety_warning_project"),
+  confidence: text("confidence"), // high, medium, low — AI diagnosis confidence
+  confidenceReason: text("confidence_reason"), // Why confidence is at this level
   // Rating system
   averageRating: decimal("average_rating", { precision: 3, scale: 2 }).default("0"),
   totalRatings: integer("total_ratings").default(0),
