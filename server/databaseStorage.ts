@@ -3,6 +3,7 @@ import {
   projects,
   instructions,
   feedback,
+  oauthAccounts,
   type User,
   type UpsertUser,
   type InsertUser,
@@ -11,19 +12,24 @@ import {
   type Instruction,
   type InsertInstruction,
   type Feedback,
-  type InsertFeedback
+  type InsertFeedback,
+  type OAuthAccount,
+  type InsertOAuthAccount,
 } from "../shared/schema";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 // Interface for storage operations
 export interface IStorage {
-  // User operations (mandatory for Replit Auth)
+  // User operations
   createUser(userData: InsertUser): Promise<User>;
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   getUserByEmail(email: string): Promise<User | undefined>;
   updateUser(id: string, updates: Partial<InsertUser>): Promise<User>;
+  // OAuth account operations
+  getUserByOAuthAccount(provider: string, providerAccountId: string): Promise<User | undefined>;
+  createOAuthAccount(data: InsertOAuthAccount): Promise<OAuthAccount>;
   incrementUserBuilds(userId: string, difficulty: string): Promise<void>;
   upgradeToPremium(userId: string): Promise<void>;
   canUserBuild(userId: string, difficulty: string): Promise<boolean>;
@@ -222,6 +228,29 @@ export class DatabaseStorage implements IStorage {
       premiumExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(),
     }).where(eq(users.id, userId));
+  }
+
+  async getUserByOAuthAccount(provider: string, providerAccountId: string): Promise<User | undefined> {
+    const [row] = await db
+      .select({ user: users })
+      .from(oauthAccounts)
+      .innerJoin(users, eq(oauthAccounts.userId, users.id))
+      .where(
+        and(
+          eq(oauthAccounts.provider, provider),
+          eq(oauthAccounts.providerAccountId, providerAccountId)
+        )
+      );
+    return row?.user;
+  }
+
+  async createOAuthAccount(data: InsertOAuthAccount): Promise<OAuthAccount> {
+    const [account] = await db
+      .insert(oauthAccounts)
+      .values(data)
+      .onConflictDoNothing()
+      .returning();
+    return account;
   }
 
 }
