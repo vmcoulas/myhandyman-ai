@@ -15,6 +15,7 @@ import RepairsListing from "@/pages/repairs";
 import RepairDetail from "@/pages/repairs/repair-detail";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
+import ThankYou from "@/pages/thank-you";
 import { FeedbackProvider } from "@/lib/feedback-context";
 import { AppShell } from "@/components/navigation/app-shell";
 import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/repairs" component={RepairsListing} />
       <Route path="/repairs/:slug" component={RepairDetail} />
+      <Route path="/thank-you" component={ThankYou} />
       <Route component={NotFound} />
     </Switch>
   );

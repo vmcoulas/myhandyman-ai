@@ -72,6 +72,15 @@ const COMMON_REPAIRS = [
     difficulty: "Easy",
     time: "30-60 min",
   },
+  {
+    id: "water-heater",
+    slug: "fix-water-heater-no-hot-water",
+    title: "No Hot Water",
+    icon: Zap,
+    description: "My water heater isn't producing hot water. Help me check the pilot light, thermostat, and heating element to diagnose and fix the problem.",
+    difficulty: "Medium",
+    time: "45-90 min",
+  },
 ];
 
 export default function Home() {

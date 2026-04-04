@@ -17,7 +17,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Individual repair guides (20 total) -->
+  <!-- Individual repair guides (25 guides) -->
   <url>
     <loc>https://myhandyman.ai/repairs/fix-running-toilet</loc>
     <lastmod>2026-03-28</lastmod>
@@ -135,6 +135,56 @@
   <url>
     <loc>https://myhandyman.ai/repairs/replace-bathroom-faucet</loc>
     <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://myhandyman.ai/repairs/fix-garbage-disposal-humming</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://myhandyman.ai/repairs/stop-toilet-running-after-flush</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://myhandyman.ai/repairs/fix-dripping-kitchen-faucet</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://myhandyman.ai/repairs/patch-large-hole-drywall</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://myhandyman.ai/repairs/fix-water-heater-no-hot-water</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://myhandyman.ai/repairs/fix-clogged-toilet</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://myhandyman.ai/repairs/fix-leaky-pipe-under-sink</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://myhandyman.ai/repairs/fix-sticking-door</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://myhandyman.ai/repairs/replace-toilet-seat</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://myhandyman.ai/repairs/replace-bathroom-faucet</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

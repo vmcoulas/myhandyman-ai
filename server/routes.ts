@@ -499,7 +499,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         payment_method_types: ["card"],
         line_items: [{ price: PREMIUM_PRICE_ID, quantity: 1 }],
         mode: "subscription",
-        success_url: `${req.protocol}://${req.get("host")}/?premium=success`,
+        success_url: `${req.protocol}://${req.get("host")}/thank-you`,
         cancel_url: `${req.protocol}://${req.get("host")}/?premium=cancelled`,
         metadata: { userId },
       });
