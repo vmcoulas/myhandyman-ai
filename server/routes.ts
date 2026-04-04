@@ -36,13 +36,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve static assets from attached_assets directory
   app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_assets')));
   
-  // Add auth routes (setup will be simplified for now)
-  app.get('/api/auth/user', (req, res) => {
-    // For now, return null (no authenticated user)
-    // In production, this would integrate with Replit Auth
-    res.json(null);
-  });
-  
+  // Auth routes are registered by setupAuth() in auth.ts
+
   // Lightweight outbound click tracking (best-effort)
   app.post("/api/events/outbound", (req, res) => {
     try {
@@ -73,16 +68,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/users/:id", async (req, res) => {
     try {
-      // Handle both string and numeric IDs for compatibility
-      const id = req.params.id;
-      const numericId = parseInt(id);
-      
-      // Try to get user with the ID (handle both string and number)
-      const user = await storage.getUser(isNaN(numericId) ? id : numericId);
+      const user = await storage.getUser(req.params.id);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-
       res.json(user);
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -229,23 +218,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const base64Image = processedImage.toString('base64');
 
-      // Check if user can build this difficulty level
-      const { userId } = req.body;
+      // Prefer the authenticated session user; fall back to anonymous userId from body
+      const sessionUser = req.user as any;
+      const { userId: bodyUserId } = req.body;
+      const userId: string | null = sessionUser?.id ?? (bodyUserId ? String(bodyUserId) : null);
+
       if (userId) {
-        // Ensure user exists in database (auto-create if not)
-        let user = await storage.getUser(String(userId));
-        if (!user) {
+        // Ensure user exists in database (auto-create anonymous users only)
+        let user = await storage.getUser(userId);
+        if (!user && !sessionUser) {
           try {
-            user = await storage.upsertUser({ id: String(userId), email: `user-${userId}@myhandyman.ai` });
-            console.log(`[users] Auto-created user ${userId}`);
+            user = await storage.upsertUser({ id: userId, email: `user-${userId}@myhandyman.ai` });
+            console.log(`[users] Auto-created anonymous user ${userId}`);
           } catch (e) {
             console.error("[users] Failed to auto-create user:", e);
           }
         }
-        const canBuild = await storage.canUserBuild(String(userId), "unknown"); // We'll check after analysis
+        const canBuild = await storage.canUserBuild(userId, "unknown"); // We'll check after analysis
         if (!canBuild) {
-          return res.status(403).json({ 
-            message: "Build limit reached. Please upgrade to continue." 
+          return res.status(403).json({
+            message: "Build limit reached. Please upgrade to continue."
           });
         }
       }
@@ -255,10 +247,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check build limits based on actual difficulty
       if (userId) {
-        const canBuildActual = await storage.canUserBuild(String(userId), analysis.difficulty);
+        const canBuildActual = await storage.canUserBuild(userId, analysis.difficulty);
         if (!canBuildActual) {
           let message = "Build limit reached.";
-          const user = await storage.getUser(String(userId));
+          const user = await storage.getUser(userId);
           if (user && !user.isPremium && analysis.difficulty.toLowerCase() !== 'easy') {
             message = "Only Easy builds are available in the free plan. Upgrade to Premium for Medium and Hard builds!";
           } else if (user && !user.isPremium) {
@@ -266,14 +258,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
           return res.status(403).json({ message });
         }
-        
+
         // Increment user's build count
-        await storage.incrementUserBuilds(String(userId), analysis.difficulty);
+        await storage.incrementUserBuilds(userId, analysis.difficulty);
       }
 
       // Create project
       const projectData = {
-        userId: userId ? String(userId) : null,
+        userId,
         title: analysis.title,
         description: analysis.description,
         imageUrl: `data:image/jpeg;base64,${base64Image}`,
@@ -385,12 +377,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Check usage limits
   app.get("/api/users/:id/usage", async (req, res) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid user ID" });
-      }
-
-      const user = await storage.getUser(id);
+      const user = await storage.getUser(req.params.id);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -417,17 +404,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Analyze from text description (no photo needed)
   app.post("/api/analyze-description", async (req, res) => {
     try {
-      const { description, userId } = req.body;
-      
+      const { description, userId: bodyUserId } = req.body;
+      const sessionUser = req.user as any;
+      const userId: string | null = sessionUser?.id ?? (bodyUserId ? String(bodyUserId) : null);
+
       if (!description || description.trim().length < 5) {
         return res.status(400).json({ message: "Please provide a description of what you want to build." });
       }
 
-      if (userId) {
-        let user = await storage.getUser(String(userId));
+      if (userId && !sessionUser) {
+        let user = await storage.getUser(userId);
         if (!user) {
           try {
-            user = await storage.upsertUser({ id: String(userId), email: `user-${userId}@myhandyman.ai` });
+            await storage.upsertUser({ id: userId, email: `user-${userId}@myhandyman.ai` });
           } catch (e) {
             console.error("[users] Failed to auto-create user:", e);
           }
@@ -437,11 +426,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const analysis = await analyzeFromDescription(description.trim());
 
       if (userId) {
-        await storage.incrementUserBuilds(String(userId), analysis.difficulty);
+        await storage.incrementUserBuilds(userId, analysis.difficulty);
       }
 
       const projectData = {
-        userId: userId ? String(userId) : null,
+        userId,
         title: analysis.title,
         description: analysis.description,
         imageUrl: "text-input",
