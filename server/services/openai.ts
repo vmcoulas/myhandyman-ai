@@ -136,6 +136,59 @@ export async function analyzeFurnitureImage(base64Image: string): Promise<Furnit
   }
 }
 
+export async function analyzePhotoWithDescription(base64Image: string, userDescription: string): Promise<FurnitureAnalysis> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: `Analyze this photo of a home repair issue. The homeowner also provided this description: "${userDescription}". Use both the visual and the description to accurately identify the problem and create complete repair instructions.`
+            },
+            {
+              type: "image_url",
+              image_url: { url: `data:image/jpeg;base64,${base64Image}` }
+            }
+          ],
+        },
+      ],
+      response_format: { type: "json_object" },
+      max_completion_tokens: 4000,
+    });
+
+    const rawContent = response.choices[0].message.content || "{}";
+
+    let result: any;
+    try {
+      result = JSON.parse(rawContent);
+    } catch {
+      const jsonMatch = rawContent.match(/```(?:json)?\s*([\s\S]*?)```/);
+      if (jsonMatch) {
+        result = JSON.parse(jsonMatch[1].trim());
+      } else {
+        throw new Error("Failed to parse AI response");
+      }
+    }
+
+    if (result.result) result = result.result;
+    if (result.analysis) result = result.analysis;
+    if (result.project) result = result.project;
+
+    if (!result.title || !result.steps || !Array.isArray(result.steps)) {
+      throw new Error("Invalid response structure from OpenAI");
+    }
+
+    return result as FurnitureAnalysis;
+  } catch (error) {
+    console.error("OpenAI API error (photo+description):", error);
+    throw new Error("Failed to analyze image. Please try again with a clearer photo.");
+  }
+}
+
 export async function analyzeFromDescription(description: string): Promise<FurnitureAnalysis> {
   try {
     const response = await openai.chat.completions.create({

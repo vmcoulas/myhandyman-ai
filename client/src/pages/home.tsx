@@ -87,6 +87,8 @@ export default function Home() {
   const [result, setResult] = useState<ProjectWithInstructions | null>(null);
   const [pendingResult, setPendingResult] = useState<ProjectWithInstructions | null>(null);
   const [pendingImagePreview, setPendingImagePreview] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [photoDescription, setPhotoDescription] = useState('');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [inputMode, setInputMode] = useState<'photo' | 'text'>('photo');
   const [textDescription, setTextDescription] = useState('');
@@ -149,16 +151,19 @@ export default function Home() {
   useEffect(() => { getCurrentUser(); }, []);
 
   const analyzeMutation = useMutation({
-    mutationFn: async (file: File) => {
+    mutationFn: async ({ file, description }: { file: File; description?: string }) => {
       if (usageInfo && usageInfo.isLimitReached) throw new Error("Repair limit reached. Please upgrade to continue.");
       const formData = new FormData();
       formData.append('image', file);
       if (currentUser?.id) formData.append('userId', currentUser.id.toString());
+      if (description && description.trim().length > 0) formData.append('description', description.trim());
       const response = await apiRequest('POST', '/api/analyze-repair', formData);
       return response.json();
     },
     onSuccess: (data: ProjectWithInstructions) => {
       setPendingResult(data);
+      setSelectedFile(null);
+      setPhotoDescription('');
       refetchUsage();
     },
     onError: (error: Error) => {
@@ -190,10 +195,16 @@ export default function Home() {
   const handleImageSelected = (file: File) => {
     setResult(null);
     setPendingResult(null);
+    setPhotoDescription('');
     if (pendingImagePreview) URL.revokeObjectURL(pendingImagePreview);
     const previewUrl = URL.createObjectURL(file);
     setPendingImagePreview(previewUrl);
-    analyzeMutation.mutate(file);
+    setSelectedFile(file);
+  };
+
+  const handlePhotoSubmit = () => {
+    if (!selectedFile) return;
+    analyzeMutation.mutate({ file: selectedFile, description: photoDescription });
   };
 
   const handleConfirmDiagnosis = () => {
@@ -206,6 +217,8 @@ export default function Home() {
 
   const handleRejectDiagnosis = () => {
     setPendingResult(null);
+    setSelectedFile(null);
+    setPhotoDescription('');
     if (pendingImagePreview) {
       URL.revokeObjectURL(pendingImagePreview);
       setPendingImagePreview(null);
@@ -550,7 +563,7 @@ export default function Home() {
             <div className="flex justify-center mb-6">
               <div className="inline-flex rounded-xl bg-muted p-1 gap-1">
                 <button
-                  onClick={() => setInputMode('photo')}
+                  onClick={() => { setInputMode('photo'); setSelectedFile(null); setPhotoDescription(''); if (pendingImagePreview) { URL.revokeObjectURL(pendingImagePreview); setPendingImagePreview(null); } }}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     inputMode === 'photo' ? 'bg-white shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
                   }`}
@@ -571,7 +584,42 @@ export default function Home() {
             </div>
 
             {inputMode === 'photo' ? (
-              <PhotoUpload onImageSelected={handleImageSelected} isLoading={analyzeMutation.isPending} />
+              selectedFile && pendingImagePreview ? (
+                /* Staged photo view: preview + optional description + submit */
+                <div className="card-premium rounded-2xl p-5 sm:p-8 mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-display text-xl font-bold text-foreground">Photo ready</h3>
+                    <button
+                      onClick={() => { setSelectedFile(null); setPhotoDescription(''); URL.revokeObjectURL(pendingImagePreview); setPendingImagePreview(null); }}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      aria-label="Remove photo"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div className="rounded-xl overflow-hidden mb-4 bg-muted">
+                    <img src={pendingImagePreview} alt="Selected photo" className="w-full max-h-56 object-cover" />
+                  </div>
+                  <p className="text-muted-foreground text-sm mb-2">Add a description <span className="text-xs">(optional — helps the AI give a more accurate diagnosis)</span></p>
+                  <textarea
+                    value={photoDescription}
+                    onChange={(e) => setPhotoDescription(e.target.value)}
+                    placeholder="e.g., This faucet drips constantly after I close it. It's a two-handle model and the drip comes from the hot side."
+                    className="w-full h-24 rounded-xl border border-input bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
+                  />
+                  <div className="flex flex-wrap items-center justify-end gap-3 mt-4">
+                    <button
+                      onClick={handlePhotoSubmit}
+                      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 transition-all"
+                    >
+                      <Wrench className="w-4 h-4" />
+                      Analyze Photo
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <PhotoUpload onImageSelected={handleImageSelected} isLoading={analyzeMutation.isPending} />
+              )
             ) : (
               <div className="card-premium rounded-2xl p-5 sm:p-8 mb-8">
                 <h3 className="font-display text-xl font-bold text-foreground mb-2">What needs fixing?</h3>

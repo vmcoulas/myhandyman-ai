@@ -9,7 +9,7 @@ const PREMIUM_PRICE_ID = "price_1TGJwRC6GhDofzzOV1OXKMZg";
 
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { analyzeFurnitureImage, analyzeFromDescription } from "./services/openai";
+import { analyzeFurnitureImage, analyzePhotoWithDescription, analyzeFromDescription } from "./services/openai";
 import { insertProjectSchema, insertInstructionSchema, insertUserSchema, insertFeedbackSchema } from "@shared/schema";
 import multer from "multer";
 import sharp from "sharp";
@@ -250,8 +250,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Analyze with OpenAI
-      const analysis = await analyzeFurnitureImage(base64Image);
+      // Analyze with OpenAI — use combined function if user provided a description
+      const { description: userDescription } = req.body;
+      const analysis = userDescription && userDescription.trim().length > 0
+        ? await analyzePhotoWithDescription(base64Image, userDescription.trim())
+        : await analyzeFurnitureImage(base64Image);
 
       // Check build limits based on actual difficulty
       if (userId) {
