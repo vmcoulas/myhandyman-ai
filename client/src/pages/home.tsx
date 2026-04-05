@@ -188,7 +188,19 @@ export default function Home() {
       toast({ title: "Repair Plan Ready!", description: "Your instructions are ready." });
     },
     onError: (error: Error) => {
-      toast({ title: "Generation Failed", description: error.message || "Please try again with more detail.", variant: "destructive" });
+      // The error message may look like "422: {"message":"...","fallback":true}"
+      // Parse out just the human-readable message if possible.
+      let displayMessage = error.message || "Please try again with more detail.";
+      try {
+        const jsonStart = displayMessage.indexOf('{');
+        if (jsonStart !== -1) {
+          const parsed = JSON.parse(displayMessage.slice(jsonStart));
+          if (parsed?.message) displayMessage = parsed.message;
+        }
+      } catch {
+        // keep displayMessage as-is
+      }
+      toast({ title: "Couldn't Generate Plan", description: displayMessage, variant: "destructive" });
     },
   });
 

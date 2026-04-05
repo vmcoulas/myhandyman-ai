@@ -32,7 +32,7 @@ export interface FurnitureAnalysis {
   }[];
 }
 
-const SYSTEM_PROMPT = `You are a world-class licensed handyman and home repair instructor teaching a COMPLETE BEGINNER homeowner who has never done repairs before. Analyze photos of home repair problems and create hyper-detailed step-by-step instructions to diagnose and fix them.
+const SYSTEM_PROMPT = `You are a world-class licensed handyman and home repair instructor teaching a COMPLETE BEGINNER homeowner who has never done repairs before. Analyze home repair problems (from photos or descriptions) and create hyper-detailed step-by-step instructions to diagnose and fix them.
 
 CRITICAL RULES FOR INSTRUCTIONS:
 - Every step must include EXACT specifications (pipe sizes, screw types, paint coverage, etc.)
@@ -190,45 +190,72 @@ export async function analyzePhotoWithDescription(base64Image: string, userDescr
 }
 
 export async function analyzeFromDescription(description: string): Promise<FurnitureAnalysis> {
-  try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        {
-          role: "user",
-          content: `I need to fix this home repair issue: ${description}. Create complete repair instructions with accurate parts, tools, costs, and detailed step-by-step instructions.`
-        },
-      ],
-      response_format: { type: "json_object" },
-      max_completion_tokens: 4000,
-    });
+  let lastError: unknown;
 
-    const rawContent = response.choices[0].message.content || "{}";
-    
-    let result: any;
+  for (let attempt = 1; attempt <= 2; attempt++) {
     try {
-      result = JSON.parse(rawContent);
-    } catch {
-      const jsonMatch = rawContent.match(/```(?:json)?\s*([\s\S]*?)```/);
-      if (jsonMatch) {
-        result = JSON.parse(jsonMatch[1].trim());
-      } else {
-        throw new Error("Failed to parse AI response");
+      console.log(`[openai] analyzeFromDescription attempt ${attempt}, input length: ${description.length}`);
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          {
+            role: "user",
+            content: `A homeowner described this repair issue: "${description}"\n\nCreate complete, beginner-friendly home repair instructions. Identify the most likely problem(s), provide accurate parts, tools, costs, and detailed step-by-step instructions to diagnose and fix it.`
+          },
+        ],
+        response_format: { type: "json_object" },
+        max_completion_tokens: 4000,
+      });
+
+      const rawContent = response.choices[0].message.content || "{}";
+      console.log(`[openai] analyzeFromDescription response length: ${rawContent.length}`);
+
+      let result: any;
+      try {
+        result = JSON.parse(rawContent);
+      } catch {
+        const jsonMatch = rawContent.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (jsonMatch) {
+          result = JSON.parse(jsonMatch[1].trim());
+        } else {
+          throw new Error(`Failed to parse AI response as JSON (length: ${rawContent.length})`);
+        }
+      }
+
+      // Unwrap common nesting patterns
+      if (result.result) result = result.result;
+      if (result.analysis) result = result.analysis;
+      if (result.project) result = result.project;
+
+      // Validate required fields
+      if (!result.title || !result.steps || !Array.isArray(result.steps) || result.steps.length === 0) {
+        console.error("[openai] Invalid response structure. Keys present:", Object.keys(result));
+        throw new Error("AI returned an incomplete response — missing title or steps");
+      }
+
+      // Coerce missing optional fields to safe defaults so downstream parsing doesn't crash
+      result.estimatedCost = typeof result.estimatedCost === "number" ? result.estimatedCost : 0;
+      result.estimatedTime = typeof result.estimatedTime === "number" ? result.estimatedTime : 60;
+      result.difficulty = ["easy", "medium", "hard"].includes(result.difficulty) ? result.difficulty : "medium";
+      result.confidence = ["high", "medium", "low"].includes(result.confidence) ? result.confidence : "medium";
+      result.materials = Array.isArray(result.materials) ? result.materials : [];
+      result.tools = Array.isArray(result.tools) ? result.tools : [];
+      result.safetyNotes = result.safetyNotes || "Always turn off utilities before starting repairs. Wear appropriate PPE.";
+      result.category = result.category || "other";
+
+      return result as FurnitureAnalysis;
+    } catch (error) {
+      lastError = error;
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`[openai] analyzeFromDescription attempt ${attempt} failed: ${message}`, error);
+      if (attempt < 2) {
+        console.log("[openai] Retrying analyzeFromDescription...");
       }
     }
-    
-    if (result.result) result = result.result;
-    if (result.analysis) result = result.analysis;
-    if (result.project) result = result.project;
-    
-    if (!result.title || !result.steps || !Array.isArray(result.steps)) {
-      throw new Error("Invalid response structure");
-    }
-
-    return result as FurnitureAnalysis;
-  } catch (error) {
-    console.error("OpenAI text analysis error:", error);
-    throw new Error("Failed to generate repair plan. Please try again with more detail.");
   }
+
+  const causeMessage = lastError instanceof Error ? lastError.message : String(lastError);
+  throw new Error(`Failed to generate repair plan: ${causeMessage}`);
 }

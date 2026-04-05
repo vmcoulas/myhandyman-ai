@@ -307,7 +307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             description: step.description,
             imageUrl: null,
             safetyWarning: step.safetyWarning || null,
-            adultSupervisionRequired: step.adultSupervision,
+            adultSupervision: step.adultSupervision || false,
           };
           const validatedInstruction = insertInstructionSchema.parse(instructionData);
           return storage.createInstruction(validatedInstruction);
@@ -421,10 +421,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/analyze-description", async (req, res) => {
     try {
       const { description, userId } = req.body;
-      
-      if (!description || description.trim().length < 5) {
-        return res.status(400).json({ message: "Please provide a description of what you want to build." });
+
+      if (!description || typeof description !== "string" || description.trim().length < 5) {
+        return res.status(400).json({ message: "Please provide a description of your repair issue (at least 5 characters)." });
       }
+
+      const trimmedDescription = description.trim();
+      console.log(`[analyze-description] Request received. userId=${userId || "anonymous"}, description length=${trimmedDescription.length}`);
 
       if (userId) {
         let user = await storage.getUser(String(userId));
@@ -437,7 +440,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      const analysis = await analyzeFromDescription(description.trim());
+      let analysis;
+      try {
+        analysis = await analyzeFromDescription(trimmedDescription);
+        console.log(`[analyze-description] AI analysis succeeded. title="${analysis.title}", steps=${analysis.steps.length}`);
+      } catch (aiError: any) {
+        console.error("[analyze-description] AI generation failed:", aiError?.message, aiError?.stack);
+        // Return a user-friendly error — not a raw 500 — so the UI can show a helpful message
+        return res.status(422).json({
+          message: "We couldn't generate a repair plan for this input. Please try rephrasing your description with more specific details about the problem (e.g., where it is, what you see or hear, how long it's been happening).",
+          fallback: true,
+        });
+      }
 
       if (userId) {
         await storage.incrementUserBuilds(String(userId), analysis.difficulty);
@@ -446,19 +460,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const projectData = {
         userId: userId ? String(userId) : null,
         title: analysis.title,
-        description: analysis.description,
+        description: analysis.description || null,
         imageUrl: "text-input",
-        category: analysis.category,
-        difficulty: analysis.difficulty,
-        estimatedTime: analysis.estimatedTime,
+        category: analysis.category || "other",
+        difficulty: analysis.difficulty || "medium",
+        estimatedTime: analysis.estimatedTime || 60,
         activeTime: (analysis as any).activeTime || null,
-        estimatedCost: analysis.estimatedCost.toString(),
-        materials: analysis.materials,
-        tools: analysis.tools,
-        safetyNotes: analysis.safetyNotes,
+        estimatedCost: (analysis.estimatedCost ?? 0).toString(),
+        materials: analysis.materials || [],
+        tools: analysis.tools || [],
+        safetyNotes: analysis.safetyNotes || null,
         safetyLevel: (analysis as any).safetyLevel || "DIY-friendly",
         safetyWarningProject: (analysis as any).safetyWarning || null,
-        confidence: analysis.confidence || "high",
+        confidence: analysis.confidence || "medium",
         confidenceReason: analysis.confidenceReason || null,
       };
 
@@ -485,8 +499,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         analysis,
       });
     } catch (error: any) {
-      console.error("Error analyzing description:", error);
-      res.status(500).json({ message: error.message || "Failed to generate build plan." });
+      console.error("[analyze-description] Unexpected error:", error?.message, error?.stack);
+      res.status(500).json({ message: "An unexpected error occurred. Please try again." });
     }
   });
 

@@ -60,7 +60,7 @@ export class MemStorage implements IStorage {
         title: "Prepare Your Workspace",
         description: "Set up a clean, well-ventilated workspace. Lay out all cedar wood pieces and organize your tools. Have an adult check that all materials are present and in good condition.",
         safetyWarning: "Always work in a well-ventilated area when using wood stain",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 2,
@@ -69,7 +69,7 @@ export class MemStorage implements IStorage {
         title: "Sand the Cedar Wood",
         description: "Lightly sand all cedar pieces with fine-grit sandpaper to smooth any rough edges. This helps the stain absorb evenly and prevents splinters.",
         safetyWarning: "Wear safety glasses and dust mask while sanding",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 3,
@@ -78,7 +78,7 @@ export class MemStorage implements IStorage {
         title: "Measure and Mark",
         description: "Using your measuring tape, mark where the shelves will be attached to the side panels. Make light pencil marks that can be erased later.",
         safetyWarning: null,
-        adultSupervisionRequired: false
+        adultSupervision: false
       },
       {
         id: 4,
@@ -87,7 +87,7 @@ export class MemStorage implements IStorage {
         title: "Pre-drill Holes",
         description: "Have an adult pre-drill pilot holes at your marked locations. This prevents the wood from splitting when screws are inserted.",
         safetyWarning: "Always wear safety glasses when drilling",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 5,
@@ -96,7 +96,7 @@ export class MemStorage implements IStorage {
         title: "Assemble the Frame",
         description: "Connect the side panels to the back panel first, then attach the shelves at your marked locations. Work slowly and check that everything is square.",
         safetyWarning: "Handle screws carefully to avoid cuts",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 6,
@@ -105,7 +105,7 @@ export class MemStorage implements IStorage {
         title: "Apply Wood Stain",
         description: "Using a brush or cloth, apply wood stain in long, even strokes following the wood grain. Work on one section at a time for best results.",
         safetyWarning: "Use proper ventilation and wear gloves when applying stain",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 7,
@@ -114,7 +114,7 @@ export class MemStorage implements IStorage {
         title: "Final Inspection",
         description: "Once dry, inspect your plant stand for stability and finish quality. Add decorative plants and enjoy your beautiful creation together!",
         safetyWarning: null,
-        adultSupervisionRequired: false
+        adultSupervision: false
       }
     ];
 
@@ -127,7 +127,7 @@ export class MemStorage implements IStorage {
         title: "Organize Materials",
         description: "Arrange all wood planks, screws, and tools on your workspace. Check that all pieces match the materials list.",
         safetyWarning: null,
-        adultSupervisionRequired: false
+        adultSupervision: false
       },
       {
         id: 9,
@@ -136,7 +136,7 @@ export class MemStorage implements IStorage {
         title: "Sand All Pieces",
         description: "Smooth all wood surfaces with sandpaper to prevent splinters. Take turns with your building partner to make the work fun!",
         safetyWarning: "Wear dust masks and work in ventilated area",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 10,
@@ -145,7 +145,7 @@ export class MemStorage implements IStorage {
         title: "Mark Connection Points",
         description: "Use a pencil to mark where the legs will connect to the seat. Measure carefully to ensure the stool will be stable.",
         safetyWarning: null,
-        adultSupervisionRequired: false
+        adultSupervision: false
       },
       {
         id: 11,
@@ -154,7 +154,7 @@ export class MemStorage implements IStorage {
         title: "Pre-drill Holes",
         description: "Have an adult pre-drill holes at marked locations. This prevents wood from cracking when screws are inserted.",
         safetyWarning: "Always wear safety glasses when drilling",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 12,
@@ -163,7 +163,7 @@ export class MemStorage implements IStorage {
         title: "Attach the Legs",
         description: "Apply wood glue to joints, then secure legs to the seat with screws. Work on opposite corners for stability.",
         safetyWarning: "Handle wood glue carefully and ensure good ventilation",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 13,
@@ -172,7 +172,7 @@ export class MemStorage implements IStorage {
         title: "Test Your Stool",
         description: "Let the glue dry completely, then test for leaks carefully. Congratulations on completing your first plumbing repair!",
         safetyWarning: null,
-        adultSupervisionRequired: false
+        adultSupervision: false
       }
     ];
 
@@ -185,7 +185,7 @@ export class MemStorage implements IStorage {
         title: "Plan Your Design",
         description: "Look at the design together and discuss what needs fixing first. This makes the project a good learning experience!",
         safetyWarning: null,
-        adultSupervisionRequired: false
+        adultSupervision: false
       },
       {
         id: 15,
@@ -194,7 +194,7 @@ export class MemStorage implements IStorage {
         title: "Cut Plywood Pieces",
         description: "Have an adult cut all plywood pieces to size. Sand the cut edges smooth to prevent splinters during assembly.",
         safetyWarning: "All power tool use requires adult operation only",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 16,
@@ -203,7 +203,7 @@ export class MemStorage implements IStorage {
         title: "Create the Base",
         description: "Join the bottom panel with the side panels. Use wood glue at joints and secure with screws for extra strength.",
         safetyWarning: "Handle wood glue carefully and have good ventilation",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 17,
@@ -212,7 +212,7 @@ export class MemStorage implements IStorage {
         title: "Add the Back Panel",
         description: "Attach the back panel to complete the box structure. Check that all corners are square using a carpenter's square.",
         safetyWarning: null,
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 18,
@@ -221,7 +221,7 @@ export class MemStorage implements IStorage {
         title: "Install Lid Hinges",
         description: "Mark hinge positions on both the lid and the back edge of the chest. Install hinges with screws, ensuring smooth operation.",
         safetyWarning: "Small screws can be sharp - handle with care",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 19,
@@ -230,7 +230,7 @@ export class MemStorage implements IStorage {
         title: "Sand and Finish",
         description: "Sand all surfaces smooth, then apply your chosen finish. Let your child help with light sanding using fine-grit paper.",
         safetyWarning: "Always sand in the direction of the wood grain",
-        adultSupervisionRequired: true
+        adultSupervision: true
       },
       {
         id: 20,
@@ -239,7 +239,7 @@ export class MemStorage implements IStorage {
         title: "Final Assembly",
         description: "Test the repair, check for leaks, and clean up your workspace. Test everything works and celebrate your fix!",
         safetyWarning: null,
-        adultSupervisionRequired: false
+        adultSupervision: false
       }
     ];
 
