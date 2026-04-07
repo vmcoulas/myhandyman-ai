@@ -15,6 +15,13 @@ import { Stepper } from "@/components/ui/stepper";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { ProjectWithInstructions, UsageInfo, User, Project } from "@/lib/types";
+import {
+  trackPhotoUpload,
+  trackRepairPlanGenerated,
+  trackPremiumUpgradeClick,
+  trackPremiumPurchaseComplete,
+  trackLeadCapture,
+} from "@/lib/analytics";
 
 
 const COMMON_REPAIRS = [
@@ -139,6 +146,19 @@ export default function Home() {
 
   useEffect(() => { getCurrentUser(); }, []);
 
+  // Detect Stripe checkout success redirect (?premium=success)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("premium") === "success") {
+      trackPremiumPurchaseComplete();
+      // Clean up URL so event doesn't re-fire on refresh
+      params.delete("premium");
+      const clean = params.toString();
+      window.history.replaceState({}, "", window.location.pathname + (clean ? `?${clean}` : ""));
+      toast({ title: "Welcome to Premium!", description: "You now have unlimited AI diagnoses." });
+    }
+  }, []);
+
   const analyzeMutation = useMutation({
     mutationFn: async (file: File) => {
       if (usageInfo && usageInfo.isLimitReached) throw new Error("Repair limit reached. Please upgrade to continue.");
@@ -151,6 +171,10 @@ export default function Home() {
     onSuccess: (data: ProjectWithInstructions) => {
       setPendingResult(data);
       refetchUsage();
+      trackRepairPlanGenerated({
+        projectTitle: data.project?.title,
+        confidence: data.project?.confidence,
+      });
     },
     onError: (error: Error) => {
       setPendingImagePreview(prev => { if (prev) URL.revokeObjectURL(prev); return null; });
@@ -171,6 +195,10 @@ export default function Home() {
       setResult(data);
       setTextDescription('');
       refetchUsage();
+      trackRepairPlanGenerated({
+        projectTitle: data.project?.title,
+        confidence: data.project?.confidence,
+      });
       toast({ title: "Repair Plan Ready!", description: "Your instructions are ready." });
     },
     onError: (error: Error) => {
@@ -184,6 +212,7 @@ export default function Home() {
     if (pendingImagePreview) URL.revokeObjectURL(pendingImagePreview);
     const previewUrl = URL.createObjectURL(file);
     setPendingImagePreview(previewUrl);
+    trackPhotoUpload({ method: "photo" });
     analyzeMutation.mutate(file);
   };
 
@@ -204,7 +233,13 @@ export default function Home() {
     toast({ title: "No problem", description: "Try uploading again or describe the issue in your own words." });
   };
 
-  const handleTextSubmit = () => { if (textDescription.trim().length >= 5) { setResult(null); textMutation.mutate(textDescription); } };
+  const handleTextSubmit = () => {
+    if (textDescription.trim().length >= 5) {
+      setResult(null);
+      trackPhotoUpload({ method: "text" });
+      textMutation.mutate(textDescription);
+    }
+  };
 
   const handleLeadCapture = async () => {
     const email = leadEmail.trim();
@@ -226,6 +261,7 @@ export default function Home() {
       }
 
       setLeadEmail('');
+      trackLeadCapture();
       toast({ title: 'You are on the list', description: 'We saved your email for repair tips and product updates.' });
     } catch {
       toast({ title: 'Could not save email', description: 'Please try again in a moment.', variant: 'destructive' });
@@ -235,6 +271,7 @@ export default function Home() {
   };
 
   const handleUpgrade = async () => {
+    trackPremiumUpgradeClick();
     try {
       const res = await fetch("/api/stripe/create-checkout", {
         method: "POST",
@@ -260,6 +297,7 @@ export default function Home() {
     setResult(null);
     setPendingResult(null);
     setInputMode('text');
+    trackPhotoUpload({ method: "quick_repair" });
     textMutation.mutate(description);
   };
 
