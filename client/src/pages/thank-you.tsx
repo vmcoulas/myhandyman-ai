@@ -2,23 +2,12 @@ import { useEffect } from "react";
 import { Link } from "wouter";
 import { CheckCircle, Crown, Camera, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { trackPurchaseComplete } from "@/lib/analytics";
 
 export default function ThankYou() {
   useEffect(() => {
     document.title = "Welcome to Premium — MyHandyman.ai";
-
-    // Fire Meta Pixel purchase event if available
-    if (typeof window !== "undefined" && (window as any).fbq) {
-      (window as any).fbq("track", "Purchase", { currency: "USD", value: 9.99 });
-    }
-
-    // Fire Google Analytics conversion event if available
-    if (typeof window !== "undefined" && (window as any).gtag) {
-      (window as any).gtag("event", "purchase", {
-        event_category: "ecommerce",
-        event_label: "premium_subscription",
-      });
-    }
+    trackPurchaseComplete(4.99);
   }, []);
 
   return (

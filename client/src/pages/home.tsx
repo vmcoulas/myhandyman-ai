@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Stepper } from "@/components/ui/stepper";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { trackPhotoUpload, trackRepairPlanGenerated, trackPremiumUpgradeClick, trackEmailCapture } from "@/lib/analytics";
 import type { ProjectWithInstructions, UsageInfo, User, Project } from "@/lib/types";
 
 
@@ -165,6 +166,7 @@ export default function Home() {
       setSelectedFile(null);
       setPhotoDescription('');
       refetchUsage();
+      trackRepairPlanGenerated(data.project?.title || 'photo_diagnosis');
     },
     onError: (error: Error) => {
       setPendingImagePreview(prev => { if (prev) URL.revokeObjectURL(prev); return null; });
@@ -185,6 +187,7 @@ export default function Home() {
       setResult(data);
       setTextDescription('');
       refetchUsage();
+      trackRepairPlanGenerated(data.project?.title || 'text_diagnosis');
       toast({ title: "Repair Plan Ready!", description: "Your instructions are ready." });
     },
     onError: (error: Error) => {
@@ -216,6 +219,7 @@ export default function Home() {
 
   const handlePhotoSubmit = () => {
     if (!selectedFile) return;
+    trackPhotoUpload('photo');
     analyzeMutation.mutate({ file: selectedFile, description: photoDescription });
   };
 
@@ -238,7 +242,7 @@ export default function Home() {
     toast({ title: "No problem", description: "Try uploading again or describe the issue in your own words." });
   };
 
-  const handleTextSubmit = () => { if (textDescription.trim().length >= 5) { setResult(null); textMutation.mutate(textDescription); } };
+  const handleTextSubmit = () => { if (textDescription.trim().length >= 5) { setResult(null); trackPhotoUpload('text'); textMutation.mutate(textDescription); } };
 
   const handleLeadCapture = async () => {
     const email = leadEmail.trim();
@@ -260,6 +264,7 @@ export default function Home() {
       }
 
       setLeadEmail('');
+      trackEmailCapture();
       toast({ title: 'You are on the list', description: 'We saved your email for repair tips and product updates.' });
     } catch {
       toast({ title: 'Could not save email', description: 'Please try again in a moment.', variant: 'destructive' });
@@ -269,6 +274,7 @@ export default function Home() {
   };
 
   const handleUpgrade = async () => {
+    trackPremiumUpgradeClick();
     try {
       const res = await fetch("/api/stripe/create-checkout", {
         method: "POST",
@@ -294,6 +300,7 @@ export default function Home() {
     setResult(null);
     setPendingResult(null);
     setInputMode('text');
+    trackPhotoUpload('text');
     textMutation.mutate(description);
   };
 
