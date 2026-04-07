@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { getRepairBySlug, getAmazonLink, REPAIRS, type RepairGuide } from "@/content/repairs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, DollarSign, ShoppingCart, ExternalLink, AlertTriangle, Shield, ArrowLeft, Camera, ChevronRight, Wrench, Droplets, PaintBucket, Fan, Tv, Lightbulb, Cog, Thermometer, Bell, Paintbrush, RotateCcw, Flame, DoorOpen, Armchair, ShowerHead, Pipette } from "lucide-react";
+import { Clock, DollarSign, ShoppingCart, ExternalLink, AlertTriangle, Shield, ArrowLeft, Camera, ChevronRight, Wrench, Droplets, PaintBucket, Fan, Tv, Lightbulb, Cog, Thermometer, Bell, Paintbrush, RotateCcw, Flame, DoorOpen, Armchair, ShowerHead, Pipette, HelpCircle } from "lucide-react";
 import { GuideFeedback } from "@/components/guide-feedback";
 
 /** Upsert a <meta> tag by property or name attribute */
@@ -27,6 +27,64 @@ function resetMetaTag(attr: "property" | "name", key: string, defaultValue?: str
       el.remove();
     }
   }
+}
+
+/**
+ * Auto-generate 5 universal FAQs per guide from existing repair fields.
+ * Keeps content in sync with the source of truth (repairs.ts) and avoids
+ * hand-authoring FAQs for every guide. The same Q&A is rendered visibly
+ * on the page so the FAQPage schema is legitimate per Google guidelines.
+ */
+function buildFaqs(repair: RepairGuide): { question: string; answer: string }[] {
+  const titleLower = repair.title.toLowerCase();
+  const topTools = repair.toolsNeeded.slice(0, 4).join(", ");
+  const remainingTools = repair.toolsNeeded.length > 4
+    ? ` Additional tools: ${repair.toolsNeeded.slice(4).join(", ")}.`
+    : "";
+  const proCallout =
+    repair.safetyLevel === "Professional required"
+      ? `This repair is rated "Professional required" — we recommend hiring a licensed pro. ${repair.whenToCallPro}`
+      : repair.difficulty === "Easy"
+      ? `Yes — most homeowners can handle this themselves. It's rated ${repair.difficulty} difficulty and ${repair.safetyLevel}. ${repair.whenToCallPro}`
+      : `It depends on your comfort level. This repair is rated ${repair.difficulty} difficulty and ${repair.safetyLevel}. ${repair.whenToCallPro}`;
+
+  return [
+    {
+      question: `How long does it take to ${titleLower}?`,
+      answer: `Plan on about ${repair.totalTime} minutes total, with roughly ${repair.activeTime} minutes of hands-on work. The rest is wait time (drying, settling, or testing).`,
+    },
+    {
+      question: `How much does it cost to ${titleLower}?`,
+      answer: `Most DIY fixes land around ${repair.estimatedCost} for parts and materials, assuming you already own the basic tools. Hiring a pro for the same job typically runs 4–10x that price depending on your area.`,
+    },
+    {
+      question: `Should I DIY this or call a pro?`,
+      answer: proCallout,
+    },
+    {
+      question: `What tools do I need to ${titleLower}?`,
+      answer: `You'll need: ${topTools}.${remainingTools} A complete tool list with Amazon links is in the "What You Need" section above.`,
+    },
+    {
+      question: `Is it safe to ${titleLower} myself?`,
+      answer: `This repair is rated "${repair.safetyLevel}". Follow each step's safety warnings — especially anything involving water shutoffs, electrical, or gas. ${repair.whenToCallPro}`,
+    },
+  ];
+}
+
+function buildFAQSchema(repair: RepairGuide) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": buildFaqs(repair).map((f) => ({
+      "@type": "Question",
+      "name": f.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": f.answer,
+      },
+    })),
+  };
 }
 
 function buildHowToSchema(repair: RepairGuide) {
@@ -125,6 +183,15 @@ export default function RepairDetail() {
       script.text = JSON.stringify(buildHowToSchema(repair));
       document.head.appendChild(script);
 
+      // FAQ JSON-LD structured data
+      const existingFaq = document.getElementById("faq-jsonld");
+      if (existingFaq) existingFaq.remove();
+      const faqScript = document.createElement("script");
+      faqScript.id = "faq-jsonld";
+      faqScript.type = "application/ld+json";
+      faqScript.text = JSON.stringify(buildFAQSchema(repair));
+      document.head.appendChild(faqScript);
+
       return () => {
         // Reset OG tags to homepage defaults
         const defaultTitle = "MyHandyman AI — Snap a Photo. Know What's Wrong.";
@@ -138,6 +205,7 @@ export default function RepairDetail() {
         resetMetaTag("name", "twitter:description", "Upload a photo, get the fix, and know whether to DIY or call a pro.");
 
         document.getElementById("howto-jsonld")?.remove();
+        document.getElementById("faq-jsonld")?.remove();
         const canon = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
         if (canon) canon.href = "https://myhandyman.ai/";
       };
@@ -303,6 +371,27 @@ export default function RepairDetail() {
       <div className="mt-8 mb-8">
         <GuideFeedback />
       </div>
+
+      {/* FAQ — visible Q&A that mirrors the FAQPage JSON-LD above */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold text-[#1F4E79] mb-4 flex items-center gap-2">
+          <HelpCircle className="size-5" /> Frequently Asked Questions
+        </h2>
+        <div className="space-y-3">
+          {buildFaqs(repair).map((faq, i) => (
+            <details
+              key={i}
+              className="group rounded-xl border p-4 open:bg-muted/30 transition-colors"
+            >
+              <summary className="cursor-pointer list-none flex items-start justify-between gap-3">
+                <h3 className="text-sm font-semibold text-[#1F4E79]">{faq.question}</h3>
+                <ChevronRight className="size-4 text-muted-foreground shrink-0 mt-0.5 transition-transform group-open:rotate-90" />
+              </summary>
+              <p className="text-sm text-muted-foreground leading-relaxed mt-3">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
 
       {/* Related Repairs */}
       {related.length > 0 && (
