@@ -534,11 +534,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     let event: Stripe.Event;
 
     try {
-      // In production, verify with webhook secret
-      event = JSON.parse(req.body.toString()) as Stripe.Event;
+      const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+      if (webhookSecret && sig) {
+        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+      } else {
+        // Fallback for dev/testing without webhook secret
+        console.warn("[stripe] No STRIPE_WEBHOOK_SECRET set — skipping signature verification");
+        event = JSON.parse(req.body.toString()) as Stripe.Event;
+      }
     } catch (error) {
-      console.error("Webhook parse error:", error);
-      return res.status(400).send("Webhook Error");
+      console.error("Webhook signature verification failed:", error);
+      return res.status(400).send("Webhook signature verification failed");
     }
 
     if (event.type === "checkout.session.completed") {

@@ -7,7 +7,7 @@ import { trackPurchaseComplete } from "@/lib/analytics";
 export default function ThankYou() {
   useEffect(() => {
     document.title = "Welcome to Premium — MyHandyman.ai";
-    trackPurchaseComplete(4.99);
+    trackPurchaseComplete(9.99);
   }, []);
 
   return (

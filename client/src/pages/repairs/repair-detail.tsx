@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { getRepairBySlug, getAmazonLink, REPAIRS, type RepairGuide } from "@/content/repairs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, DollarSign, ShoppingCart, ExternalLink, AlertTriangle, Shield, ArrowLeft, Camera, ChevronRight, Wrench, Droplets, PaintBucket, Fan, Tv, Lightbulb, Cog, Thermometer, Bell, Paintbrush, RotateCcw } from "lucide-react";
+import { Clock, DollarSign, ShoppingCart, ExternalLink, AlertTriangle, Shield, ArrowLeft, Camera, ChevronRight, Wrench, Droplets, PaintBucket, Fan, Tv, Lightbulb, Cog, Thermometer, Bell, Paintbrush, RotateCcw, Flame, DoorOpen, Armchair, ShowerHead, Pipette } from "lucide-react";
 import { GuideFeedback } from "@/components/guide-feedback";
 
 /** Upsert a <meta> tag by property or name attribute */
@@ -68,6 +68,16 @@ const REPAIR_ICONS: Record<string, React.ElementType> = {
   "fix-doorbell": Bell,
   "paint-room": Paintbrush,
   "replace-toilet-flapper": RotateCcw,
+  "fix-garbage-disposal-humming": Cog,
+  "stop-toilet-running-after-flush": Droplets,
+  "fix-dripping-kitchen-faucet": Droplets,
+  "patch-large-hole-drywall": PaintBucket,
+  "fix-water-heater-no-hot-water": Flame,
+  "fix-clogged-toilet": Wrench,
+  "fix-leaky-pipe-under-sink": Pipette,
+  "fix-sticking-door": DoorOpen,
+  "replace-toilet-seat": Armchair,
+  "replace-bathroom-faucet": Droplets,
 };
 
 export default function RepairDetail() {
