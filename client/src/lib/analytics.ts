@@ -99,11 +99,11 @@ export function trackPremiumUpgradeClick() {
   meta('InitiateCheckout', {
     content_name: 'premium_subscription',
     currency: 'USD',
-    value: 4.99,
+    value: 9.99,
   });
   tiktok('InitiateCheckout', {
     content_type: 'premium_subscription',
-    value: 4.99,
+    value: 9.99,
     currency: 'USD',
   });
 }
@@ -112,7 +112,7 @@ export function trackPremiumUpgradeClick() {
  * Stripe checkout completed — user is now premium.
  * Fires on the thank-you page.
  */
-export function trackPurchaseComplete(value: number = 4.99) {
+export function trackPurchaseComplete(value: number = 9.99) {
   ga4('purchase', {
     event_category: 'ecommerce',
     event_label: 'premium_subscription',

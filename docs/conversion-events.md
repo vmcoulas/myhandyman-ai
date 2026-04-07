@@ -24,15 +24,15 @@ All funnel events fire on **GA4**, **Meta Pixel**, and **TikTok Pixel** simultan
 - **Trigger:** User clicks any "Upgrade" button to start Stripe checkout
 - **File:** `client/src/pages/home.tsx` — `handleUpgrade()`
 - **GA4:** `premium_upgrade_click` (event_category: ecommerce)
-- **Meta:** `InitiateCheckout` (currency: USD, value: 4.99)
-- **TikTok:** `InitiateCheckout` (currency: USD, value: 4.99)
+- **Meta:** `InitiateCheckout` (currency: USD, value: 9.99)
+- **TikTok:** `InitiateCheckout` (currency: USD, value: 9.99)
 
 ### 4. Purchase Complete
 - **Trigger:** Stripe checkout success — user lands on thank-you page
 - **File:** `client/src/pages/thank-you.tsx` — `useEffect` on mount
-- **GA4:** `purchase` (currency: USD, value: 4.99, transaction_id)
-- **Meta:** `Purchase` (currency: USD, value: 4.99)
-- **TikTok:** `CompletePayment` (currency: USD, value: 4.99)
+- **GA4:** `purchase` (currency: USD, value: 9.99, transaction_id)
+- **Meta:** `Purchase` (currency: USD, value: 9.99)
+- **TikTok:** `CompletePayment` (currency: USD, value: 9.99)
 
 ### 5. Email Capture (bonus)
 - **Trigger:** User submits email in the newsletter signup
