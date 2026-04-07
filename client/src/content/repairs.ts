@@ -65,7 +65,7 @@ export const REPAIRS: RepairGuide[] = [
       },
     ],
     whenToCallPro: "Call a plumber if the toilet is cracked, leaking from the base (wax ring issue), if you see water damage on the ceiling below a second-floor bathroom, or if the shut-off valve is stuck or leaking when you try to turn it.",
-    relatedRepairs: ["replace-toilet-flapper", "unclog-drain", "fix-leaky-faucet"],
+    relatedRepairs: ["replace-toilet-flapper", "unclog-drain", "replace-toilet-seat"],
   },
   {
     slug: "unclog-drain",
@@ -155,7 +155,7 @@ export const REPAIRS: RepairGuide[] = [
       },
     ],
     whenToCallPro: "Call a plumber if the faucet body itself is corroded or cracked, if the shut-off valves under the sink don't fully stop the water, if you see water damage in the cabinet below, or if the faucet is very old and replacement parts aren't available.",
-    relatedRepairs: ["unclog-drain", "replace-shower-head", "fix-running-toilet"],
+    relatedRepairs: ["unclog-drain", "fix-leaky-pipe-under-sink", "fix-running-toilet"],
   },
   {
     slug: "patch-drywall-hole",
@@ -199,7 +199,7 @@ export const REPAIRS: RepairGuide[] = [
       },
     ],
     whenToCallPro: "Call a professional if the hole is larger than 12 inches, if there's water damage or mold behind the wall, if the damage extends to multiple areas, or if the wall is plaster (not drywall) — plaster repair requires different techniques.",
-    relatedRepairs: ["paint-room", "fix-squeaky-door", "mount-tv-on-wall"],
+    relatedRepairs: ["paint-room", "patch-large-hole-drywall", "mount-tv-on-wall"],
   },
   {
     slug: "install-ceiling-fan",
@@ -366,7 +366,7 @@ export const REPAIRS: RepairGuide[] = [
       },
     ],
     whenToCallPro: "A squeaky door almost never needs a professional. However, if the door frame is visibly out of square, if the door won't latch because it's shifted significantly, or if there are cracks in the wall near the door frame, that could indicate foundation settling — which does need professional assessment.",
-    relatedRepairs: ["patch-drywall-hole", "fix-leaky-faucet", "paint-room"],
+    relatedRepairs: ["patch-drywall-hole", "fix-sticking-door", "paint-room"],
   },
   {
     slug: "replace-shower-head",
@@ -479,7 +479,7 @@ export const REPAIRS: RepairGuide[] = [
       },
     ],
     whenToCallPro: "Call a plumber if the disposal is leaking from the bottom (internal seal failure — replacement needed), if it's hardwired (not plugged in) and the electrical connection needs work, if you need a full replacement and aren't comfortable with the plumbing connections, or if there's a persistent foul odor that doesn't go away with cleaning.",
-    relatedRepairs: ["unclog-drain", "fix-leaky-faucet", "replace-shower-head"],
+    relatedRepairs: ["unclog-drain", "fix-leaky-faucet", "fix-garbage-disposal-humming"],
   },
   {
     slug: "install-smart-thermostat",
@@ -525,7 +525,7 @@ export const REPAIRS: RepairGuide[] = [
       },
     ],
     whenToCallPro: "Call an HVAC technician if you have a heat pump system with complex wiring (O/B wires), if you find only 2 wires (older systems may need new wiring run), if your system uses high-voltage (120V/240V) line voltage thermostats (baseboard heaters), or if the new thermostat powers on but the system doesn't respond to commands.",
-    relatedRepairs: ["replace-light-switch", "install-ceiling-fan", "fix-doorbell"],
+    relatedRepairs: ["replace-light-switch", "fix-water-heater-no-hot-water", "fix-doorbell"],
   },
   {
     slug: "fix-doorbell",
