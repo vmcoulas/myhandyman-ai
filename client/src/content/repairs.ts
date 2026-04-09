@@ -1227,6 +1227,59 @@ export const REPAIRS: RepairGuide[] = [
     whenToCallPro: "Call a plumber if the shut-off valves under the sink are frozen, corroded, or begin leaking when you try to close them (the valves need to be replaced before any faucet work can happen), if you discover corrosion or damage to the drain tailpiece or P-trap, or if you're replacing a faucet on an older home with galvanized or copper supply lines (connections to old pipe types require different fittings and more experience).",
     relatedRepairs: ["fix-dripping-kitchen-faucet", "fix-leaky-faucet", "replace-shower-head"],
   },
+  {
+    slug: "stop-smoke-detector-chirping",
+    title: "How to Stop a Smoke Detector from Chirping",
+    metaDescription: "Smoke detector chirping every 30-60 seconds? Here's how to stop it in under 10 minutes. Covers dying batteries, end-of-life alarms, dust, and wired units.",
+    heroEmoji: "🚨",
+    difficulty: "Easy",
+    activeTime: 10,
+    totalTime: 15,
+    estimatedCost: "$3-15",
+    safetyLevel: "DIY-friendly",
+    overview: "A chirping smoke detector is one of the most universally annoying sounds in a home — a single short beep every 30 to 60 seconds, always louder at 2 a.m. The good news is that a chirp (not a full alarm) almost always means the detector is working correctly and is trying to tell you something specific. The bad news is that replacing the battery doesn't always fix it.\n\nThere are four common causes of a chirping smoke detector: a dying battery, an end-of-life signal (the detector itself is 10+ years old and needs to be replaced), dust or debris interfering with the sensor, or — for hardwired units — a tripped breaker or loose backup battery. The fix is usually under 10 minutes once you know which one it is.\n\nWe'll walk through the exact order to diagnose and fix it, including why the chirp sometimes continues after a new battery and what the end-of-life chirp means. No tools required for most fixes.",
+    toolsNeeded: ["Step stool or ladder", "Canned air or vacuum with brush attachment", "Soft cloth"],
+    materialsNeeded: [
+      { name: "9V battery (most common size)", estimatedCost: "$3-6", amazonSearch: "9v+battery+alkaline+smoke+detector" },
+      { name: "AA batteries (for newer models)", estimatedCost: "$4-8", amazonSearch: "aa+alkaline+battery+pack" },
+      { name: "Replacement 10-year sealed smoke detector", estimatedCost: "$15-25", amazonSearch: "10+year+sealed+smoke+detector" },
+      { name: "Combination smoke and CO detector", estimatedCost: "$25-45", amazonSearch: "combination+smoke+carbon+monoxide+detector" },
+    ],
+    steps: [
+      {
+        title: "Identify which detector is chirping",
+        description: "If you have multiple detectors, the chirp can echo and sound like it's coming from the wrong spot. Stand under each unit for 30-60 seconds and wait for the next chirp — it's usually obvious when you're right under the source. Interconnected detectors (common in homes built after 1996) can all chirp in sequence, so you may need to silence the loudest one first. Write down which unit it is before climbing up.",
+      },
+      {
+        title: "Check the manufacture date on the back",
+        description: "Take the detector down (twist counter-clockwise about 1/4 turn to release from the mounting bracket). Look at the back of the unit for a manufacture date — it's usually printed on a label. If the detector is 10 years or older, it has reached end of life and the chirp will not stop until you replace the entire unit. This is non-negotiable: the sensor degrades and a new battery will not help. Skip to step 6 if this is the case.",
+        safetyWarning: "Smoke detectors are legally required to be replaced every 10 years. Do not attempt to silence an end-of-life unit permanently — it is no longer reliable.",
+      },
+      {
+        title: "Replace the battery (even if you just changed it)",
+        description: "Open the battery compartment and remove the old battery. Important: use a brand-new battery from a fresh pack — not one from a junk drawer. Half-full batteries are the #1 reason a new battery 'doesn't fix it.' Most older detectors use a 9V; some newer models use AA. Match the polarity carefully. Reinstall the battery, close the compartment, and reattach the detector to the ceiling bracket. Wait 60 seconds. If the chirp stops, you're done.",
+      },
+      {
+        title: "Clear the silence/hush button",
+        description: "Press and hold the test/silence button on the front of the detector for 15-20 seconds. This drains any residual charge from the capacitor that can make the unit 'remember' the low-battery state even after a new battery is installed. Release the button — you should hear a single confirmation chirp. Reinstall the detector and wait. This single step fixes roughly 1 in 5 'chirping after battery replacement' cases.",
+      },
+      {
+        title: "Clean out dust and debris",
+        description: "Dust, cobwebs, and insects inside the sensor chamber can cause nuisance chirps and even false alarms. With the battery out, use a can of compressed air to blow out the vents on the side of the detector. Hold the can 4-6 inches away and blow air through each vent slot. Follow up with a vacuum brush attachment around the outside. Wipe the housing with a dry cloth. Reinstall the battery and remount. Plan to do this every 6 months — it extends the life of the unit and prevents most future chirps.",
+      },
+      {
+        title: "For hardwired detectors — check the breaker and backup battery",
+        description: "Hardwired smoke detectors (connected to household AC with a backup battery) chirp when either the backup battery is low OR when power to the circuit is interrupted. First, check your electrical panel for a tripped breaker labeled 'smoke detectors' or 'bedrooms' and reset it if needed. Then take the unit down, disconnect the wiring harness by squeezing the clip, replace the backup battery, reconnect the harness, and reattach to the bracket. Wait 60 seconds for the chirp to clear.",
+        safetyWarning: "Never cut or splice smoke detector wiring without turning off the breaker first. If you're uncomfortable with any electrical work, call an electrician.",
+      },
+      {
+        title: "If all else fails, replace the detector",
+        description: "If the chirp continues after a fresh battery, a hold-reset, and a cleaning, the detector is failing. Even if it's under 10 years old, a persistently chirping unit with no diagnosable cause should be replaced — the internal sensor or circuitry is unreliable. Buy a 10-year sealed lithium battery model so you never have to change batteries again, just replace the whole unit in a decade. If the unit is near a kitchen or bathroom, consider a photoelectric model (fewer nuisance alarms from cooking and steam). Write the install date on the back with a permanent marker.",
+      },
+    ],
+    whenToCallPro: "Call an electrician if multiple hardwired detectors are chirping at once and a breaker reset doesn't fix it (could indicate a wiring issue), if you smell anything burning near the detector, if the detector is giving a full three-beep alarm pattern rather than a single chirp (that's a smoke signal — evacuate first, then investigate), or if you have a combination smoke/CO detector giving a four-beep pattern (that's carbon monoxide — evacuate and call 911). A chirp is a maintenance issue; an alarm is an emergency.",
+    relatedRepairs: ["reset-gfci-outlet", "replace-light-switch", "fix-wobbly-ceiling-fan"],
+  },
 ];
 
 export const getRepairBySlug = (slug: string): RepairGuide | undefined =>
