@@ -39,17 +39,21 @@ export function PhotoUpload({ onImageSelected, isLoading }: PhotoUploadProps) {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
       const video = document.createElement('video');
       video.srcObject = stream;
+      video.setAttribute('playsinline', '');
       video.play();
-      video.addEventListener('loadedmetadata', () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(video, 0, 0);
-        canvas.toBlob((blob) => {
-          if (blob) { const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' }); onImageSelected(file); }
-          stream.getTracks().forEach(track => track.stop());
-        }, 'image/jpeg', 0.8);
+      video.addEventListener('playing', () => {
+        // Small delay to ensure a real frame is rendered (not a black frame)
+        setTimeout(() => {
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(video, 0, 0);
+          canvas.toBlob((blob) => {
+            if (blob) { const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' }); onImageSelected(file); }
+            stream.getTracks().forEach(track => track.stop());
+          }, 'image/jpeg', 0.8);
+        }, 300);
       });
     } catch {
       toast({ title: "Camera access denied", description: "Please allow camera access or upload a file instead", variant: "destructive" });

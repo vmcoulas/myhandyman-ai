@@ -36,7 +36,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { ProjectWithInstructions } from "@/lib/types";
 import { useFeedbackContext } from "@/lib/feedback-context";
 import { useInstructionStyle } from "@/hooks/use-instruction-style";
-import { ShieldAlert, ShieldCheck, AlertTriangle, Phone } from "lucide-react";
+import { ShieldAlert, ShieldCheck, Phone } from "lucide-react";
 import { useSpeechNarrator } from "@/hooks/use-speech-narrator";
 import { buildAmazonAffiliateUrl } from "@shared/amazonAffiliate";
 import { trackOutboundClick } from "@/lib/outboundTracking";
@@ -443,16 +443,16 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
             {!narrator.isSupported && (
               <p className="mt-2 text-[11px] text-muted-foreground">Read Aloud isn’t supported in this browser.</p>
             )}
-
-
-          {isLastStep && (
-            <CompletionCard
-              title={project.title}
-              onShare={() => void handleShare()}
-              onDownload={() => void handleExport()}
-            />
-          )}          </div>
+          </div>
         </div>
+
+        {isLastStep && (
+          <CompletionCard
+            title={project.title}
+            onShare={() => void handleShare()}
+            onDownload={() => void handleExport()}
+          />
+        )}
       </div>
 
       {/* Safety Notice */}
