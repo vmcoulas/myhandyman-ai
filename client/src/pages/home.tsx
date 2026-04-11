@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart, ClipboardList, Zap, Droplets, Tv, Fan, PaintBucket, Lightbulb, Thermometer, ArrowRight, Mail, ShieldCheck, CheckCircle, X, AlertCircle } from "lucide-react";
+import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart, ClipboardList, Zap, Droplets, Tv, Fan, PaintBucket, Lightbulb, Thermometer, ArrowRight, Mail, ShieldCheck, CheckCircle, X, AlertCircle, Sparkles } from "lucide-react";
 import { HeroBackdrop } from "@/components/hero/hero-backdrop";
-import { PhotoUpload } from "@/components/photo-upload";
 import { InstructionDisplay } from "@/components/instruction-display";
 import { UsageLimitBanner } from "@/components/usage-limit-banner";
 import { ConfidenceIndicator } from "@/components/confidence-indicator";
@@ -91,11 +90,64 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [photoDescription, setPhotoDescription] = useState('');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [inputMode, setInputMode] = useState<'photo' | 'text'>('photo');
   const [textDescription, setTextDescription] = useState('');
   const [leadEmail, setLeadEmail] = useState('');
   const [isSavingLead, setIsSavingLead] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  // Drag-and-drop handlers for unified upload zone
+  const handleDragEnter = (e: React.DragEvent) => { e.preventDefault(); e.stopPropagation(); setDragActive(true); };
+  const handleDragLeave = (e: React.DragEvent) => { e.preventDefault(); e.stopPropagation(); setDragActive(false); };
+  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); e.stopPropagation(); };
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault(); e.stopPropagation(); setDragActive(false);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/') && file.size <= 10 * 1024 * 1024) {
+        handleImageSelected(file);
+      } else {
+        toast({ title: "Invalid file", description: "Please drop an image file under 10MB.", variant: "destructive" });
+      }
+    }
+  };
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/') && file.size <= 10 * 1024 * 1024) {
+        handleImageSelected(file);
+      } else {
+        toast({ title: "Invalid file", description: "Please select an image file under 10MB.", variant: "destructive" });
+      }
+    }
+  };
+  const handleCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      video.setAttribute('playsinline', '');
+      video.play();
+      video.addEventListener('playing', () => {
+        setTimeout(() => {
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(video, 0, 0);
+          canvas.toBlob((blob) => {
+            if (blob) { const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' }); handleImageSelected(file); }
+            stream.getTracks().forEach(track => track.stop());
+          }, 'image/jpeg', 0.8);
+        }, 300);
+      });
+    } catch {
+      toast({ title: "Camera access denied", description: "Please allow camera access or upload a file instead.", variant: "destructive" });
+    }
+  };
 
   const getCurrentUser = async () => {
     try {
@@ -244,6 +296,20 @@ export default function Home() {
 
   const handleTextSubmit = () => { if (textDescription.trim().length >= 5) { setResult(null); trackPhotoUpload('text'); textMutation.mutate(textDescription); } };
 
+  /** Unified submit: sends photo+description, description-only, or photo-only */
+  const handleUnifiedSubmit = () => {
+    if (selectedFile) {
+      // Photo path (with optional description)
+      trackPhotoUpload('photo');
+      analyzeMutation.mutate({ file: selectedFile, description: textDescription || photoDescription });
+    } else if (textDescription.trim().length >= 5) {
+      // Text-only path
+      setResult(null);
+      trackPhotoUpload('text');
+      textMutation.mutate(textDescription);
+    }
+  };
+
   const handleLeadCapture = async () => {
     const email = leadEmail.trim();
     if (!email) {
@@ -299,7 +365,6 @@ export default function Home() {
     }
     setResult(null);
     setPendingResult(null);
-    setInputMode('text');
     trackPhotoUpload('text');
     textMutation.mutate(description);
   };
@@ -575,93 +640,97 @@ export default function Home() {
           </div>
         )}
 
-        {/* Upload or Results */}
+        {/* Unified Diagnosis Input */}
         <div id="upload-section" />
         {!result && !pendingResult && !analyzeMutation.isPending && !textMutation.isPending && (
-          <div>
-            <div className="flex justify-center mb-6">
-              <div className="inline-flex rounded-xl bg-muted p-1 gap-1">
-                <button
-                  onClick={() => { setInputMode('photo'); setSelectedFile(null); setPhotoDescription(''); if (pendingImagePreview) { URL.revokeObjectURL(pendingImagePreview); setPendingImagePreview(null); } }}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    inputMode === 'photo' ? 'bg-white shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  <Camera className="w-4 h-4" />
-                  Upload Photo
-                </button>
-                <button
-                  onClick={() => setInputMode('text')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    inputMode === 'text' ? 'bg-white shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  <FileText className="w-4 h-4" />
-                  Describe It
-                </button>
-              </div>
+          <div className="card-premium rounded-2xl p-5 sm:p-8 mb-8">
+            <div className="text-center mb-6">
+              <h3 className="font-display text-2xl font-bold text-foreground mb-2">
+                What needs fixing?
+              </h3>
+              <p className="text-muted-foreground text-sm">Describe the problem, add a photo, or both — the more context, the better the fix.</p>
             </div>
 
-            {inputMode === 'photo' ? (
-              selectedFile && pendingImagePreview ? (
-                /* Staged photo view: preview + optional description + submit */
-                <div className="card-premium rounded-2xl p-5 sm:p-8 mb-8">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-display text-xl font-bold text-foreground">Photo ready</h3>
-                    <button
-                      onClick={() => { setSelectedFile(null); setPhotoDescription(''); URL.revokeObjectURL(pendingImagePreview); setPendingImagePreview(null); }}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
-                      aria-label="Remove photo"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
+            {/* Description textarea — always visible */}
+            <textarea
+              value={textDescription}
+              onChange={(e) => setTextDescription(e.target.value)}
+              placeholder="e.g., My bathroom faucet drips constantly after I close it. It's a two-handle model, about 10 years old, and the drip comes from the hot side..."
+              className="w-full h-28 rounded-xl border border-input bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none mb-4"
+            />
+
+            {/* Photo section */}
+            {selectedFile && pendingImagePreview ? (
+              <div className="rounded-xl border border-border bg-muted/30 p-4 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Camera className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium text-foreground">Photo attached</span>
                   </div>
-                  <div className="rounded-xl overflow-hidden mb-4 bg-muted">
-                    <img src={pendingImagePreview} alt="Selected photo" className="w-full max-h-56 object-cover" />
-                  </div>
-                  <p className="text-muted-foreground text-sm mb-2">Add a description <span className="text-xs">(optional — helps the AI give a more accurate diagnosis)</span></p>
-                  <textarea
-                    value={photoDescription}
-                    onChange={(e) => setPhotoDescription(e.target.value)}
-                    placeholder="e.g., This faucet drips constantly after I close it. It's a two-handle model and the drip comes from the hot side."
-                    className="w-full h-24 rounded-xl border border-input bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
-                  />
-                  <div className="flex flex-wrap items-center justify-end gap-3 mt-4">
-                    <button
-                      onClick={handlePhotoSubmit}
-                      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 transition-all"
-                    >
-                      <Wrench className="w-4 h-4" />
-                      Analyze Photo
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <PhotoUpload onImageSelected={handleImageSelected} isLoading={analyzeMutation.isPending} />
-              )
-            ) : (
-              <div className="card-premium rounded-2xl p-5 sm:p-8 mb-8">
-                <h3 className="font-display text-xl font-bold text-foreground mb-2">What needs fixing?</h3>
-                <p className="text-muted-foreground text-sm mb-4">Describe the issue and we'll create a complete repair guide.</p>
-                <textarea
-                  value={textDescription}
-                  onChange={(e) => setTextDescription(e.target.value)}
-                  placeholder="e.g., My bathroom faucet is dripping constantly, it's a two-handle model about 10 years old..."
-                  className="w-full h-32 rounded-xl border border-input bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
-                />
-                <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
-                  <span className="text-xs text-muted-foreground">{textDescription.length > 0 ? `${textDescription.length} characters` : 'Min 5 characters'}</span>
                   <button
-                    onClick={handleTextSubmit}
-                    disabled={textDescription.trim().length < 5}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    onClick={() => { setSelectedFile(null); setPhotoDescription(''); URL.revokeObjectURL(pendingImagePreview); setPendingImagePreview(null); }}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    aria-label="Remove photo"
                   >
-                    <Wrench className="w-4 h-4" />
-                    Generate Repair Plan
+                    <X className="w-4 h-4" />
                   </button>
+                </div>
+                <img src={pendingImagePreview} alt="Selected photo" className="w-full max-h-48 object-cover rounded-lg" />
+              </div>
+            ) : (
+              <div
+                className={`upload-zone rounded-xl p-6 mb-4 cursor-pointer border-2 border-dashed border-border hover:border-primary/40 transition-colors ${dragActive ? 'border-primary bg-primary/5' : ''}`}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <div className="flex flex-col items-center">
+                  <div className="rounded-full bg-primary/10 p-3 mb-3">
+                    <Camera className="w-6 h-6 text-primary" />
+                  </div>
+                  <p className="text-sm font-medium text-foreground mb-1">Add a photo <span className="text-muted-foreground font-normal">(optional)</span></p>
+                  <p className="text-xs text-muted-foreground">Drop an image here, tap to browse, or use your camera</p>
                 </div>
               </div>
             )}
+
+            {/* Action buttons */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              {!selectedFile && (
+                <Button
+                  onClick={handleCamera}
+                  variant="outline"
+                  className="sm:flex-none"
+                  disabled={analyzeMutation.isPending || textMutation.isPending}
+                >
+                  <Camera className="w-4 h-4 mr-2" />
+                  Take photo
+                </Button>
+              )}
+              <div className="flex-1" />
+              <Button
+                onClick={handleUnifiedSubmit}
+                disabled={(analyzeMutation.isPending || textMutation.isPending) || (!selectedFile && textDescription.trim().length < 5)}
+                className="font-semibold"
+                size="lg"
+              >
+                <Wrench className="w-4 h-4 mr-2" />
+                Get My Fix
+              </Button>
+            </div>
+
+            {/* Helper text */}
+            <div className="mt-5 pt-4 border-t border-border">
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-primary/70" /> AI photo + text analysis</div>
+                <div className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-primary/70" /> Step-by-step instructions</div>
+                <div className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-primary/70" /> Materials + cost guidance</div>
+              </div>
+            </div>
+
+            <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileInput} className="hidden" />
           </div>
         )}
 

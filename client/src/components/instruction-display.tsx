@@ -31,6 +31,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { FeedbackForm } from "./feedback-form";
+import { DiagnosisFeedback } from "./diagnosis-feedback";
 import { ProjectRating } from "./project-rating";
 import { useToast } from "@/hooks/use-toast";
 import type { ProjectWithInstructions } from "@/lib/types";
@@ -829,17 +830,11 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
         </div>
       </div>
 
-      {/* Feedback Section */}
+      {/* Outcome Feedback — prominent "Did this fix it?" */}
       <div className="mx-6 mb-6 mt-0 pt-6 border-t border-border">
-        <FeedbackForm
+        <DiagnosisFeedback
           projectId={project.id}
-          userId={userId}
-          stepNumber={currentInstruction?.stepNumber}
-          context={{
-            page: window.location.pathname,
-            projectId: project.id,
-            stepNumber: currentInstruction?.stepNumber ?? null,
-          }}
+          userId={userId?.toString()}
         />
       </div>
     </div>
