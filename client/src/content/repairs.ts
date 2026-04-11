@@ -1280,6 +1280,57 @@ export const REPAIRS: RepairGuide[] = [
     whenToCallPro: "Call an electrician if multiple hardwired detectors are chirping at once and a breaker reset doesn't fix it (could indicate a wiring issue), if you smell anything burning near the detector, if the detector is giving a full three-beep alarm pattern rather than a single chirp (that's a smoke signal — evacuate first, then investigate), or if you have a combination smoke/CO detector giving a four-beep pattern (that's carbon monoxide — evacuate and call 911). A chirp is a maintenance issue; an alarm is an emergency.",
     relatedRepairs: ["reset-gfci-outlet", "replace-light-switch", "fix-wobbly-ceiling-fan"],
   },
+  {
+    slug: "fix-wobbly-ceiling-fan",
+    title: "How to Fix a Wobbly Ceiling Fan",
+    metaDescription: "Stop a wobbly ceiling fan in under 30 minutes. Covers loose blades, balancing kits, mounting screws, and warped blades. No electrician needed.",
+    heroEmoji: "💨",
+    difficulty: "Easy",
+    activeTime: 20,
+    totalTime: 30,
+    estimatedCost: "$0-15",
+    safetyLevel: "DIY-friendly",
+    overview: "A wobbly ceiling fan isn't just annoying — it's a sign that something is out of balance, and left unchecked, it accelerates wear on the motor bearings and can loosen the mounting hardware over time. The wobble gets worse, the noise gets louder, and eventually you're staring at a fan you're afraid to turn on high.\n\nHere's the thing most people don't realize: a wobble almost never means the fan is about to fall. It usually means one blade is slightly heavier, warped, or mounted at a different angle than the others. The fix is methodical but simple — tighten everything first, then balance.\n\nThe entire job takes 20-30 minutes, costs $0-15, and the only tool you truly need beyond a screwdriver is a $7 balancing kit that comes with most fans (check your junk drawer — you might already have one).",
+    toolsNeeded: ["Step stool or ladder", "Screwdriver (Phillips, usually)", "Ruler or yardstick", "Ceiling fan balancing kit (clip-on weights)"],
+    materialsNeeded: [
+      { name: "Ceiling fan balancing kit", estimatedCost: "$7-10", amazonSearch: "ceiling+fan+balancing+kit" },
+      { name: "Thread-locking compound (optional)", estimatedCost: "$5-8", amazonSearch: "loctite+threadlocker+blue+242" },
+      { name: "Replacement fan blade (if warped)", estimatedCost: "$10-15", amazonSearch: "universal+ceiling+fan+blade+replacement" },
+    ],
+    steps: [
+      {
+        title: "Turn off the fan and let it stop completely",
+        description: "Turn off the fan at the wall switch or pull chain. Wait until the blades come to a complete stop — never work on a fan that's still spinning or coasting. If the fan has a light, turn that off too. You don't need to kill the breaker for this repair since you won't be touching any wiring, but if you want extra peace of mind, flip the breaker.",
+      },
+      {
+        title: "Tighten the blade screws (this alone fixes 50% of wobbles)",
+        description: "Climb up and check every screw on every blade. Each blade has two connection points: the screws holding the blade to the blade bracket (blade iron), and the screws holding the blade bracket to the motor housing. Tighten all of them. Don't over-torque — just snug plus a quarter turn. Loose blade screws are the single most common cause of ceiling fan wobble. If a screw is stripped and won't tighten, replace it with one that's the same diameter but slightly longer, or use a drop of thread-locking compound.",
+      },
+      {
+        title: "Check the mounting bracket and canopy",
+        description: "With the fan still off, gently try to rock the entire fan unit where it meets the ceiling. If the whole assembly moves, the mounting bracket or canopy screws are loose. Remove the canopy cover (it usually unscrews or has a few screws around the rim) to access the mounting bracket. Tighten the screws attaching the bracket to the electrical box. Also check that the downrod ball sits properly in the bracket socket — if it's seated crooked, the whole fan will wobble regardless of blade balance. Reattach the canopy.",
+        safetyWarning: "If the electrical box itself feels loose or pulls away from the ceiling, stop. That's a structural issue — the box may not be fan-rated. Have an electrician install a fan-rated brace box before using the fan again.",
+      },
+      {
+        title: "Measure blade alignment",
+        description: "Hold a yardstick or ruler vertically so the end touches the ceiling and the flat edge extends down past a blade tip. Rotate each blade to the same position under the ruler and note the distance between the ruler and each blade tip. All blades should be the same distance from the ceiling (within 1/8 inch). If one blade is higher or lower, gently bend the blade bracket (blade iron) at the motor housing to bring it into alignment. Small adjustments — a few millimeters — make a big difference.",
+      },
+      {
+        title: "Balance the blades with a balancing kit",
+        description: "Turn the fan on medium speed. If it still wobbles after tightening and alignment, you need to balance the blades by weight. Clip the balancing clip (from the kit) to the center of one blade, halfway between the bracket and the tip. Run the fan on medium and note the wobble. Move the clip to the next blade and repeat. The blade where the clip reduces the wobble the most is the light blade. Once you've identified the right blade, slide the clip along that blade to find the exact position where the wobble is minimized. Peel a sticky weight from the kit and apply it to the top of the blade at that position, centered on the blade's midline. Remove the clip.",
+      },
+      {
+        title: "Check for warped blades",
+        description: "If balancing doesn't fully solve it, lay each blade flat on a countertop or table. A warped blade will rock or have a visible curve. Warped blades are common in humid climates (South Florida, Gulf Coast) or if the fan has been off for months. You can try flipping the warped blade — sometimes the warp cancels out in the other direction. If it's badly warped, replace it. Buy the same brand/model blade, or get a universal set and replace all blades at once for a consistent look.",
+      },
+      {
+        title: "Test on all speeds",
+        description: "Run the fan on low, medium, and high for at least 30 seconds each. A properly balanced fan should run with minimal visible wobble at every speed. Some very slight movement is normal — fans are not precision instruments. But you should not see the downrod swinging or the pull chain swaying. If the wobble is gone on low and medium but returns on high, you may need to add a second balancing weight or the motor bearings may be worn (which is a replacement situation, not a repair).",
+      },
+    ],
+    whenToCallPro: "Call a professional if the electrical box is loose or not fan-rated (this is a safety hazard — the fan needs a proper ceiling-mounted brace box), if the motor makes grinding or buzzing noises unrelated to the wobble (bearing failure), if the downrod or mounting ball is visibly damaged or cracked, or if the fan is on a vaulted ceiling and you can't safely reach it with a ladder. Wobble itself is a DIY fix; structural and motor problems are not.",
+    relatedRepairs: ["install-ceiling-fan", "replace-light-switch", "stop-smoke-detector-chirping"],
+  },
 ];
 
 export const getRepairBySlug = (slug: string): RepairGuide | undefined =>
