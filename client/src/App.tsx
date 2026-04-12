@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -19,6 +20,7 @@ import ThankYou from "@/pages/thank-you";
 import { FeedbackProvider } from "@/lib/feedback-context";
 import { AppShell } from "@/components/navigation/app-shell";
 import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
+import { Onboarding } from "@/components/onboarding";
 
 function Router() {
   return (
@@ -41,11 +43,18 @@ function Router() {
 }
 
 function App() {
+  const [showOnboarding, setShowOnboarding] = useState(
+    () => !localStorage.getItem("myhandyman_onboarded")
+  );
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <FeedbackProvider>
           <Toaster />
+          {showOnboarding && (
+            <Onboarding onComplete={() => setShowOnboarding(false)} />
+          )}
           <AppShell>
             <Router />
             <PwaInstallPrompt />

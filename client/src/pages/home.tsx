@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Wrench, Clock, DollarSign, Camera, ShoppingCart, Zap, Droplets, Tv, Fan, PaintBucket, Lightbulb, Thermometer, CheckCircle, X, AlertCircle, Sparkles } from "lucide-react";
 import { InstructionDisplay } from "@/components/instruction-display";
 import { UsageLimitBanner } from "@/components/usage-limit-banner";
+import { PaywallModal } from "@/components/paywall-modal";
 import { ConfidenceIndicator } from "@/components/confidence-indicator";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -88,6 +89,7 @@ export default function Home() {
   const [textDescription, setTextDescription] = useState('');
   const [dragActive, setDragActive] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
+  const [showPaywall, setShowPaywall] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -338,7 +340,7 @@ export default function Home() {
 
   const handleQuickRepair = (description: string) => {
     if (usageInfo && usageInfo.isLimitReached) {
-      toast({ title: "Repair limit reached", description: "Please upgrade to continue.", variant: "destructive" });
+      setShowPaywall(true);
       return;
     }
     setResult(null);
@@ -349,9 +351,19 @@ export default function Home() {
 
   return (
     <>
+      {/* Paywall Modal */}
+      {showPaywall && (
+        <PaywallModal
+          onUpgrade={handleUpgrade}
+          onDismiss={() => setShowPaywall(false)}
+          repairsUsed={(usageInfo as any)?.repairsUsed ?? usageInfo?.buildsUsed ?? 3}
+          maxRepairs={(usageInfo as any)?.maxRepairs ?? usageInfo?.maxBuilds ?? 3}
+        />
+      )}
+
       <main className="max-w-2xl mx-auto px-4 pt-6 pb-16">
 
-        {usageInfo && <UsageLimitBanner usage={usageInfo} onUpgrade={handleUpgrade} />}
+        {usageInfo && <UsageLimitBanner usage={usageInfo} onUpgrade={() => setShowPaywall(true)} />}
 
         {/* Analysis Progress */}
         {(analyzeMutation.isPending || textMutation.isPending) && (
