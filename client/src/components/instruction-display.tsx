@@ -123,6 +123,7 @@ function CompletionCard({
 export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
   const { project, instructions } = data;
   const [currentStep, setCurrentStep] = useState(0);
+  const [ownedMaterials, setOwnedMaterials] = useState<Set<number>>(new Set());
   const { toast } = useToast();
   const { patchContext } = useFeedbackContext();
   const { style, setStyle } = useInstructionStyle();
@@ -136,6 +137,14 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
   };
   const prevStep = () => {
     if (currentStep > 0) setCurrentStep((s) => s - 1);
+  };
+  const toggleOwned = (index: number) => {
+    setOwnedMaterials(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -447,13 +456,6 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
           </div>
         </div>
 
-        {isLastStep && (
-          <CompletionCard
-            title={project.title}
-            onShare={() => void handleShare()}
-            onDownload={() => void handleExport()}
-          />
-        )}
       </div>
 
       {/* Safety Notice */}
@@ -487,34 +489,46 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
 
                 <div className="mt-5 space-y-3">
                   {project.materials.map((material, index) => (
-                    <div key={index} className="flex items-start justify-between gap-3 rounded-xl border border-border bg-muted/30 p-4">
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-foreground">{material.name}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">Qty: {material.quantity}</p>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className="text-sm font-semibold text-primary">
-                          ${typeof material.estimatedCost === "number" ? material.estimatedCost.toFixed(2) : material.estimatedCost}
-                        </span>
-                        <a
-                          href={buildAmazonAffiliateUrl({ query: material.name, affiliateLink: material.affiliateLink })}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-primary hover:bg-primary/10 transition-colors"
-                          onClick={() => {
-                            void trackOutboundClick({
-                              destination: buildAmazonAffiliateUrl({ query: material.name, affiliateLink: material.affiliateLink }),
-                              itemType: "material",
-                              itemName: material.name,
-                              source: "materials_sheet",
-                            });
-                          }}
-                          aria-label={`Buy ${material.name} on Amazon`}
-                          title="Buy on Amazon"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                          <span className="hidden sm:inline">Buy</span>
-                        </a>
+                    <div key={index} className={`flex items-start gap-3 rounded-xl border p-4 transition-colors ${ownedMaterials.has(index) ? 'bg-green-500/5 border-green-500/20' : 'border-border bg-muted/30'}`}>
+                      <button
+                        onClick={() => toggleOwned(index)}
+                        className={`mt-0.5 w-5 h-5 rounded flex-shrink-0 border-2 flex items-center justify-center transition-colors ${
+                          ownedMaterials.has(index)
+                            ? 'bg-green-500 border-green-500 text-white'
+                            : 'border-border hover:border-primary/40'
+                        }`}
+                      >
+                        {ownedMaterials.has(index) && <CheckCircle className="w-3 h-3" />}
+                      </button>
+                      <div className="flex-1 flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className={`text-sm font-semibold transition-colors ${ownedMaterials.has(index) ? 'text-muted-foreground line-through' : 'text-foreground'}`}>{material.name}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">Qty: {material.quantity}</p>
+                        </div>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span className="text-sm font-semibold text-primary">
+                            ${typeof material.estimatedCost === "number" ? material.estimatedCost.toFixed(2) : material.estimatedCost}
+                          </span>
+                          <a
+                            href={buildAmazonAffiliateUrl({ query: material.name, affiliateLink: material.affiliateLink })}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-primary hover:bg-primary/10 transition-colors"
+                            onClick={() => {
+                              void trackOutboundClick({
+                                destination: buildAmazonAffiliateUrl({ query: material.name, affiliateLink: material.affiliateLink }),
+                                itemType: "material",
+                                itemName: material.name,
+                                source: "materials_sheet",
+                              });
+                            }}
+                            aria-label={`Buy ${material.name} on Amazon`}
+                            title="Buy on Amazon"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            <span className="hidden sm:inline">Buy</span>
+                          </a>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -523,6 +537,14 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
                     <div className="rounded-xl border border-border bg-background p-4 flex justify-between items-center">
                       <span className="text-muted-foreground text-xs">Total estimate</span>
                       <span className="text-primary font-bold text-sm">${project.estimatedCost}</span>
+                    </div>
+                  )}
+                  {ownedMaterials.size > 0 && (
+                    <div className="flex justify-between items-center text-xs text-muted-foreground">
+                      <span>{ownedMaterials.size} of {project.materials.length} items owned</span>
+                      <span className="text-green-600 font-medium">
+                        {ownedMaterials.size === project.materials.length ? "You have everything!" : `${project.materials.length - ownedMaterials.size} to buy`}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -591,11 +613,20 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
           </h4>
           <div className="space-y-2.5">
             {project.materials.map((material, index) => (
-              <div key={index} className="flex items-center justify-between">
+              <div key={index} className={`flex items-center justify-between p-2 rounded-lg transition-colors ${ownedMaterials.has(index) ? 'bg-green-500/5' : 'bg-transparent'}`}>
                 <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                  <button
+                    onClick={() => toggleOwned(index)}
+                    className={`w-5 h-5 rounded flex-shrink-0 border-2 flex items-center justify-center transition-colors ${
+                      ownedMaterials.has(index)
+                        ? 'bg-green-500 border-green-500 text-white'
+                        : 'border-border hover:border-primary/40'
+                    }`}
+                  >
+                    {ownedMaterials.has(index) && <CheckCircle className="w-3 h-3" />}
+                  </button>
                   <div className="min-w-0">
-                    <span className="text-foreground text-sm truncate block font-medium">{material.name}</span>
+                    <span className={`text-foreground text-sm truncate block font-medium transition-colors ${ownedMaterials.has(index) ? 'text-muted-foreground line-through' : ''}`}>{material.name}</span>
                     <span className="text-muted-foreground text-xs">Qty: {material.quantity}</span>
                   </div>
                 </div>
@@ -629,6 +660,14 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
               <div className="border-t border-border pt-2.5 mt-1 flex justify-between items-center">
                 <span className="text-muted-foreground text-xs">Total estimate</span>
                 <span className="text-primary font-bold text-sm">${project.estimatedCost}</span>
+              </div>
+            )}
+            {ownedMaterials.size > 0 && (
+              <div className="flex justify-between items-center text-xs text-muted-foreground pt-2.5">
+                <span>{ownedMaterials.size} of {project.materials.length} items owned</span>
+                <span className="text-green-600 font-medium">
+                  {ownedMaterials.size === project.materials.length ? "You have everything!" : `${project.materials.length - ownedMaterials.size} to buy`}
+                </span>
               </div>
             )}
           </div>
@@ -724,84 +763,69 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
         </div>
       )}
 
-      {/* Step-by-Step Instructions */}
+      {/* Step-by-Step Instructions - One at a Time */}
       <div className="px-6 pb-6">
-        <h4 className="font-display text-foreground font-extrabold text-base mb-4 flex items-center gap-2 tracking-tight">
-          <List className="w-4 h-4 text-primary" />
-          Step-by-step repair guidance
-        </h4>
-
-        <div className="space-y-3">
-          {instructions.map((instruction, index) => {
-            const isActive = index === currentStep;
-            return (
-              <div
-                key={instruction.id}
-                className={`flex gap-4 p-5 rounded-xl border cursor-pointer transition-colors relative ${
-                  isActive
-                    ? "bg-primary/6 border-primary/25"
-                    : "bg-background/60 border-border hover:bg-muted/30"
-                }`}
-                onClick={() => setCurrentStep(index)}
-                aria-current={isActive ? "step" : undefined}
-              >
-                <div className="flex-shrink-0">
-                  <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
-                      isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {instruction.stepNumber}
-                  </div>
-                </div>
-
-                <div className="w-full sm:flex-1 sm:min-w-0">
-                  <h5
-                    className={`font-semibold mb-1 text-sm leading-snug ${
-                      isActive ? "text-foreground" : "text-foreground/80"
-                    }`}
-                  >
-                    {instruction.title}
-                  </h5>
-                  <p
-                    className={`text-sm leading-relaxed ${
-                      isActive ? "text-muted-foreground" : "text-muted-foreground line-clamp-2"
-                    }`}
-                  >
-                    {instruction.description}
-                  </p>
-
-                  {instruction.safetyWarning && (
-                    <div className="mt-3 flex items-start gap-2 bg-red-500/8 border border-red-500/20 rounded-lg p-3">
-                      <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                      <p className="text-red-700/90 text-xs">{instruction.safetyWarning}</p>
-                    </div>
-                  )}
-
-                  {instruction.adultSupervision && (
-                    <div className="mt-3 flex items-center gap-2 bg-primary/6 border border-primary/15 rounded-lg p-3">
-                      <Shield className="w-4 h-4 text-primary flex-shrink-0" />
-                      <p className="text-primary/90 text-xs">Adult supervision recommended for this step.</p>
-                    </div>
-                  )}
-                </div>
-
-                {index < instructions.length - 1 && (
-                  <div className="absolute left-[2.45rem] top-[3.8rem] w-px h-4 bg-border" />
-                )}
-              </div>
-            );
-          })}
+        {/* Step counter */}
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="font-display text-foreground font-extrabold text-base flex items-center gap-2 tracking-tight">
+            <List className="w-4 h-4 text-primary" />
+            Step-by-step guidance
+          </h4>
+          <span className="text-sm text-muted-foreground font-medium">
+            {currentStep + 1} / {instructions.length}
+          </span>
         </div>
 
-        {/* Progress Navigation */}
-        <div className="mt-6 pt-6 border-t border-border">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-muted-foreground text-xs">Progress</span>
-            <span className="text-foreground text-xs font-medium">
-              {currentStep + 1} / {instructions.length} steps
-            </span>
+        {/* Active Step Card */}
+        <div className="rounded-2xl border-2 border-primary/20 bg-primary/[0.03] p-6 mb-4">
+          <div className="flex items-start gap-4 mb-4">
+            <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0">
+              {currentInstruction.stepNumber}
+            </div>
+            <h5 className="font-display text-xl font-bold text-foreground leading-tight pt-1.5">
+              {currentInstruction.title}
+            </h5>
           </div>
+
+          <p className="text-[15px] leading-relaxed text-foreground/85 mb-4 pl-14">
+            {currentInstruction.description}
+          </p>
+
+          {currentInstruction.safetyWarning && (
+            <div className="ml-14 flex items-start gap-2 bg-red-500/8 border border-red-500/20 rounded-xl p-3 mb-3">
+              <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+              <p className="text-red-700/90 text-sm">{currentInstruction.safetyWarning}</p>
+            </div>
+          )}
+
+          {currentInstruction.adultSupervision && (
+            <div className="ml-14 flex items-center gap-2 bg-primary/6 border border-primary/15 rounded-xl p-3">
+              <Shield className="w-4 h-4 text-primary flex-shrink-0" />
+              <p className="text-primary/90 text-sm">Adult supervision recommended for this step.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Step dots indicator */}
+        <div className="flex items-center justify-center gap-1.5 mb-4">
+          {instructions.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentStep(index)}
+              className={`rounded-full transition-all ${
+                index === currentStep
+                  ? "w-6 h-2 bg-primary"
+                  : index < currentStep
+                  ? "w-2 h-2 bg-primary/40"
+                  : "w-2 h-2 bg-border"
+              }`}
+              aria-label={`Go to step ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Progress bar + nav */}
+        <div className="pt-4 border-t border-border">
           <div className="bg-muted rounded-full h-1.5 w-full mb-4 overflow-hidden">
             <div
               className="bg-primary h-full rounded-full transition-all duration-300"
@@ -816,19 +840,30 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
               className="flex-1"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
-              {style === "pro" ? "Previous" : "Back"}
+              Previous
             </Button>
             <Button
               onClick={nextStep}
               disabled={isLastStep}
               className="font-semibold flex-1"
             >
-              {style === "pro" ? "Next" : "Next step"}
+              Next Step
               <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         </div>
       </div>
+
+      {/* Completion Card - shown when user reaches last step */}
+      {isLastStep && (
+        <div className="px-6 pb-2">
+          <CompletionCard
+            title={project.title}
+            onShare={() => void handleShare()}
+            onDownload={() => void handleExport()}
+          />
+        </div>
+      )}
 
       {/* Outcome Feedback — prominent "Did this fix it?" */}
       <div className="mx-6 mb-6 mt-0 pt-6 border-t border-border">

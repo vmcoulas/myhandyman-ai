@@ -1,20 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
-import { Wrench, Star, Crown, TrendingUp, Clock, DollarSign, Camera, FileText, ShoppingCart, ClipboardList, Zap, Droplets, Tv, Fan, PaintBucket, Lightbulb, Thermometer, ArrowRight, Mail, ShieldCheck, CheckCircle, X, AlertCircle, Sparkles } from "lucide-react";
-import { HeroBackdrop } from "@/components/hero/hero-backdrop";
+import { Wrench, Clock, DollarSign, Camera, ShoppingCart, Zap, Droplets, Tv, Fan, PaintBucket, Lightbulb, Thermometer, CheckCircle, X, AlertCircle, Sparkles } from "lucide-react";
 import { InstructionDisplay } from "@/components/instruction-display";
 import { UsageLimitBanner } from "@/components/usage-limit-banner";
 import { ConfidenceIndicator } from "@/components/confidence-indicator";
-import { ProjectImage } from "@/components/project-image";
-import { ProjectRating } from "@/components/project-rating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Stepper } from "@/components/ui/stepper";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { trackPhotoUpload, trackRepairPlanGenerated, trackPremiumUpgradeClick, trackEmailCapture } from "@/lib/analytics";
-import type { ProjectWithInstructions, UsageInfo, User, Project } from "@/lib/types";
+import { trackPhotoUpload, trackRepairPlanGenerated } from "@/lib/analytics";
+import type { ProjectWithInstructions, UsageInfo, User } from "@/lib/types";
 
 
 const COMMON_REPAIRS = [
@@ -91,11 +86,18 @@ export default function Home() {
   const [photoDescription, setPhotoDescription] = useState('');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [textDescription, setTextDescription] = useState('');
-  const [leadEmail, setLeadEmail] = useState('');
-  const [isSavingLead, setIsSavingLead] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  const LOADING_MESSAGES = [
+    "Inspecting the issue...",
+    "Identifying the problem...",
+    "Checking repair options...",
+    "Building your repair plan...",
+    "Assembling tools and materials...",
+  ];
 
   // Drag-and-drop handlers for unified upload zone
   const handleDragEnter = (e: React.DragEvent) => { e.preventDefault(); e.stopPropagation(); setDragActive(true); };
@@ -196,11 +198,6 @@ export default function Home() {
     enabled: !!currentUser,
   });
 
-  const { data: topProjects } = useQuery<Project[]>({
-    queryKey: ['/api/projects/top-rated'],
-    staleTime: 5 * 60 * 1000,
-  });
-
   useEffect(() => { getCurrentUser(); }, []);
 
   const analyzeMutation = useMutation({
@@ -259,6 +256,17 @@ export default function Home() {
     },
   });
 
+  useEffect(() => {
+    if (!analyzeMutation.isPending && !textMutation.isPending) {
+      setLoadingStep(0);
+      return;
+    }
+    const interval = setInterval(() => {
+      setLoadingStep(prev => (prev + 1) % LOADING_MESSAGES.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [analyzeMutation.isPending, textMutation.isPending]);
+
   const handleImageSelected = (file: File) => {
     setResult(null);
     setPendingResult(null);
@@ -310,37 +318,7 @@ export default function Home() {
     }
   };
 
-  const handleLeadCapture = async () => {
-    const email = leadEmail.trim();
-    if (!email) {
-      toast({ title: "Email required", description: "Enter your email to save updates and repair tips.", variant: "destructive" });
-      return;
-    }
-
-    setIsSavingLead(true);
-    try {
-      const res = await fetch('/api/users/email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!res.ok) {
-        throw new Error('Could not save email');
-      }
-
-      setLeadEmail('');
-      trackEmailCapture();
-      toast({ title: 'You are on the list', description: 'We saved your email for repair tips and product updates.' });
-    } catch {
-      toast({ title: 'Could not save email', description: 'Please try again in a moment.', variant: 'destructive' });
-    } finally {
-      setIsSavingLead(false);
-    }
-  };
-
   const handleUpgrade = async () => {
-    trackPremiumUpgradeClick();
     try {
       const res = await fetch("/api/stripe/create-checkout", {
         method: "POST",
@@ -371,162 +349,7 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="hero-workshop relative">
-        <div className="absolute inset-0 z-0">
-          <img src="/hero.jpg" alt="Woman using MyHandyman AI app to diagnose a plumbing issue" className="w-full h-full object-cover" id="hero-img" />
-          <div className="absolute inset-0 bg-gradient-to-b sm:bg-gradient-to-r from-[#1B2430]/70 via-[#1B2430]/40 to-[#1B2430]/20 sm:from-[#1B2430]/85 sm:via-[#1B2430]/60 sm:to-transparent" />
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-24 pb-16 text-left flex flex-col min-h-[75vh] sm:min-h-0">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/85 mb-4 w-fit">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#7EE0D7]" />
-            Fix it yourself. Know when to call.
-          </div>
-          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-5 tracking-tight leading-[1.02] max-w-4xl">
-            <span className="text-white">Snap a photo.</span><br />
-            <span className="text-[#2FA3A0]">Know what’s wrong.</span>
-          </h2>
-          <p className="text-lg text-white/80 max-w-2xl mb-6 mt-auto sm:mt-0 pt-40 sm:pt-0">
-            Get step-by-step repair guidance, parts and tools, time and cost estimates, and a clear read on whether this is a safe DIY fix or pro territory.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
-            <Button
-              size="lg"
-              className="font-semibold"
-              onClick={() => document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-            >
-              Upload a photo
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-            <Button size="lg" variant="outline" asChild className="border-white/25 bg-white/10 text-white hover:bg-white/15 hover:text-white">
-              <a href="#common-repairs">Browse common repairs</a>
-            </Button>
-          </div>
-          <p className="text-sm text-white/65 max-w-xl">
-            Best for first-time homeowners, DIY beginners, and anyone who wants clarity before paying for a service call.
-          </p>
-
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="bg-white py-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <Stepper
-            className="max-w-4xl mx-auto mb-12"
-            steps={[
-              {
-                title: "Upload a photo",
-                description: "Leaky faucet, cracked drywall, loose cabinet — the clearer the better.",
-                icon: <Camera className="size-5" />,
-              },
-              {
-                title: "Get the fix",
-                description: "AI issue detection, repair steps, tools, parts + time estimates.",
-                icon: <FileText className="size-5" />,
-              },
-              {
-                title: "Source the parts",
-                description: "A focused list so you can shop once and fix once.",
-                icon: <ShoppingCart className="size-5" />,
-              },
-            ]}
-          />
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="bg-white py-8 px-4 sm:px-6 lg:px-8 border-b border-[#D8E0E8]">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid sm:grid-cols-3 gap-4">
-            <div className="rounded-xl bg-[#F4F7FA] p-5">
-              <div className="flex items-center gap-1 mb-2">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-[#D99A2B] text-[#D99A2B]" />
-                ))}
-              </div>
-              <p className="text-sm text-foreground leading-relaxed mb-3">"Saved me a plumber visit. Turned out it was just the flapper — $6 fix instead of a $150 service call."</p>
-              <p className="text-xs text-muted-foreground">— Reddit user, r/HomeImprovement</p>
-            </div>
-            <div className="rounded-xl bg-[#F4F7FA] p-5">
-              <div className="flex items-center gap-1 mb-2">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-[#D99A2B] text-[#D99A2B]" />
-                ))}
-              </div>
-              <p className="text-sm text-foreground leading-relaxed mb-3">"First-time homeowner here. This told me exactly what tools I needed and what order to do things. Super clear."</p>
-              <p className="text-xs text-muted-foreground">— Early beta user</p>
-            </div>
-            <div className="rounded-xl bg-[#F4F7FA] p-5">
-              <div className="flex items-center gap-1 mb-2">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-[#D99A2B] text-[#D99A2B]" />
-                ))}
-              </div>
-              <p className="text-sm text-foreground leading-relaxed mb-3">"The parts list with prices and direct links is a game changer. No more guessing what to buy at the hardware store."</p>
-              <p className="text-xs text-muted-foreground">— DIY beginner</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Badges */}
-      <section className="bg-[#F4F7FA] py-8 px-4 border-y border-[#D8E0E8]">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-2xl font-extrabold text-[#1F4E79]">Instant</div>
-              <div className="text-xs text-muted-foreground mt-1">AI-Powered Diagnosis</div>
-            </div>
-            <div>
-              <div className="text-2xl font-extrabold text-[#1F4E79]">30s</div>
-              <div className="text-xs text-muted-foreground mt-1">Average Diagnosis Time</div>
-            </div>
-            <div>
-              <div className="text-2xl font-extrabold text-[#2FA3A0]">Safe</div>
-              <div className="text-xs text-muted-foreground mt-1">DIY Safety Assessments</div>
-            </div>
-            <div>
-              <div className="text-2xl font-extrabold text-[#1F4E79]">Free</div>
-              <div className="text-xs text-muted-foreground mt-1">To Get Started</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-4 sm:px-6 lg:px-8 pb-8">
-        <div className="max-w-5xl mx-auto rounded-2xl border border-[#D8E0E8] bg-gradient-to-br from-white to-[#F4F7FA] p-6 sm:p-8 shadow-sm">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-5 lg:justify-between">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary mb-3">
-                <Mail className="w-3.5 h-3.5" />
-                Stay in the loop
-              </div>
-              <h3 className="font-display text-2xl font-bold text-foreground mb-2">Get repair tips, new guides, and product updates.</h3>
-              <p className="text-sm text-muted-foreground">
-                Drop your email for practical repair tips, new fix guides, and product updates.
-              </p>
-            </div>
-            <div className="w-full lg:max-w-md">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="email"
-                  value={leadEmail}
-                  onChange={(e) => setLeadEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="flex-1 rounded-xl border border-input bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                />
-                <Button onClick={handleLeadCapture} disabled={isSavingLead} className="font-semibold whitespace-nowrap">
-                  {isSavingLead ? 'Saving...' : 'Get updates'}
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">No spam. Just useful repair content and product updates.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 -mt-8">
+      <main className="max-w-2xl mx-auto px-4 pt-6 pb-16">
 
         {usageInfo && <UsageLimitBanner usage={usageInfo} onUpgrade={handleUpgrade} />}
 
@@ -542,9 +365,9 @@ export default function Home() {
             <h3 className="font-display text-2xl font-bold text-foreground mb-2">
               Diagnosing the issue...
             </h3>
-            <p className="text-muted-foreground mb-6">Inspecting, planning, and assembling your repair guide.</p>
+            <p className="text-muted-foreground mb-6 transition-opacity duration-300">{LOADING_MESSAGES[loadingStep]}</p>
             <div className="bg-muted rounded-full h-1.5 w-full max-w-sm mx-auto overflow-hidden">
-              <div className="bg-primary h-full rounded-full progress-bar" style={{ width: "65%" }} />
+              <div className="bg-primary h-full rounded-full animate-pulse" style={{ width: analyzeMutation.isPending || textMutation.isPending ? "85%" : "0%", transition: "width 8s ease-out" }} />
             </div>
           </div>
         )}
@@ -735,127 +558,6 @@ export default function Home() {
         )}
 
         {result && <InstructionDisplay data={result} userId={currentUser?.id} />}
-
-        {/* Community Favorites */}
-        {!result && topProjects && topProjects.length > 0 && (
-          <div className="mb-12">
-            <div className="text-center mb-8">
-              <div className="flex items-center justify-center gap-2 mb-3">
-                <TrendingUp className="text-primary w-5 h-5" />
-                <h3 className="font-display text-2xl font-bold text-foreground">
-                  Community favorites
-                </h3>
-              </div>
-              <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                Top-rated repair guides from homeowners like you.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {topProjects.slice(0, 6).map((project) => (
-                <Link key={project.id} href={`/project/${project.id}`}>
-                  <div className="card-premium rounded-xl overflow-hidden cursor-pointer group">
-                    <div className="aspect-video bg-muted relative overflow-hidden">
-                      <ProjectImage
-                        imageUrl={project.imageUrl}
-                        title={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute top-2.5 right-2.5">
-                        <span className="badge-premium rounded-full px-2.5 py-0.5 text-xs">
-                          {project.ratingPercentage}%
-                        </span>
-                      </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                        <span className="text-white text-sm font-semibold">View repair guide →</span>
-                      </div>
-                    </div>
-
-                    <div className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-semibold text-foreground text-sm leading-tight">{project.title}</h4>
-                        <Badge variant="outline" className="text-xs ml-2 flex-shrink-0">
-                          {project.category}
-                        </Badge>
-                      </div>
-
-                      <div className="flex items-center justify-between mb-3">
-                        <ProjectRating
-                          averageRating={project.averageRating}
-                          totalRatings={project.totalRatings}
-                          ratingPercentage={project.ratingPercentage}
-                          size="sm"
-                          showPercentage={false}
-                        />
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Clock className="w-3 h-3" />
-                          <span>{project.estimatedTime}min</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <Badge className={
-                          project.difficulty === 'Easy' ? 'bg-green-500/15 text-green-400 border-0' :
-                          project.difficulty === 'Medium' ? 'bg-yellow-500/15 text-yellow-400 border-0' :
-                          'bg-red-500/15 text-red-400 border-0'
-                        }>
-                          <Star className="w-3 h-3 mr-1" />
-                          {project.difficulty}
-                        </Badge>
-                        {project.estimatedCost && (
-                          <div className="flex items-center text-primary text-sm font-semibold">
-                            <DollarSign className="w-3 h-3" />
-                            {project.estimatedCost}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-
-            <div className="text-center mt-8">
-              <Button className="font-semibold">
-                <Crown className="w-4 h-4 mr-2" />
-                Upgrade for unlimited repairs
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Features */}
-        {!result && (
-          <div className="grid md:grid-cols-3 gap-5 mt-4">
-            <div className="card-premium rounded-xl p-6">
-              <div className="mb-4">
-                <div className="w-12 h-12 rounded-xl bg-[#1F4E79]/10 flex items-center justify-center">
-                  <ClipboardList className="w-6 h-6 text-[#1F4E79]" />
-                </div>
-              </div>
-              <h4 className="font-display text-base font-bold text-foreground mb-2">My Repairs</h4>
-              <p className="text-muted-foreground text-sm leading-relaxed">All your repair history in one place. Never lose track of a fix again.</p>
-            </div>
-            <div className="card-premium rounded-xl p-6">
-              <div className="mb-4">
-                <div className="w-12 h-12 rounded-xl bg-[#2FA3A0]/10 flex items-center justify-center">
-                  <ShoppingCart className="w-6 h-6 text-[#2FA3A0]" />
-                </div>
-              </div>
-              <h4 className="font-display text-base font-bold text-foreground mb-2">Parts & Tools</h4>
-              <p className="text-muted-foreground text-sm leading-relaxed">Every parts list includes direct links to buy exactly what you need.</p>
-            </div>
-            <div className="card-premium rounded-xl p-6">
-              <div className="mb-4">
-                <div className="w-12 h-12 rounded-xl bg-[#D99A2B]/10 flex items-center justify-center">
-                  <Zap className="w-6 h-6 text-[#D99A2B]" />
-                </div>
-              </div>
-              <h4 className="font-display text-base font-bold text-foreground mb-2">Instant Diagnosis</h4>
-              <p className="text-muted-foreground text-sm leading-relaxed">AI analysis in seconds — full repair guide, tools list, and cost breakdown.</p>
-            </div>
-          </div>
-        )}
       </main>
     </>
   );

@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import { Link, useLocation } from "wouter";
-import { Home, Hammer, BookOpen, Wrench } from "lucide-react";
+import { Home, Clock, BookOpen, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Tab = {
@@ -15,14 +15,14 @@ type Tab = {
 
 const tabs: Tab[] = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/build", label: "Build", icon: Hammer },
   {
     href: "/projects",
-    label: "Projects",
-    icon: BookOpen,
+    label: "My Repairs",
+    icon: Clock,
     matchPrefixes: ["/project/"],
   },
-  { href: "/tools", label: "Tools", icon: Wrench },
+  { href: "/repairs", label: "Guides", icon: BookOpen },
+  { href: "/tools", label: "Account", icon: User },
 ];
 
 export function MobileTabBar() {
@@ -53,7 +53,7 @@ export function MobileTabBar() {
                 "group flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-xs font-medium",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 active
-                  ? "text-primary"
+                  ? "text-[#2FA3A0]"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -61,11 +61,11 @@ export function MobileTabBar() {
                 className={cn(
                   "size-5 transition-transform group-active:scale-95",
                   active
-                    ? "text-primary"
+                    ? "text-[#2FA3A0]"
                     : "text-muted-foreground group-hover:text-foreground"
                 )}
               />
-              <span className={cn(active ? "text-primary" : "")}>{tab.label}</span>
+              <span className={cn(active ? "text-[#2FA3A0]" : "")}>{tab.label}</span>
             </Link>
           );
         })}
