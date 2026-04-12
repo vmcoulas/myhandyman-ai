@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -21,6 +21,8 @@ import { FeedbackProvider } from "@/lib/feedback-context";
 import { AppShell } from "@/components/navigation/app-shell";
 import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
 import { Onboarding } from "@/components/onboarding";
+import { isNative } from "@/lib/platform";
+import { initNativeApp } from "@/lib/native-init";
 
 function Router() {
   return (
@@ -47,6 +49,11 @@ function App() {
     () => !localStorage.getItem("myhandyman_onboarded")
   );
 
+  // Initialize native plugins (status bar, splash screen, back button, etc.)
+  useEffect(() => {
+    initNativeApp();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -57,7 +64,8 @@ function App() {
           )}
           <AppShell>
             <Router />
-            <PwaInstallPrompt />
+            {/* Only show PWA install prompt on web, not inside native apps */}
+            {!isNative && <PwaInstallPrompt />}
           </AppShell>
         </FeedbackProvider>
       </TooltipProvider>

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { hapticTap } from "@/lib/native-camera";
 import {
   AlertTriangle,
   CheckCircle,
@@ -133,10 +134,16 @@ export function InstructionDisplay({ data, userId }: InstructionDisplayProps) {
   const [handsFreeMode, setHandsFreeMode] = useState(false);
 
   const nextStep = () => {
-    if (currentStep < instructions.length - 1) setCurrentStep((s) => s + 1);
+    if (currentStep < instructions.length - 1) {
+      setCurrentStep((s) => s + 1);
+      hapticTap();
+    }
   };
   const prevStep = () => {
-    if (currentStep > 0) setCurrentStep((s) => s - 1);
+    if (currentStep > 0) {
+      setCurrentStep((s) => s - 1);
+      hapticTap();
+    }
   };
   const toggleOwned = (index: number) => {
     setOwnedMaterials(prev => {

@@ -6,3 +6,15 @@ vite.config.ts.*
 *.tar.gz
 .env
 .vercel
+
+# Capacitor native build artifacts (generated, not committed)
+ios/App/App/public
+ios/App/Pods
+ios/DerivedData
+android/app/src/main/assets/public
+android/.gradle
+android/app/build
+android/build
+android/local.properties
+*.xcworkspace/xcuserdata
+*.xcodeproj/xcuserdata

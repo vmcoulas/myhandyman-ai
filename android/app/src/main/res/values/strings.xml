@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MyHandyman</string>
+    <string name="title_activity_main">MyHandyman</string>
+    <string name="package_name">ai.myhandyman.app</string>
+    <string name="custom_url_scheme">ai.myhandyman.app</string>
+</resources>

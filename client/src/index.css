@@ -117,6 +117,30 @@
 
   .divider-glow { height: 1px; background: linear-gradient(90deg, transparent, rgba(31,78,121,0.2), transparent); }
 
+  /* ── Capacitor Native App Styles ── */
+  /* Safe area padding for iOS notch and Android status bar */
+  .native-safe-top { padding-top: env(safe-area-inset-top); }
+  .native-safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+  /* When keyboard is open on iOS, shrink the bottom tab bar area */
+  body.keyboard-open .mobile-tab-bar {
+    display: none;
+  }
+
+  /* Disable text selection and callouts in native app for more app-like feel */
+  .capacitor-native {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  /* But allow selection in text areas and inputs */
+  .capacitor-native textarea,
+  .capacitor-native input,
+  .capacitor-native [contenteditable] {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
   .badge-premium {
     background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     color: #FFFFFF;

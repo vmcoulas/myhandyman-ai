@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { trackPhotoUpload, trackRepairPlanGenerated } from "@/lib/analytics";
+import { takePhoto, hapticTap } from "@/lib/native-camera";
+import { isNative } from "@/lib/platform";
+import { getItemSync, setItemWithCache, removeItem as removeStorageItem } from "@/lib/native-storage";
 import type { ProjectWithInstructions, UsageInfo, User } from "@/lib/types";
 
 
@@ -130,24 +133,11 @@ export default function Home() {
   };
   const handleCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-      const video = document.createElement('video');
-      video.srcObject = stream;
-      video.setAttribute('playsinline', '');
-      video.play();
-      video.addEventListener('playing', () => {
-        setTimeout(() => {
-          const canvas = document.createElement('canvas');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(video, 0, 0);
-          canvas.toBlob((blob) => {
-            if (blob) { const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' }); handleImageSelected(file); }
-            stream.getTracks().forEach(track => track.stop());
-          }, 'image/jpeg', 0.8);
-        }, 300);
-      });
+      const result = await takePhoto();
+      if (result) {
+        await hapticTap();
+        handleImageSelected(result.file, result.previewUrl);
+      }
     } catch {
       toast({ title: "Camera access denied", description: "Please allow camera access or upload a file instead.", variant: "destructive" });
     }
@@ -155,11 +145,11 @@ export default function Home() {
 
   const getCurrentUser = async () => {
     try {
-      let userId = localStorage.getItem('anonymousUserId');
+      let userId = getItemSync('anonymousUserId');
       if (userId) {
         const response = await fetch(`/api/users/${userId}`);
         if (response.ok) { setCurrentUser(await response.json()); return; }
-        localStorage.removeItem('anonymousUserId');
+        await removeStorageItem('anonymousUserId');
       }
       const uniqueEmail = `anon-${Date.now()}-${Math.random().toString(36).slice(2, 6)}@myhandyman.ai`;
       const createRes = await fetch('/api/users', {
@@ -169,17 +159,17 @@ export default function Home() {
       });
       if (createRes.ok) {
         const user = await createRes.json();
-        localStorage.setItem('anonymousUserId', user.id.toString());
+        await setItemWithCache('anonymousUserId', user.id.toString());
         setCurrentUser(user);
         return;
       }
       throw new Error('Failed to create user');
     } catch (err) {
       console.error('[user] Error:', err);
-      let fallbackId = localStorage.getItem('anonymousUserId');
+      let fallbackId = getItemSync('anonymousUserId');
       if (!fallbackId) {
         fallbackId = 'local-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-        localStorage.setItem('anonymousUserId', fallbackId);
+        setItemWithCache('anonymousUserId', fallbackId);
       }
       setCurrentUser({
         id: fallbackId as any,
@@ -269,12 +259,14 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [analyzeMutation.isPending, textMutation.isPending]);
 
-  const handleImageSelected = (file: File) => {
+  const handleImageSelected = (file: File, existingPreviewUrl?: string) => {
     setResult(null);
     setPendingResult(null);
     setPhotoDescription('');
-    if (pendingImagePreview) URL.revokeObjectURL(pendingImagePreview);
-    const previewUrl = URL.createObjectURL(file);
+    if (pendingImagePreview && !pendingImagePreview.startsWith('data:')) {
+      URL.revokeObjectURL(pendingImagePreview);
+    }
+    const previewUrl = existingPreviewUrl || URL.createObjectURL(file);
     setPendingImagePreview(previewUrl);
     setSelectedFile(file);
   };
@@ -321,20 +313,44 @@ export default function Home() {
   };
 
   const handleUpgrade = async () => {
-    try {
-      const res = await fetch("/api/stripe/create-checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: currentUser?.id || localStorage.getItem("anonymousUserId") }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        toast({ title: "Error", description: "Could not start checkout. Please try again." });
+    if (isNative) {
+      // On native, open Stripe checkout in the in-app browser.
+      // TODO: Replace with RevenueCat IAP for iOS App Store compliance.
+      // Apple REQUIRES In-App Purchase for digital subscriptions in iOS apps.
+      // This Stripe fallback is temporary for development/Android only.
+      try {
+        const { Browser } = await import('@capacitor/browser');
+        const res = await fetch("/api/stripe/create-checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: currentUser?.id || getItemSync("anonymousUserId") }),
+        });
+        const data = await res.json();
+        if (data.url) {
+          await Browser.open({ url: data.url });
+        } else {
+          toast({ title: "Error", description: "Could not start checkout. Please try again." });
+        }
+      } catch {
+        toast({ title: "Error", description: "Could not connect to payment server." });
       }
-    } catch {
-      toast({ title: "Error", description: "Could not connect to payment server." });
+    } else {
+      // Web: standard Stripe redirect
+      try {
+        const res = await fetch("/api/stripe/create-checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: currentUser?.id || getItemSync("anonymousUserId") }),
+        });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          toast({ title: "Error", description: "Could not start checkout. Please try again." });
+        }
+      } catch {
+        toast({ title: "Error", description: "Could not connect to payment server." });
+      }
     }
   };
 

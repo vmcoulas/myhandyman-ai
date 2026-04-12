@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Camera, Wrench, ShieldCheck, ChevronRight } from "lucide-react";
+import { setItemWithCache } from "@/lib/native-storage";
 
 interface OnboardingProps {
   onComplete: () => void;
@@ -36,7 +37,8 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   };
 
   const handleComplete = () => {
-    localStorage.setItem("myhandyman_onboarded", "true");
+    // Write to both localStorage (sync) and native Preferences (persistent)
+    setItemWithCache("myhandyman_onboarded", "true");
     onComplete();
   };
 
