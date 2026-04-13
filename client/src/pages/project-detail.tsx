@@ -231,7 +231,7 @@ export default function ProjectDetail() {
                   variant="ghost"
                   size="sm"
                   onClick={handleShare}
-                  className="text-white/50 hover:text-white hover:bg-white/8 border border-white/10"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted border border-border"
                 >
                   <Share2 className="w-4 h-4 mr-1.5" />
                   Share
@@ -240,7 +240,7 @@ export default function ProjectDetail() {
                   variant="ghost"
                   size="sm"
                   onClick={handleDownload}
-                  className="text-white/50 hover:text-white hover:bg-white/8 border border-white/10"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted border border-border"
                 >
                   <Download className="w-4 h-4 mr-1.5" />
                   Download
@@ -281,8 +281,8 @@ export default function ProjectDetail() {
           ].map(({ icon: Icon, label, value, color }) => (
             <div key={label} className="card-premium rounded-xl p-4 text-center">
               <Icon className={`w-6 h-6 ${color} mx-auto mb-2`} />
-              <p className="text-white/40 text-xs mb-1">{label}</p>
-              <p className="text-white font-semibold text-sm">{value}</p>
+              <p className="text-muted-foreground text-xs mb-1">{label}</p>
+              <p className="text-foreground font-semibold text-sm">{value}</p>
             </div>
           ))}
         </div>
@@ -291,18 +291,18 @@ export default function ProjectDetail() {
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           {/* Materials */}
           <div className="card-premium rounded-xl p-6">
-            <h3 className="font-display text-white font-bold text-base mb-4 flex items-center gap-2">
+            <h3 className="font-display text-foreground font-bold text-base mb-4 flex items-center gap-2">
               <List className="w-4 h-4 text-orange-400" />
               Materials Needed
             </h3>
             <div className="space-y-3">
               {project.materials.map((material, i) => (
-                <div key={i} className="flex items-center justify-between p-3 bg-white/3 rounded-lg border border-white/5">
+                <div key={i} className="flex items-center justify-between p-3 bg-muted rounded-lg border border-border">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-white/90 text-sm font-medium truncate">{material.name}</p>
-                      <p className="text-white/40 text-xs">Qty: {material.quantity}</p>
+                      <p className="text-foreground text-sm font-medium truncate">{material.name}</p>
+                      <p className="text-muted-foreground text-xs">Qty: {material.quantity}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 ml-3 flex-shrink-0">
@@ -321,8 +321,8 @@ export default function ProjectDetail() {
                 </div>
               ))}
               {project.estimatedCost && (
-                <div className="border-t border-white/8 pt-3 mt-2 flex justify-between items-center">
-                  <span className="text-white/60 text-sm">Total Estimated Cost</span>
+                <div className="border-t border-border pt-3 mt-2 flex justify-between items-center">
+                  <span className="text-muted-foreground text-sm">Total Estimated Cost</span>
                   <span className="text-orange-400 font-bold">${project.estimatedCost}</span>
                 </div>
               )}
@@ -331,15 +331,15 @@ export default function ProjectDetail() {
 
           {/* Tools */}
           <div className="card-premium rounded-xl p-6">
-            <h3 className="font-display text-white font-bold text-base mb-4 flex items-center gap-2">
+            <h3 className="font-display text-foreground font-bold text-base mb-4 flex items-center gap-2">
               <Wrench className="w-4 h-4 text-blue-400" />
               Tools Required
             </h3>
             <div className="space-y-2">
               {project.tools.map((tool, i) => (
-                <div key={i} className="flex items-center gap-2 p-3 bg-white/3 rounded-lg border border-white/5">
+                <div key={i} className="flex items-center gap-2 p-3 bg-muted rounded-lg border border-border">
                   <div className="w-1.5 h-1.5 bg-blue-400 rounded-full flex-shrink-0" />
-                  <span className="text-white/80 text-sm capitalize">{tool}</span>
+                  <span className="text-muted-foreground text-sm capitalize">{tool}</span>
                 </div>
               ))}
             </div>
@@ -348,11 +348,11 @@ export default function ProjectDetail() {
 
         {/* Step-by-Step Instructions */}
         <div className="card-premium rounded-xl p-6 mb-8">
-          <h3 className="font-display text-white font-bold text-lg mb-2 flex items-center gap-2">
+          <h3 className="font-display text-foreground font-bold text-lg mb-2 flex items-center gap-2">
             <List className="w-5 h-5 text-orange-400" />
             Step-by-Step Repair Guide
           </h3>
-          <p className="text-white/40 text-sm mb-6">Follow each step carefully for the best results.</p>
+          <p className="text-muted-foreground text-sm mb-6">Follow each step carefully for the best results.</p>
 
           <div className="space-y-4">
             {instructions.map((instruction, index) => (
@@ -361,7 +361,7 @@ export default function ProjectDetail() {
                 className={`relative flex gap-4 p-5 rounded-xl border transition-all duration-200 cursor-pointer ${
                   index === currentStep
                     ? 'bg-orange-500/8 border-orange-500/30'
-                    : 'bg-white/2 border-white/6 hover:bg-white/4'
+                    : 'bg-background border-border hover:bg-muted'
                 }`}
                 onClick={() => setCurrentStep(index)}
               >
@@ -369,18 +369,18 @@ export default function ProjectDetail() {
                 <div className="flex-shrink-0">
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
                     index === currentStep
-                      ? 'orange-gradient text-white'
-                      : 'bg-white/8 text-white/50'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-muted-foreground'
                   }`}>
                     {instruction.stepNumber}
                   </div>
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <h4 className={`font-semibold mb-1 text-sm ${index === currentStep ? 'text-white' : 'text-white/70'}`}>
+                  <h4 className={`font-semibold mb-1 text-sm ${index === currentStep ? 'text-foreground' : 'text-muted-foreground'}`}>
                     {instruction.title}
                   </h4>
-                  <p className={`text-sm leading-relaxed ${index === currentStep ? 'text-white/70' : 'text-white/40'}`}>
+                  <p className={`text-sm leading-relaxed ${index === currentStep ? 'text-muted-foreground' : 'text-muted-foreground/70'}`}>
                     {instruction.description}
                   </p>
 
@@ -401,21 +401,21 @@ export default function ProjectDetail() {
 
                 {/* Connector line */}
                 {index < instructions.length - 1 && (
-                  <div className="absolute left-[2.45rem] top-[3.8rem] w-px h-4 bg-white/10" />
+                  <div className="absolute left-[2.45rem] top-[3.8rem] w-px h-4 bg-border" />
                 )}
               </div>
             ))}
           </div>
 
           {/* Progress Bar */}
-          <div className="mt-6 pt-6 border-t border-white/8">
+          <div className="mt-6 pt-6 border-t border-border">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-white/40 text-xs">Progress</span>
-              <span className="text-white/60 text-xs font-medium">Step {currentStep + 1} of {instructions.length}</span>
+              <span className="text-muted-foreground text-xs">Progress</span>
+              <span className="text-muted-foreground text-xs font-medium">Step {currentStep + 1} of {instructions.length}</span>
             </div>
-            <div className="bg-white/8 rounded-full h-1.5 mb-4 overflow-hidden">
+            <div className="bg-muted rounded-full h-1.5 mb-4 overflow-hidden">
               <div
-                className="orange-gradient h-full rounded-full transition-all duration-300"
+                className="bg-primary h-full rounded-full transition-all duration-300"
                 style={{ width: `${((currentStep + 1) / instructions.length) * 100}%` }}
               />
             </div>
@@ -425,7 +425,7 @@ export default function ProjectDetail() {
                 size="sm"
                 onClick={() => setCurrentStep(s => Math.max(0, s - 1))}
                 disabled={currentStep === 0}
-                className="text-white/50 hover:text-white hover:bg-white/8 border border-white/10 flex-1"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted border border-border flex-1"
               >
                 <ChevronLeft className="w-4 h-4 mr-1" /> Previous
               </Button>
@@ -433,7 +433,7 @@ export default function ProjectDetail() {
                 size="sm"
                 onClick={() => setCurrentStep(s => Math.min(instructions.length - 1, s + 1))}
                 disabled={currentStep === instructions.length - 1}
-                className="orange-gradient text-white font-semibold flex-1"
+                className="bg-primary text-primary-foreground font-semibold flex-1"
               >
                 Next <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
@@ -450,13 +450,13 @@ export default function ProjectDetail() {
             <div className="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center mx-auto mb-4">
               <Zap className="w-8 h-8 text-orange-400" />
             </div>
-            <h3 className="font-display text-xl font-extrabold text-white mb-2">
+            <h3 className="font-display text-xl font-extrabold text-foreground mb-2">
               Build Complete! 🔨
             </h3>
-            <p className="text-white/50 text-sm mb-5 max-w-sm mx-auto">
+            <p className="text-muted-foreground text-sm mb-5 max-w-sm mx-auto">
               You made it through all {instructions.length} steps. Time to snap your finished build and show it off.
             </p>
-            <Button onClick={handleShare} className="orange-gradient text-white font-semibold">
+            <Button onClick={handleShare} className="bg-primary text-primary-foreground font-semibold">
               <Share2 className="w-4 h-4 mr-2" />
               Share Your Build
             </Button>
