@@ -126,7 +126,7 @@ export function PhotoUpload({ onImageSelected, isLoading }: PhotoUploadProps) {
         </div>
       </div>
 
-      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileInput} className="hidden" />
+      <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileInput} className="hidden" />
     </div>
   );
 }
