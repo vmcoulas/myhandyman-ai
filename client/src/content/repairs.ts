@@ -1331,6 +1331,60 @@ export const REPAIRS: RepairGuide[] = [
     whenToCallPro: "Call a professional if the electrical box is loose or not fan-rated (this is a safety hazard — the fan needs a proper ceiling-mounted brace box), if the motor makes grinding or buzzing noises unrelated to the wobble (bearing failure), if the downrod or mounting ball is visibly damaged or cracked, or if the fan is on a vaulted ceiling and you can't safely reach it with a ladder. Wobble itself is a DIY fix; structural and motor problems are not.",
     relatedRepairs: ["install-ceiling-fan", "replace-light-switch", "stop-smoke-detector-chirping"],
   },
+  {
+    slug: "reset-gfci-outlet",
+    title: "How to Reset a GFCI Outlet That Won't Reset",
+    metaDescription: "GFCI outlet won't reset? Here's the exact diagnostic order: upstream tripped GFCI, moisture, bad appliance, or dead outlet. 10 minutes, no electrician needed in most cases.",
+    heroEmoji: "⚡",
+    difficulty: "Easy",
+    activeTime: 10,
+    totalTime: 20,
+    estimatedCost: "$0-25",
+    safetyLevel: "DIY-friendly",
+    overview: "A GFCI outlet (the one with the little Test and Reset buttons, usually in bathrooms, kitchens, garages, and outdoors) is designed to cut power the instant it detects even a tiny current leak — the kind that would otherwise run through a person standing in water. That's the job. When it trips, it's almost always doing the right thing. The question is why, and whether you can reset it.\n\nHere's what most people don't know: one GFCI outlet typically protects several outlets downstream of it. So when half your bathroom, kitchen counter, or garage goes dead at the same time, it's almost always a single tripped GFCI somewhere — and it may not be the outlet you're standing in front of. The bathroom GFCI might actually control the garage outlet. The kitchen GFCI might control the outdoor plug. Finding the right one is the whole game.\n\nThis guide walks through the exact diagnostic order: find the upstream GFCI, check for moisture, unplug any appliance that could be causing the trip, and finally, test whether the outlet itself is dead. 90% of 'won't reset' problems are solved in the first three steps. The last 10% usually means the GFCI is worn out — a $15 part with a 15-minute replacement that most homeowners can do safely if they're comfortable pulling a breaker.",
+    toolsNeeded: ["Non-contact voltage tester (pen-style)", "Flashlight", "Phillips screwdriver", "Flat-head screwdriver"],
+    materialsNeeded: [
+      { name: "Replacement GFCI outlet (15A or 20A, match existing)", estimatedCost: "$15-25", amazonSearch: "gfci+outlet+15+amp+tamper+resistant" },
+      { name: "Non-contact voltage tester", estimatedCost: "$10-20", amazonSearch: "non+contact+voltage+tester+pen" },
+      { name: "GFCI receptacle tester with trip indicator", estimatedCost: "$10-15", amazonSearch: "gfci+receptacle+outlet+tester" },
+      { name: "Electrical tape (black)", estimatedCost: "$3-5", amazonSearch: "electrical+tape+black+3m" },
+    ],
+    steps: [
+      {
+        title: "Unplug everything from the dead outlet (and any outlet near it)",
+        description: "Before you touch the GFCI, remove every plug from the outlet that won't reset and every outlet in the same room. A faulty appliance — most commonly a hair dryer, space heater, old freezer, pond pump, or anything that's been rained on — will trip a GFCI the instant you reset it. If you don't unplug it first, the GFCI will click, trip again, and you'll waste 20 minutes chasing the wrong problem. Pay special attention to anything with a motor, a heating element, or a plug that looks corroded, cracked, or damp.",
+      },
+      {
+        title: "Press Reset firmly — you should feel a distinct click",
+        description: "With nothing plugged in, press the Reset button with a firm, deliberate push. You're looking for a clear mechanical click and, on most models, the little indicator light should go from off/red to off (no light = reset, on most models). If the button won't stay pushed in and pops right back out, something downstream is still tripping it — either moisture, a wiring issue, or a bad GFCI. If the button feels mushy or doesn't click at all, the outlet has failed internally and needs to be replaced (skip to step 7).",
+      },
+      {
+        title: "Look for the upstream GFCI that might control this outlet",
+        description: "If the outlet in front of you doesn't have a Reset button at all but is still dead, it's being protected by a GFCI somewhere else. Check every GFCI in the house — bathrooms, kitchen, laundry room, garage, basement, outdoor walls, and sometimes even one labeled inside the breaker panel. Press Reset on each one. The culprit is usually: a bathroom GFCI that also controls a second bathroom, a kitchen counter GFCI that controls the outdoor patio outlet, or a garage GFCI that controls all exterior outlets. Follow the click — when you hear one reset, check whether your dead outlet came back to life.",
+        safetyWarning: "Do not remove any outlet covers to trace wiring while power is on. If you need to open an outlet to investigate, turn off the breaker first and confirm with a non-contact voltage tester.",
+      },
+      {
+        title: "Check for moisture — the silent killer of outdoor and bathroom GFCIs",
+        description: "Moisture inside a GFCI or downstream outlet will trip it every time. Look at the outlet and every outlet on the same circuit: are any of them outside, under a sink, near a shower, in a damp basement, or exposed to recent rain? Water intrusion is the #1 reason an outdoor GFCI won't reset after a storm. If you suspect moisture, turn off the breaker to that circuit, remove the outlet cover (and the outlet if needed), and let it air-dry for at least 24 hours. For outdoor outlets, make sure the weatherproof in-use cover (the bubble cover) is actually closing and sealing — a broken or missing cover is a frequent cause of repeat tripping.",
+        safetyWarning: "Never attempt to dry out a wet outlet with power on, and never stick anything inside the slots to speed up drying. Turn off the breaker first, always.",
+      },
+      {
+        title: "Test the Reset with no load, then one device at a time",
+        description: "Once you've ruled out moisture and the GFCI clicks into Reset with nothing plugged in, test each appliance one at a time. Plug in a known-good device (like a phone charger or lamp) first — if it works, the outlet is fine. Then plug in the other items one by one. The moment the GFCI trips, the last thing you plugged in is the culprit. A tripping appliance almost always needs to be repaired or replaced — it has a ground fault, which is a low-grade shock hazard, not just a nuisance. Common repeat offenders: old hair dryers, ancient extension cords, pond pumps, holiday light strings with frayed wires.",
+      },
+      {
+        title: "Test the Test/Reset cycle to confirm the outlet is functioning",
+        description: "With the outlet reset and a lamp or GFCI tester plugged in, press the Test button. The lamp should go dark and the Reset button should pop out — that proves the GFCI is actually protecting the circuit. Press Reset. The lamp should come back on. If the Test button does nothing, or if the Reset doesn't drop power, the GFCI is failed-safe but not functioning as a safety device and must be replaced. A $10 plug-in GFCI tester (yellow, with three lights and a little trip button) is the cleanest way to verify this without a lamp.",
+      },
+      {
+        title: "Replace the GFCI if it's over 10-15 years old or failing the test",
+        description: "GFCIs wear out. The internal electronics degrade, especially in humid climates or outdoor locations, and the industry recommendation is to replace them every 10-15 years even if they seem fine. If yours won't reset after you've ruled out everything above, or if it fails the Test/Reset cycle, replace it. Turn off the breaker, confirm the outlet is dead with a non-contact voltage tester (touch the probe to each slot), unscrew the outlet, label the 'LINE' wires (power coming in) and 'LOAD' wires (going to downstream outlets) before disconnecting — this is the most common mistake. Wire the new GFCI: LINE screws to the incoming wires, LOAD screws to the downstream wires, ground to green screw. Tuck wires in, screw outlet to box, replace cover, restore power, test.",
+        safetyWarning: "Do not reverse LINE and LOAD. A GFCI wired backwards will not protect downstream outlets and may not reset at all. Both terminals are clearly labeled on the back of the outlet. If you're not 100% sure which wires are LINE vs LOAD, use a non-contact tester with the breaker on (carefully, without touching anything metal) to identify the hot pair — those are LINE.",
+      },
+    ],
+    whenToCallPro: "Call a licensed electrician if you've replaced the GFCI and it still won't hold a reset (could be a shared neutral, a damaged wire in the wall, or a miswired junction box upstream), if the outlet or wiring shows visible burn marks, melted plastic, or smells like burning, if the breaker itself trips every time you reset the GFCI (indicates a short, not a ground fault), or if the GFCI is on a circuit that also serves hardwired equipment like a disposal or a bathroom exhaust fan — those situations require diagnostic testing beyond a basic reset. Electrical work inside the panel or in a junction box behind the wall is not a DIY job without a tester, a voltmeter, and code knowledge. $120-200 for an electrician beats a fire.",
+    relatedRepairs: ["replace-light-switch", "stop-smoke-detector-chirping", "fix-doorbell"],
+  },
 ];
 
 export const getRepairBySlug = (slug: string): RepairGuide | undefined =>
