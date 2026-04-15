@@ -1385,6 +1385,60 @@ export const REPAIRS: RepairGuide[] = [
     whenToCallPro: "Call a licensed electrician if you've replaced the GFCI and it still won't hold a reset (could be a shared neutral, a damaged wire in the wall, or a miswired junction box upstream), if the outlet or wiring shows visible burn marks, melted plastic, or smells like burning, if the breaker itself trips every time you reset the GFCI (indicates a short, not a ground fault), or if the GFCI is on a circuit that also serves hardwired equipment like a disposal or a bathroom exhaust fan — those situations require diagnostic testing beyond a basic reset. Electrical work inside the panel or in a junction box behind the wall is not a DIY job without a tester, a voltmeter, and code knowledge. $120-200 for an electrician beats a fire.",
     relatedRepairs: ["replace-light-switch", "stop-smoke-detector-chirping", "fix-doorbell"],
   },
+  {
+    slug: "fix-refrigerator-not-cooling",
+    title: "How to Fix a Refrigerator That's Not Cooling",
+    metaDescription: "Refrigerator not cooling? Fix it in 30 minutes. Step-by-step diagnostic for warm fridge: dirty coils, door seal, evaporator fan, defrost issues. Save $300 service call.",
+    heroEmoji: "🧊",
+    difficulty: "Medium",
+    activeTime: 30,
+    totalTime: 60,
+    estimatedCost: "$0-50",
+    safetyLevel: "DIY-friendly",
+    overview: "A fridge that won't cool is a clock — every hour you wait, more food spoils. The good news: in roughly 70% of 'not cooling' cases, the fix is free or under $30 and takes less than an hour. The single most common cause is dirty condenser coils choked with dust, pet hair, and crumbs. The fridge can't dump heat, the compressor runs nonstop but loses ground, and everything inside slowly warms up. A vacuum and a coil brush solve it.\n\nThe other usual suspects, in order of how often they fail: a bad door seal letting warm air in, a frozen-over evaporator fan that can't move cold air from the freezer to the fridge compartment, a failed evaporator fan motor, a broken defrost system letting frost build up over the coils, or a dead start relay on the compressor. We'll walk through them in diagnostic order — easiest and cheapest first — so you don't replace a $40 part when the real problem was a $0 cleaning.\n\nOne critical thing to check before you do anything else: is the freezer still cold while the fridge is warm? That single observation tells you immediately whether you have an airflow problem (freezer cold, fridge warm — most common) or a full system failure (both compartments warm). It changes which steps below matter most.",
+    toolsNeeded: ["Vacuum with hose attachment", "Coil cleaning brush", "Phillips screwdriver", "Flashlight", "Hair dryer (for defrost test)"],
+    materialsNeeded: [
+      { name: "Refrigerator coil cleaning brush", estimatedCost: "$8-12", amazonSearch: "refrigerator+coil+cleaning+brush+long" },
+      { name: "Universal refrigerator door gasket", estimatedCost: "$30-60", amazonSearch: "refrigerator+door+gasket+universal" },
+      { name: "Refrigerator thermometer (verify actual temp)", estimatedCost: "$5-10", amazonSearch: "refrigerator+thermometer+digital" },
+      { name: "Compressor start relay (3-in-1 universal)", estimatedCost: "$10-20", amazonSearch: "refrigerator+compressor+start+relay+3+in+1" },
+    ],
+    steps: [
+      {
+        title: "Confirm it's actually warm — and check the freezer separately",
+        description: "Put a thermometer in the fridge and one in the freezer. Wait 30 minutes. The fridge should be 35-40°F; the freezer should be 0-5°F. If both are warm, you likely have a compressor, start relay, or sealed-system problem (steps 6-7). If the freezer is cold but the fridge is warm, it's almost always an airflow problem — frost-blocked evaporator coils or a failed evaporator fan (step 4). This single test cuts your diagnostic time in half. Also confirm the temperature dial wasn't bumped — it's stupid, but it happens, especially in fridges with kids or pets in the house.",
+      },
+      {
+        title: "Vacuum the condenser coils (the #1 fix)",
+        description: "Pull the fridge away from the wall and unplug it. Find the condenser coils — on most modern fridges they're behind a kick-plate at the bottom front; on older models they're a black grid on the back. Use a vacuum with a hose attachment to suck out every visible bit of dust, pet hair, and debris. Then run a long-bristle coil brush through the coils to dislodge what the vacuum missed, and vacuum again. If you've never cleaned them and own a pet, expect to fill the vacuum canister. Also vacuum the condenser fan blade right next to the coils — a clogged fan can't pull air across clean coils. This alone fixes 50-70% of 'not cooling' calls and should be done every 6 months as maintenance regardless.",
+        safetyWarning: "Always unplug the fridge before working near the coils or condenser fan. The fan can start automatically and the blade is fast enough to take off a fingertip.",
+      },
+      {
+        title: "Check the door seal (gasket) for leaks",
+        description: "Close the door on a dollar bill so half is sticking out. Try to pull it free. If it slides out with no resistance, the seal is failing on that section — warm humid air is leaking in, the fridge runs nonstop trying to compensate, and ice often builds up on the back wall. Test all four sides of every door. Also inspect the gasket visually for tears, hardening, mold, or sections that have pulled away from the door. A weak seal is fixable for free — wipe it clean with warm soapy water, rub a thin layer of petroleum jelly into the rubber to soften and reseat it, and check if any door hinges have sagged (an off-square door won't seal at the top). If the gasket is torn or permanently deformed, replace it. Universal gaskets are $30-60; brand-specific ones are model-numbered and run $50-150.",
+      },
+      {
+        title: "Check for a frozen evaporator coil or failed evaporator fan",
+        description: "If the freezer is cold but the fridge is warm, the cold air can't get from the freezer compartment into the fridge compartment. There are only two reasons: the evaporator coil (behind the back panel of the freezer) is frosted over and blocking airflow, or the evaporator fan that pushes that air has died. Open the freezer and listen — you should hear a gentle fan whir within a few seconds of closing the door (some fans stop when the door is open; press the door switch with your finger to test). If silent, the fan motor or its control is bad. To check for frost-over: unload the freezer, unscrew the back panel inside the freezer, and look at the coils. They should be lightly frosted at most. If they're encased in a solid block of ice, the defrost system has failed (defrost heater, thermostat, or timer/control board). Quick fix: unplug the fridge for 24-48 hours with the doors open and towels down to thaw the ice — if it cools normally for a few weeks then fails again, the defrost system needs repair.",
+        safetyWarning: "Do not chip ice off the evaporator coils with anything sharp. The coil is thin aluminum tubing — one nick and you have a refrigerant leak that turns a $50 fix into a $400 sealed-system repair or a new fridge.",
+      },
+      {
+        title: "Verify the condenser fan and listen for the compressor",
+        description: "With the fridge plugged back in, listen at the bottom rear. You should hear two things: the compressor (a low hum) and the condenser fan (a softer whoosh). If the compressor is humming but the fan isn't spinning, the fan motor is dead — the compressor will overheat and shut off on its thermal overload, and the fridge will cycle warm. The fan motor is typically $25-40 and a 20-minute swap. If the compressor itself is silent, or you hear it click on then click off every few minutes (the start relay clicking out on overload), the start relay is the most likely failure. The relay is a small black or beige plastic box plugged into the side of the compressor. It costs $10-20 and pops off and on by hand once you unplug the fridge — no tools, no wiring. Replace it before you condemn the compressor; relays fail far more often than compressors do.",
+        safetyWarning: "Always unplug the fridge before touching the start relay or any wiring at the compressor. Capacitors in some relays can hold a charge for several minutes after unplugging.",
+      },
+      {
+        title: "Check the door switch and interior light",
+        description: "Open the fridge — does the interior light come on? If not, the door switch may be stuck in the 'open' position, which on many models also disables the evaporator fan (the fan turns off when the door is open so cold air doesn't blow out, and a stuck switch makes the fridge think the door is permanently open). Press the switch with your finger; you should feel a click and hear the fan kick on. A stuck switch is usually crud built up around it — clean it with a cotton swab and isopropyl alcohol, or replace it for $5-15. This is a small fix but it's the most-overlooked one because the symptom (warm fridge, freezer fine) looks identical to a fan failure.",
+      },
+      {
+        title: "Reset the control board and document everything before calling for service",
+        description: "Many modern fridges have a control board that occasionally locks up. Unplug the fridge for 5 full minutes, then plug it back in — this hard-resets the board and clears any error states. Set the fridge to its mid-range coolness setting (not coldest — coldest can actually frost over the evaporator and starve the fridge of cold air, ironically making it warmer). Wait 24 hours and recheck the thermometer. If after all of the above the fridge still won't hold 35-40°F, write down: the model and serial number (inside the fridge on a sticker), what you've already tried, whether the freezer cools, whether the compressor is running, and how old the fridge is. A repair tech with that info needs 20 minutes; without it, they need 90. And if the fridge is over 10-12 years old and the repair quote is over $400, replace it — efficiency gains alone pay back $50-100/year, and a sealed-system repair often fails again within 18 months.",
+      },
+    ],
+    whenToCallPro: "Call a refrigerator technician if: the fridge and freezer are both warm and the compressor is running but nothing cools (likely refrigerant leak in the sealed system — not a DIY fix, requires EPA certification to handle refrigerant); you hear the compressor trying to start with a loud buzz and then clicking off (compressor failure or hard-start condition); there's oil pooled under the unit (refrigerant leak); ice keeps re-forming on the evaporator coils within days of thawing (defrost control board, defrost heater element, or defrost thermostat — diagnosable but requires a multimeter); the fridge is under 5 years old and still under manufacturer warranty (call the manufacturer first, not a third party). Average service call: $80-150 just to walk in the door, $250-500 for typical repairs, $600+ for sealed-system work. Anything over $400 on a fridge older than 10 years, replace instead.",
+    relatedRepairs: ["fix-garbage-disposal", "fix-water-heater-no-hot-water", "install-smart-thermostat"],
+  },
 ];
 
 export const getRepairBySlug = (slug: string): RepairGuide | undefined =>
