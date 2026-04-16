@@ -2,6 +2,7 @@ import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { runMigrations } from "./migrate";
 
 const app = express();
 
@@ -63,6 +64,14 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Run pending database migrations before starting the server
+  try {
+    await runMigrations();
+  } catch (err: any) {
+    console.error("[startup] Migration failed — server will NOT start:", err.message);
+    process.exit(1);
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
