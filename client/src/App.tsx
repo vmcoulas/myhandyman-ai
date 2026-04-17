@@ -24,6 +24,7 @@ import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
 import { Onboarding } from "@/components/onboarding";
 import { isNative } from "@/lib/platform";
 import { initNativeApp } from "@/lib/native-init";
+import { initPurchases } from "@/lib/native-purchases";
 
 function Router() {
   return (
@@ -52,8 +53,10 @@ function App() {
   const [location] = useLocation();
 
   // Initialize native plugins (status bar, splash screen, back button, etc.)
+  // and RevenueCat for iOS in-app purchases.
   useEffect(() => {
     initNativeApp();
+    initPurchases();
   }, []);
 
   // /links is a standalone link-in-bio page — no app shell (header/footer/tabs)

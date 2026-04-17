@@ -1,4 +1,7 @@
 import { Camera, Wrench, Zap, X } from "lucide-react";
+import { useState } from "react";
+import { isIOS, isNative } from "@/lib/platform";
+import { purchaseProMonthly, restorePurchases } from "@/lib/native-purchases";
 
 interface PaywallModalProps {
   onUpgrade: () => void;
@@ -8,6 +11,39 @@ interface PaywallModalProps {
 }
 
 export function PaywallModal({ onUpgrade, onDismiss, repairsUsed = 3, maxRepairs = 3 }: PaywallModalProps) {
+  const [loading, setLoading] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+  const useNativeIap = isNative && isIOS;
+
+  async function handleUpgrade() {
+    if (useNativeIap) {
+      setLoading(true);
+      try {
+        const purchased = await purchaseProMonthly();
+        if (purchased) {
+          onUpgrade();
+        }
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+    // Web path — continue to Stripe via the existing onUpgrade handler.
+    onUpgrade();
+  }
+
+  async function handleRestore() {
+    setRestoring(true);
+    try {
+      const restored = await restorePurchases();
+      if (restored) {
+        onUpgrade();
+      }
+    } finally {
+      setRestoring(false);
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-[55] flex items-end sm:items-center justify-center">
       {/* Backdrop */}
@@ -78,10 +114,11 @@ export function PaywallModal({ onUpgrade, onDismiss, repairsUsed = 3, maxRepairs
 
           {/* CTA */}
           <button
-            onClick={onUpgrade}
-            className="w-full h-14 rounded-xl bg-[#2FA3A0] text-white font-semibold text-base hover:bg-[#238785] transition-colors shadow-sm mb-3"
+            onClick={handleUpgrade}
+            disabled={loading}
+            className="w-full h-14 rounded-xl bg-[#2FA3A0] text-white font-semibold text-base hover:bg-[#238785] disabled:opacity-60 transition-colors shadow-sm mb-3"
           >
-            Start Pro
+            {loading ? "Processing…" : "Start Pro"}
           </button>
 
           {/* Dismiss */}
@@ -91,6 +128,24 @@ export function PaywallModal({ onUpgrade, onDismiss, repairsUsed = 3, maxRepairs
           >
             Maybe later
           </button>
+
+          {/* Apple requires Restore Purchases to be visible in-app */}
+          {useNativeIap && (
+            <button
+              onClick={handleRestore}
+              disabled={restoring}
+              className="w-full text-center text-xs text-[#6E7A86] hover:text-[#1B2430] transition-colors mt-2 underline-offset-2 hover:underline"
+            >
+              {restoring ? "Restoring…" : "Restore purchases"}
+            </button>
+          )}
+
+          {/* Apple requires auto-renew disclosure near the purchase button */}
+          {useNativeIap && (
+            <p className="text-[10px] text-[#6E7A86] text-center mt-4 leading-relaxed">
+              Subscription auto-renews monthly until cancelled. Cancel anytime in your Apple ID settings. Payment will be charged to your Apple ID account.
+            </p>
+          )}
         </div>
       </div>
     </div>
