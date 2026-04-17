@@ -36,6 +36,7 @@ type StaticEntry = {
 const STATIC_ROUTES: StaticEntry[] = [
   { loc: "/", changefreq: "weekly", priority: "1.0" },
   { loc: "/repairs", changefreq: "weekly", priority: "0.8" },
+  { loc: "/links", changefreq: "monthly", priority: "0.5" },
 ];
 
 const urlBlock = (loc: string, changefreq: string, priority: string) => `  <url>
