@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -25,6 +25,7 @@ import { Onboarding } from "@/components/onboarding";
 import { isNative } from "@/lib/platform";
 import { initNativeApp } from "@/lib/native-init";
 import { initPurchases } from "@/lib/native-purchases";
+import { trackPageView } from "@/lib/analytics";
 
 function Router() {
   return (
@@ -58,6 +59,19 @@ function App() {
     initNativeApp();
     initPurchases();
   }, []);
+
+  // SPA pageview tracking — wouter changes location without a page reload,
+  // so GA4's default snippet only ever sees the initial URL. Fire a manual
+  // page_view on every route change. Skip on the very first mount because
+  // the gtag("config", ...) snippet in index.html already sent that one.
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    trackPageView(location);
+  }, [location]);
 
   // /links is a standalone link-in-bio page — no app shell (header/footer/tabs)
   if (location === "/links") {

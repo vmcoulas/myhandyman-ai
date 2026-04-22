@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, DollarSign, ShoppingCart, ExternalLink, AlertTriangle, Shield, ArrowLeft, Camera, ChevronRight, Wrench, Droplets, PaintBucket, Fan, Tv, Lightbulb, Cog, Thermometer, Bell, Paintbrush, RotateCcw, Flame, DoorOpen, Armchair, ShowerHead, Pipette, HelpCircle } from "lucide-react";
 import { GuideFeedback } from "@/components/guide-feedback";
+import { trackAffiliateClick } from "@/lib/analytics";
 
 /** Upsert a <meta> tag by property or name attribute */
 function setMetaTag(attr: "property" | "name", key: string, value: string) {
@@ -307,6 +308,7 @@ export default function RepairDetail() {
                     href={getAmazonLink(mat.amazonSearch)}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackAffiliateClick(`repair:${repair.slug}`, mat.name, mat.amazonSearch)}
                     className="inline-flex items-center gap-1 rounded-lg bg-[#2FA3A0] px-2.5 py-1 text-xs font-semibold text-white hover:bg-[#2FA3A0]/90 transition-colors shrink-0"
                   >
                     <ShoppingCart className="size-3" /> Buy <ExternalLink className="size-3" />

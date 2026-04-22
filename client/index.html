@@ -29,17 +29,7 @@
       gtag("js", new Date());
       gtag("config", "G-RKH0S818TY");
     </script>
-    <!-- Meta Pixel -->
-    <script>
-      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-      n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-      document,"script","https://connect.facebook.net/en_US/fbevents.js");
-      fbq("init", "XXXXXXXXXXXXXXXXX");
-      fbq("track", "PageView");
-    </script>
-    <!-- Microsoft Clarity -->
+    <!-- Microsoft Clarity (heatmaps + session replay) -->
     <script type="text/javascript">
       (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -47,20 +37,14 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
       })(window,document,"clarity","script","w6j9ulx67b");
     </script>
-    <!-- TikTok Pixel -->
-    <script>
-      !function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=
-      ["page","track","identify","instances","debug","on","off","once","ready","alias",
-      "group","enableCookie","disableCookie"];ttq.setAndDefer=function(t,e){t[e]=function(){
-      t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)
-      ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;
-      n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};ttq.load=function(e,n){
-      var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{};ttq._i[e]=[];
-      ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e+"_"+n]=+new Date;(function(t,i){var o=d.createElement("script");
-      o.type="text/javascript";o.async=!0;o.src=i+"?sdkid="+t+"&lib="+"libname";
-      d.body.appendChild(o)})(e,i)};ttq.load("XXXXXXXXXXXXXXXXX");ttq.page();
-      }(window,document,"ttq");
-    </script>
+    <!--
+      Meta Pixel and TikTok Pixel scripts removed 2026-04-21. The previous
+      versions used placeholder IDs (XXXXX...) which loaded the pixel SDKs
+      but tracked nothing. Re-add here when real Pixel IDs exist; the
+      tracking helpers in /src/lib/analytics.ts are already wired to fire
+      window.fbq / window.ttq events the moment the SDKs are loaded.
+    -->
+
   </head>
   <body>
     <div id="root"></div>

@@ -1,20 +1,26 @@
 /**
  * MyHandyman Conversion Event Tracking
- * 
+ *
  * Fires custom events on GA4, Meta Pixel, and TikTok Pixel
  * for all funnel steps:
- *   1. photo_upload     — user submits a photo or text description
- *   2. repair_plan_generated — AI returns a repair plan
- *   3. premium_upgrade_click — user clicks upgrade/checkout
- *   4. premium_purchase_complete — Stripe checkout success (thank-you page)
+ *   1. page_view              — every SPA route change (wouter doesn't trigger reload)
+ *   2. photo_upload           — user submits a photo or text description
+ *   3. repair_plan_generated  — AI returns a repair plan
+ *   4. premium_upgrade_click  — user clicks upgrade/checkout
+ *   5. affiliate_click        — user clicks an Amazon affiliate link
+ *   6. purchase_complete      — Stripe checkout success (thank-you page)
+ *   7. email_capture          — user submits email for newsletter
  *
  * Event mapping:
- *   GA4             | Meta Pixel         | TikTok Pixel
- *   ----------------+--------------------+------------------
- *   photo_upload     | Lead               | SubmitForm
- *   repair_plan_gen  | ViewContent        | ViewContent
- *   upgrade_click    | InitiateCheckout   | InitiateCheckout
- *   purchase_complete| Purchase           | CompletePayment
+ *   GA4               | Meta Pixel         | TikTok Pixel
+ *   ------------------+--------------------+------------------
+ *   page_view         | PageView           | (auto via ttq.page)
+ *   photo_upload      | Lead               | SubmitForm
+ *   repair_plan_gen   | ViewContent        | ViewContent
+ *   upgrade_click     | InitiateCheckout   | InitiateCheckout
+ *   affiliate_click   | (custom)           | ClickButton
+ *   purchase_complete | Purchase           | CompletePayment
+ *   email_capture     | CompleteRegistration | Subscribe
  */
 
 declare global {
@@ -46,6 +52,58 @@ function tiktok(event: string, params?: Record<string, any>) {
 }
 
 // --- Funnel Events ---
+
+/**
+ * SPA route-change pageview. Call this on every wouter `location` change.
+ * GA4's default config only tracks the initial URL — on a SPA, subsequent
+ * route changes produce ZERO pageviews without this. This is the single
+ * biggest missing signal for "which pages get traffic."
+ *
+ * `sendToMeta` defaults to true (we want per-route PageView events in Meta).
+ */
+export function trackPageView(path: string, title?: string) {
+  ga4('page_view', {
+    page_path: path,
+    page_location: typeof window !== 'undefined' ? window.location.origin + path : path,
+    page_title: title || (typeof document !== 'undefined' ? document.title : undefined),
+  });
+  // Meta Pixel custom PageView so route changes show up in Events Manager.
+  meta('PageView');
+  // TikTok fires `page()` automatically on its pixel init; no per-route call
+  // needed to avoid double-counting.
+}
+
+/**
+ * User clicked an Amazon affiliate link. This is the entire affiliate
+ * revenue funnel — without this event, we have NO visibility into which
+ * guides/materials actually drive click-through.
+ *
+ * `source` = page slug or page name (e.g. "repair:fix-running-toilet",
+ * "tools:plumbing"). `material` = the product name as shown. `search` =
+ * the Amazon search term used in the URL.
+ */
+export function trackAffiliateClick(source: string, material: string, search: string) {
+  ga4('affiliate_click', {
+    event_category: 'affiliate',
+    event_label: material,
+    source,
+    material,
+    search_term: search,
+    // Assign a nominal value so affiliate clicks rank in GA4's value-based reports.
+    // Not revenue — just a prioritization signal.
+    value: 1,
+  });
+  meta('AffiliateClick', {
+    content_name: material,
+    source,
+    content_category: 'amazon_affiliate',
+  });
+  tiktok('ClickButton', {
+    content_type: 'affiliate_link',
+    description: `${source} → ${material}`,
+  });
+}
+
 
 /**
  * User submits a photo for diagnosis or a text description.

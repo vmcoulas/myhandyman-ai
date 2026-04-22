@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { Wrench, BookOpen, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { trackPremiumUpgradeClick } from "@/lib/analytics";
 
 export function Header() {
   const [location] = useLocation();
@@ -46,6 +47,7 @@ export function Header() {
               size="sm"
               className="min-h-11 bg-primary text-primary-foreground font-semibold shadow-sm hover:bg-primary/90"
               onClick={async () => {
+                trackPremiumUpgradeClick();
                 try {
                   const userId = localStorage.getItem("anonymousUserId");
                   const res = await fetch("/api/stripe/create-checkout", {

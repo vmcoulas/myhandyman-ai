@@ -1,5 +1,6 @@
 import { Wrench, Hammer, Ruler, Paintbrush, Zap, Droplets, ThermometerSun, ShoppingCart, Star, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { trackAffiliateClick } from "@/lib/analytics";
 
 const AMAZON_TAG = "myhandyman-20";
 
@@ -135,6 +136,7 @@ export default function Tools() {
                       href={`https://www.amazon.com/s?k=${tool.amazonSearch}&tag=${AMAZON_TAG}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackAffiliateClick(`tools:${category.title.toLowerCase().replace(/\s+/g, '-')}`, tool.name, tool.amazonSearch)}
                       className="inline-flex items-center gap-1.5 rounded-lg bg-[#2FA3A0] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#2FA3A0]/90 transition-colors"
                     >
                       <ShoppingCart className="size-3" />

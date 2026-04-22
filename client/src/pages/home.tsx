@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { trackPhotoUpload, trackRepairPlanGenerated } from "@/lib/analytics";
+import { trackPhotoUpload, trackRepairPlanGenerated, trackPremiumUpgradeClick } from "@/lib/analytics";
 import { takePhoto, hapticTap } from "@/lib/native-camera";
 import { isNative } from "@/lib/platform";
 import { getItemSync, setItemWithCache, removeItem as removeStorageItem } from "@/lib/native-storage";
@@ -313,6 +313,9 @@ export default function Home() {
   };
 
   const handleUpgrade = async () => {
+    // Fire upgrade-click event BEFORE opening Stripe — if the redirect fires
+    // synchronously, GA4 still has time to flush the event.
+    trackPremiumUpgradeClick();
     if (isNative) {
       // On native, open Stripe checkout in the in-app browser.
       // TODO: Replace with RevenueCat IAP for iOS App Store compliance.
