@@ -6,6 +6,22 @@ import { Wrench, Camera, Droplets, ChevronRight, ClipboardList, DollarSign, Sun,
  * Standalone — renders outside AppShell so there's no header/footer/tab bar.
  * Matches brand: navy (#0B1A2B) bg, teal (#14B8A6) accents.
  */
+
+/**
+ * Appends canonical Instagram bio UTM params so GA4 attributes every outbound
+ * click from /links to its specific button. utm_source=instagram persists
+ * first-touch attribution; utm_campaign distinguishes which tile was clicked.
+ */
+function bioLink(url: string, campaign: string): string {
+  const params = new URLSearchParams({
+    utm_source: "instagram",
+    utm_medium: "linkinbio",
+    utm_campaign: campaign,
+  });
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}${params.toString()}`;
+}
+
 export default function LinksPage() {
   useEffect(() => {
     document.title = "MyHandyman — AI Home Repair Assistant";
@@ -34,7 +50,7 @@ export default function LinksPage() {
         {/* Primary CTA */}
         <div className="w-full flex flex-col gap-3 mb-9">
           <LinkButton
-            href="https://myhandyman.ai"
+            href={bioLink("https://myhandyman.ai", "try-free")}
             primary
             icon={<Camera className="w-5 h-5" />}
             label="Try MyHandyman Free"
@@ -46,28 +62,28 @@ export default function LinksPage() {
         <SectionLabel>Popular Repair Guides</SectionLabel>
         <div className="w-full flex flex-col gap-3 mb-9">
           <LinkButton
-            href="https://myhandyman.ai/repairs/fix-running-toilet"
+            href={bioLink("https://myhandyman.ai/repairs/fix-running-toilet", "popular-running-toilet")}
             icon={<Droplets className="w-5 h-5" />}
             iconColor="teal"
             label="Fix a Running Toilet"
             sublabel="Usually a $4 flapper — takes 10 minutes"
           />
           <LinkButton
-            href="https://myhandyman.ai/repairs/fix-leaky-faucet"
+            href={bioLink("https://myhandyman.ai/repairs/fix-leaky-faucet", "popular-leaky-faucet")}
             icon={<Droplets className="w-5 h-5" />}
             iconColor="blue"
             label="Fix a Leaky Faucet"
             sublabel="Stop the drip before it costs you"
           />
           <LinkButton
-            href="https://myhandyman.ai/repairs/fix-refrigerator-not-cooling"
+            href={bioLink("https://myhandyman.ai/repairs/fix-refrigerator-not-cooling", "popular-fridge-cooling")}
             icon={<Flame className="w-5 h-5" />}
             iconColor="amber"
             label="Fix a Fridge Not Cooling"
             sublabel="Clean the coils first — fixes 50-70% of cases"
           />
           <LinkButton
-            href="https://myhandyman.ai/repairs/fix-wobbly-ceiling-fan"
+            href={bioLink("https://myhandyman.ai/repairs/fix-wobbly-ceiling-fan", "popular-wobbly-fan")}
             icon={<Sun className="w-5 h-5" />}
             iconColor="purple"
             label="Fix a Wobbly Ceiling Fan"
@@ -79,14 +95,14 @@ export default function LinksPage() {
         <SectionLabel>More</SectionLabel>
         <div className="w-full flex flex-col gap-3 mb-9">
           <LinkButton
-            href="https://myhandyman.ai/repairs"
+            href={bioLink("https://myhandyman.ai/repairs", "browse-all")}
             icon={<ClipboardList className="w-5 h-5" />}
             iconColor="teal"
             label="Browse All Repair Guides"
             sublabel="30+ step-by-step guides and counting"
           />
           <LinkButton
-            href="https://myhandyman.ai/pricing"
+            href={bioLink("https://myhandyman.ai/pricing", "pro-upgrade")}
             icon={<DollarSign className="w-5 h-5" />}
             iconColor="amber"
             label="Go Pro — $9.99/mo"
@@ -98,7 +114,7 @@ export default function LinksPage() {
         <div className="text-center mt-auto pt-5">
           <p className="text-[13px] text-white/35">Home repair, made simpler.</p>
           <p className="text-[13px] mt-1">
-            <a href="https://myhandyman.ai" className="text-teal-400 hover:underline font-medium">
+            <a href={bioLink("https://myhandyman.ai", "footer")} className="text-teal-400 hover:underline font-medium">
               myhandyman.ai
             </a>
           </p>
