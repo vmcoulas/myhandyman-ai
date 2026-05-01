@@ -6,19 +6,19 @@
   <!-- Static routes -->
   <url>
     <loc>https://myhandyman.ai/</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/links</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -26,211 +26,211 @@
   <!-- Repair guides (35 unique) -->
   <url>
     <loc>https://myhandyman.ai/repairs/fix-running-toilet</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/unclog-drain</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-leaky-faucet</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/patch-drywall-hole</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/install-ceiling-fan</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/mount-tv-on-wall</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/replace-light-switch</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-squeaky-door</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/replace-shower-head</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/recaulk-bathtub</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-garbage-disposal</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/install-smart-thermostat</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-doorbell</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/paint-room</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/replace-toilet-flapper</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-garbage-disposal-humming</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/stop-toilet-running-after-flush</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-dripping-kitchen-faucet</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/patch-large-hole-drywall</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-water-heater-no-hot-water</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-clogged-toilet</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-leaky-pipe-under-sink</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-sticking-door</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/replace-toilet-seat</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/replace-bathroom-faucet</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/stop-smoke-detector-chirping</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-wobbly-ceiling-fan</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/reset-gfci-outlet</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-refrigerator-not-cooling</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-ice-maker-not-making-ice</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-toilet-leaking-at-base</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-dryer-not-heating</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-dishwasher-not-draining</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-garage-door-wont-close</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://myhandyman.ai/repairs/fix-low-water-pressure-shower</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

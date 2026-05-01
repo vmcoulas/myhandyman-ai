@@ -1,8 +1,12 @@
-import { Wrench, Hammer, Ruler, Paintbrush, Zap, Droplets, ThermometerSun, ShoppingCart, Star, ExternalLink } from "lucide-react";
+import { Wrench, Hammer, Ruler, Paintbrush, Zap, Droplets, ThermometerSun, ShoppingCart, Star, ExternalLink, Shield, FileText, RefreshCw, Info, CreditCard } from "lucide-react";
+import { useState } from "react";
+import { isIOS, isNative } from "@/lib/platform";
+import { restorePurchases } from "@/lib/native-purchases";
 import { Badge } from "@/components/ui/badge";
 import { trackAffiliateClick } from "@/lib/analytics";
 
 const AMAZON_TAG = "myhandyman-20";
+const APP_VERSION = "1.0.0";
 
 type Tool = {
   name: string;
@@ -155,6 +159,99 @@ export default function Tools() {
         <p className="text-sm text-muted-foreground">
           <strong>Affiliate Disclosure:</strong> MyHandyman.ai is a participant in the Amazon Services LLC Associates Program. We may earn a small commission on qualifying purchases at no additional cost to you.
         </p>
+      </div>
+
+      {/* Settings & Legal — required in-app surface for App Store compliance */}
+      <SettingsBlock />
+    </div>
+  );
+}
+
+function SettingsBlock() {
+  const [restoring, setRestoring] = useState(false);
+  const [restoreMsg, setRestoreMsg] = useState<string | null>(null);
+  const showIosControls = isNative && isIOS;
+
+  async function handleRestore() {
+    setRestoring(true);
+    setRestoreMsg(null);
+    try {
+      const restored = await restorePurchases();
+      setRestoreMsg(restored ? "Pro restored." : "No previous purchases found.");
+    } catch {
+      setRestoreMsg("Restore failed. Try again.");
+    } finally {
+      setRestoring(false);
+    }
+  }
+
+  function manageSubscription() {
+    if (showIosControls) {
+      // Deep-link to Apple's manage-subscriptions screen
+      window.location.href = "https://apps.apple.com/account/subscriptions";
+      return;
+    }
+    // Web — direct to support email for now (Stripe billing portal is roadmap)
+    window.location.href = "mailto:support@myhandyman.ai?subject=Manage%20my%20subscription";
+  }
+
+  return (
+    <div className="mt-8 rounded-xl border bg-background p-6">
+      <div className="mb-4 flex items-center gap-2">
+        <Info className="size-4 text-[#1F4E79]" />
+        <h3 className="text-sm font-semibold text-[#1B2430]">Settings &amp; Legal</h3>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        <a
+          href="/privacy"
+          className="flex items-center gap-3 rounded-lg border bg-background px-4 py-3 text-sm font-medium text-[#1B2430] hover:bg-[#F4F7FA] transition-colors"
+        >
+          <Shield className="size-4 text-[#2FA3A0]" />
+          Privacy Policy
+        </a>
+        <a
+          href="/terms"
+          className="flex items-center gap-3 rounded-lg border bg-background px-4 py-3 text-sm font-medium text-[#1B2430] hover:bg-[#F4F7FA] transition-colors"
+        >
+          <FileText className="size-4 text-[#2FA3A0]" />
+          Terms of Service
+        </a>
+
+        <button
+          onClick={manageSubscription}
+          className="flex items-center gap-3 rounded-lg border bg-background px-4 py-3 text-sm font-medium text-[#1B2430] hover:bg-[#F4F7FA] transition-colors text-left"
+        >
+          <CreditCard className="size-4 text-[#2FA3A0]" />
+          Manage Pro Subscription
+        </button>
+
+        {showIosControls && (
+          <button
+            onClick={handleRestore}
+            disabled={restoring}
+            className="flex items-center gap-3 rounded-lg border bg-background px-4 py-3 text-sm font-medium text-[#1B2430] hover:bg-[#F4F7FA] disabled:opacity-60 transition-colors text-left"
+          >
+            <RefreshCw className={`size-4 text-[#2FA3A0] ${restoring ? "animate-spin" : ""}`} />
+            {restoring ? "Restoring…" : "Restore Purchases"}
+          </button>
+        )}
+      </div>
+
+      {restoreMsg && (
+        <p className="mt-3 text-xs text-[#6E7A86]">{restoreMsg}</p>
+      )}
+
+      <div className="mt-6 flex items-center justify-between border-t pt-4">
+        <p className="text-xs text-muted-foreground">
+          MyHandyman <span className="font-mono">v{APP_VERSION}</span>
+        </p>
+        <a
+          href="mailto:support@myhandyman.ai"
+          className="text-xs text-[#1F4E79] hover:underline"
+        >
+          Contact Support
+        </a>
       </div>
     </div>
   );
