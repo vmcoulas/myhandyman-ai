@@ -556,6 +556,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (user) {
             await storage.upgradeToPremium(userId);
             console.log(`[stripe] User ${userId} upgraded to premium`);
+
+            // Capture the real customer email from the Stripe session so we can
+            // later resolve a web-Pro user by email when they install iOS.
+            // Without this, every user has an auto-generated `anon-*@myhandyman.ai`
+            // address that is useless for cross-device recovery.
+            const customerEmail =
+              session.customer_email ||
+              session.customer_details?.email ||
+              null;
+            if (customerEmail) {
+              const currentEmail = (user.email || "").toLowerCase();
+              const isAnonEmail = currentEmail.startsWith("anon-")
+                && currentEmail.endsWith("@myhandyman.ai");
+              const sameEmail = currentEmail === customerEmail.toLowerCase();
+              if ((isAnonEmail || !user.email) && !sameEmail) {
+                try {
+                  // Avoid clobbering another existing user with this email.
+                  const existing = await storage.getUserByEmail(customerEmail);
+                  if (!existing || existing.id === user.id) {
+                    await storage.updateUser(userId, { email: customerEmail });
+                    console.log(`[stripe] User ${userId} email updated to ${customerEmail}`);
+                  } else {
+                    console.warn(`[stripe] Email ${customerEmail} already mapped to user ${existing.id}; not overwriting user ${userId}`);
+                  }
+                } catch (emailErr) {
+                  console.error("[stripe] Failed to update customer email:", emailErr);
+                }
+              }
+            }
           }
         } catch (err) {
           console.error("Error upgrading user:", err);
@@ -564,6 +593,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     res.json({ received: true });
+  });
+
+  /**
+   * Web<->iOS subscription recovery (band-aid for iOS v1.0.0).
+   *
+   * Anonymous user IDs are device-local, so a web Stripe subscriber who installs
+   * iOS gets a fresh anon user that does not carry the Pro entitlement. To prevent
+   * double-charge, the iOS paywall surfaces an "Already subscribed on web?" link
+   * that posts the user's Stripe-checkout email here. If we find a Premium user
+   * with that email, the iOS app swaps its local anonymousUserId for the returned
+   * one and the existing isPremium flag flows through /api/users/:id/usage.
+   *
+   * Full server-side RevenueCat customer-ID mapping is the v1.0.1 fix; this
+   * unblocks Apple submission without holding for a 1-day server spike.
+   */
+  app.post("/api/users/restore-web-pro", async (req, res) => {
+    try {
+      const rawEmail = (req.body?.email || "").toString().trim().toLowerCase();
+      if (!rawEmail || !rawEmail.includes("@") || rawEmail.length > 254) {
+        return res.status(400).json({ message: "Valid email required" });
+      }
+      // Block restore via the auto-generated anon emails (those do not represent
+      // a real Stripe customer; allowing them would let any device claim any
+      // anon Pro account whose ID happened to leak).
+      if (rawEmail.startsWith("anon-") && rawEmail.endsWith("@myhandyman.ai")) {
+        return res.status(404).json({ message: "No Pro subscription found for this email." });
+      }
+
+      const user = await storage.getUserByEmail(rawEmail);
+      if (!user || !user.isPremium) {
+        return res.status(404).json({ message: "No Pro subscription found for this email." });
+      }
+
+      // Don't return the full user record - the iOS client only needs the id
+      // so it can swap its local anonymousUserId, plus the entitlement signal.
+      return res.json({
+        userId: user.id,
+        isPremium: true,
+        premiumExpiresAt: user.premiumExpiresAt,
+      });
+    } catch (error) {
+      console.error("[restore-web-pro] error:", error);
+      res.status(500).json({ message: "Restore failed. Please try again." });
+    }
   });
 
   const httpServer = createServer(app);

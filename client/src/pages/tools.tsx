@@ -1,7 +1,8 @@
-import { Wrench, Hammer, Ruler, Paintbrush, Zap, Droplets, ThermometerSun, ShoppingCart, Star, ExternalLink, Shield, FileText, RefreshCw, Info, CreditCard } from "lucide-react";
+import { Wrench, Hammer, Ruler, Paintbrush, Zap, Droplets, ThermometerSun, ShoppingCart, Star, ExternalLink, Shield, FileText, RefreshCw, Info, CreditCard, Globe } from "lucide-react";
 import { useState } from "react";
 import { isIOS, isNative } from "@/lib/platform";
 import { restorePurchases } from "@/lib/native-purchases";
+import { restoreWebPro } from "@/lib/web-pro-restore";
 import { Badge } from "@/components/ui/badge";
 import { trackAffiliateClick } from "@/lib/analytics";
 
@@ -170,7 +171,35 @@ export default function Tools() {
 function SettingsBlock() {
   const [restoring, setRestoring] = useState(false);
   const [restoreMsg, setRestoreMsg] = useState<string | null>(null);
+  const [webRestoring, setWebRestoring] = useState(false);
+  const [webRestoreMsg, setWebRestoreMsg] = useState<string | null>(null);
   const showIosControls = isNative && isIOS;
+
+  async function handleWebRestore() {
+    const email = typeof window !== "undefined"
+      ? window.prompt("Enter the email you used at checkout on myhandyman.ai:")
+      : null;
+    if (!email) return;
+    setWebRestoring(true);
+    setWebRestoreMsg(null);
+    try {
+      const result = await restoreWebPro(email);
+      if (result.ok) {
+        setWebRestoreMsg("Web Pro restored. Reloading…");
+        setTimeout(() => {
+          if (typeof window !== "undefined") window.location.reload();
+        }, 600);
+      } else if (result.reason === "invalid_email") {
+        setWebRestoreMsg("That doesn't look like a valid email. Try again.");
+      } else if (result.reason === "not_found") {
+        setWebRestoreMsg("No Pro subscription found for that email.");
+      } else {
+        setWebRestoreMsg("Restore failed. Check your connection and try again.");
+      }
+    } finally {
+      setWebRestoring(false);
+    }
+  }
 
   async function handleRestore() {
     setRestoring(true);
@@ -236,10 +265,24 @@ function SettingsBlock() {
             {restoring ? "Restoring…" : "Restore Purchases"}
           </button>
         )}
+
+        {showIosControls && (
+          <button
+            onClick={handleWebRestore}
+            disabled={webRestoring}
+            className="flex items-center gap-3 rounded-lg border bg-background px-4 py-3 text-sm font-medium text-[#1B2430] hover:bg-[#F4F7FA] disabled:opacity-60 transition-colors text-left"
+          >
+            <Globe className={`size-4 text-[#2FA3A0] ${webRestoring ? "animate-pulse" : ""}`} />
+            {webRestoring ? "Checking…" : "Restore Web Pro"}
+          </button>
+        )}
       </div>
 
       {restoreMsg && (
         <p className="mt-3 text-xs text-[#6E7A86]">{restoreMsg}</p>
+      )}
+      {webRestoreMsg && (
+        <p className="mt-2 text-xs text-[#6E7A86]">{webRestoreMsg}</p>
       )}
 
       <div className="mt-6 flex items-center justify-between border-t pt-4">

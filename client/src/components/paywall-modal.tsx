@@ -2,6 +2,7 @@ import { Camera, Wrench, Zap, X } from "lucide-react";
 import { useState } from "react";
 import { isIOS, isNative } from "@/lib/platform";
 import { purchaseProMonthly, restorePurchases } from "@/lib/native-purchases";
+import { restoreWebPro } from "@/lib/web-pro-restore";
 
 interface PaywallModalProps {
   onUpgrade: () => void;
@@ -13,7 +14,41 @@ interface PaywallModalProps {
 export function PaywallModal({ onUpgrade, onDismiss, repairsUsed = 3, maxRepairs = 3 }: PaywallModalProps) {
   const [loading, setLoading] = useState(false);
   const [restoring, setRestoring] = useState(false);
+  const [webRestoring, setWebRestoring] = useState(false);
+  const [webRestoreMsg, setWebRestoreMsg] = useState<string | null>(null);
   const useNativeIap = isNative && isIOS;
+
+  async function handleWebRestore() {
+    // Tiny prompt-based UX for v1.0.0 — keeps the band-aid surface small.
+    // Replace with a proper modal if/when we move to the v1.0.1 server-side
+    // RevenueCat customer-ID mapping.
+    const email = typeof window !== "undefined"
+      ? window.prompt("Enter the email you used at checkout on myhandyman.ai:")
+      : null;
+    if (!email) return;
+
+    setWebRestoring(true);
+    setWebRestoreMsg(null);
+    try {
+      const result = await restoreWebPro(email);
+      if (result.ok) {
+        setWebRestoreMsg("Web Pro restored. Reloading…");
+        // Reload so every query (usage, user) re-runs against the new userId.
+        setTimeout(() => {
+          if (typeof window !== "undefined") window.location.reload();
+        }, 600);
+        onUpgrade();
+      } else if (result.reason === "invalid_email") {
+        setWebRestoreMsg("That doesn't look like a valid email. Try again.");
+      } else if (result.reason === "not_found") {
+        setWebRestoreMsg("No Pro subscription found for that email.");
+      } else {
+        setWebRestoreMsg("Restore failed. Check your connection and try again.");
+      }
+    } finally {
+      setWebRestoring(false);
+    }
+  }
 
   async function handleUpgrade() {
     if (useNativeIap) {
@@ -138,6 +173,21 @@ export function PaywallModal({ onUpgrade, onDismiss, repairsUsed = 3, maxRepairs
             >
               {restoring ? "Restoring…" : "Restore purchases"}
             </button>
+          )}
+
+          {/* Web<->iOS recovery for users who paid via Stripe on the web.
+              Hidden on web (where Stripe handles billing natively). */}
+          {useNativeIap && (
+            <button
+              onClick={handleWebRestore}
+              disabled={webRestoring}
+              className="w-full text-center text-xs text-[#6E7A86] hover:text-[#1B2430] transition-colors mt-1 underline-offset-2 hover:underline"
+            >
+              {webRestoring ? "Checking…" : "Already subscribed on the web?"}
+            </button>
+          )}
+          {useNativeIap && webRestoreMsg && (
+            <p className="text-[11px] text-[#6E7A86] text-center mt-2">{webRestoreMsg}</p>
           )}
 
           {/* Apple requires auto-renew disclosure near the purchase button */}
