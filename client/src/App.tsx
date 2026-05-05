@@ -15,6 +15,7 @@ import NotFound from "@/pages/not-found";
 import RepairsListing from "@/pages/repairs";
 import RepairDetail from "@/pages/repairs/repair-detail";
 import Privacy from "@/pages/privacy";
+import PrivacyChoices from "@/pages/privacy-choices";
 import Terms from "@/pages/terms";
 import ThankYou from "@/pages/thank-you";
 import LinksPage from "@/pages/links";
@@ -38,6 +39,7 @@ function Router() {
       <Route path="/support" component={SupportLanding} />
       <Route path="/support/:slug" component={SupportArticlePage} />
       <Route path="/privacy" component={Privacy} />
+      <Route path="/privacy-choices" component={PrivacyChoices} />
       <Route path="/terms" component={Terms} />
       <Route path="/repairs" component={RepairsListing} />
       <Route path="/repairs/:slug" component={RepairDetail} />

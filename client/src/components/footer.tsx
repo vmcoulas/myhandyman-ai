@@ -38,6 +38,7 @@ export function Footer() {
             <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-xs text-muted-foreground mb-4">
               <FeedbackSheetTrigger />
               <a href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</a>
+              <a href="/privacy-choices" className="hover:text-foreground transition-colors">Privacy Choices</a>
               <a href="/terms" className="hover:text-foreground transition-colors">Terms of Service</a>
               <a href="/support" className="hover:text-foreground transition-colors">DIY Guides</a>
               <a href="/repairs" className="hover:text-foreground transition-colors">Common Repairs</a>
