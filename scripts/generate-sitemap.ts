@@ -37,6 +37,11 @@ const STATIC_ROUTES: StaticEntry[] = [
   { loc: "/", changefreq: "weekly", priority: "1.0" },
   { loc: "/repairs", changefreq: "weekly", priority: "0.8" },
   { loc: "/links", changefreq: "monthly", priority: "0.5" },
+  // Vertical landing pages — added 2026-05-08 for Day 60 (6/21) vertical-pick
+  // GA4 segmentation. Need 7+ days of indexed data before the read.
+  { loc: "/florida-home-repair", changefreq: "weekly", priority: "0.8" },
+  { loc: "/renter-repair-guide", changefreq: "weekly", priority: "0.8" },
+  { loc: "/older-home-repair", changefreq: "weekly", priority: "0.8" },
 ];
 
 const urlBlock = (loc: string, changefreq: string, priority: string) => `  <url>

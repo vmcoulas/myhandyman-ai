@@ -19,6 +19,9 @@ import PrivacyChoices from "@/pages/privacy-choices";
 import Terms from "@/pages/terms";
 import ThankYou from "@/pages/thank-you";
 import LinksPage from "@/pages/links";
+import FloridaHomeRepair from "@/pages/verticals/florida-home-repair";
+import RenterRepairGuide from "@/pages/verticals/renter-repair-guide";
+import OlderHomeRepair from "@/pages/verticals/older-home-repair";
 import { FeedbackProvider } from "@/lib/feedback-context";
 import { AppShell } from "@/components/navigation/app-shell";
 import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
@@ -43,6 +46,9 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/repairs" component={RepairsListing} />
       <Route path="/repairs/:slug" component={RepairDetail} />
+      <Route path="/florida-home-repair" component={FloridaHomeRepair} />
+      <Route path="/renter-repair-guide" component={RenterRepairGuide} />
+      <Route path="/older-home-repair" component={OlderHomeRepair} />
       <Route path="/thank-you" component={ThankYou} />
       <Route component={NotFound} />
     </Switch>

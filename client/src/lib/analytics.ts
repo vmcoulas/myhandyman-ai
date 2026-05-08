@@ -206,3 +206,17 @@ export function trackEmailCapture() {
     content_type: 'newsletter',
   });
 }
+
+/**
+ * Vertical landing page viewed — used for the Day 60 (2026-06-21) vertical
+ * decision (South FL / renters / pre-2000 homes). Fires alongside the
+ * auto page_view so GA4 can segment session data by vertical via a
+ * dedicated event in addition to page_path.
+ */
+export function trackVerticalView(vertical: 'florida' | 'renter' | 'older-home') {
+  ga4('vertical_view', {
+    event_category: 'vertical',
+    event_label: vertical,
+    vertical,
+  });
+}
