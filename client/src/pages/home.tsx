@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { trackPhotoUpload, trackRepairPlanGenerated, trackPremiumUpgradeClick } from "@/lib/analytics";
+import { trackPhotoUpload, trackRepairPlanGenerated } from "@/lib/analytics";
 import { takePhoto, hapticTap } from "@/lib/native-camera";
 import { isNative } from "@/lib/platform";
 import { getItemSync, setItemWithCache, removeItem as removeStorageItem } from "@/lib/native-storage";
@@ -313,9 +313,9 @@ export default function Home() {
   };
 
   const handleUpgrade = async () => {
-    // Fire upgrade-click event BEFORE opening Stripe — if the redirect fires
-    // synchronously, GA4 still has time to flush the event.
-    trackPremiumUpgradeClick();
+    // Note: PaywallModal fires trackPremiumUpgradeClick(arm) itself before
+    // calling this onUpgrade prop, so we DO NOT fire it again here — that
+    // would double-count clicks in GA4 and corrupt the paywall_copy_v1 read.
     if (isNative) {
       // On native, open Stripe checkout in the in-app browser.
       // TODO: Replace with RevenueCat IAP for iOS App Store compliance.

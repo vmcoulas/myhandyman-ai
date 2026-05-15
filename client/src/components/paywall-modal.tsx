@@ -1,8 +1,10 @@
-import { Camera, Wrench, Zap, X } from "lucide-react";
-import { useState } from "react";
+import { Camera, Wrench, Zap, X, ShieldCheck, Coffee, Library } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
 import { isIOS, isNative } from "@/lib/platform";
 import { purchaseProMonthly, restorePurchases } from "@/lib/native-purchases";
 import { restoreWebPro } from "@/lib/web-pro-restore";
+import { getPaywallArm, type PaywallArm } from "@/lib/ab-test";
+import { trackPaywallView, trackPremiumUpgradeClick } from "@/lib/analytics";
 
 interface PaywallModalProps {
   onUpgrade: () => void;
@@ -11,12 +13,73 @@ interface PaywallModalProps {
   maxRepairs?: number;
 }
 
+/**
+ * Paywall copy variants — paywall_copy_v1 experiment (target window 2026-05-25 -> 2026-06-01).
+ *
+ * 'control' renders the original copy. 'A' and 'B' are the two test arms.
+ *
+ * See: My Handyman/paywall-copy-ab-test-design.md for hypothesis + read framework.
+ */
+type CopyVariant = {
+  headline: string;
+  sub: (repairsUsed: number) => string;
+  cta: string;
+  bullets: { icon: React.ComponentType<{ className?: string }>; iconBg: string; iconColor: string; title: string; sub: string }[];
+};
+
+const VARIANTS: Record<PaywallArm, CopyVariant> = {
+  control: {
+    headline: "Unlimited repairs. $9.99/month.",
+    sub: (n) => `You've used your ${n} free repairs. Go Pro to keep fixing.`,
+    cta: "Start Pro",
+    bullets: [
+      { icon: Camera, iconBg: "bg-[#2FA3A0]/10", iconColor: "text-[#2FA3A0]", title: "Unlimited photo diagnoses", sub: "Snap as many photos as you need" },
+      { icon: Wrench, iconBg: "bg-[#1F4E79]/10", iconColor: "text-[#1F4E79]", title: "Full repair guides with audio", sub: "Hands-free step-by-step guidance" },
+      { icon: Zap, iconBg: "bg-[#2FA3A0]/10", iconColor: "text-[#2FA3A0]", title: "Priority AI analysis", sub: "Faster, more accurate diagnoses" },
+    ],
+  },
+  // Arm A — Premium-feature framing.
+  // Hypothesis: users convert on differentiation (features competitors don't have).
+  A: {
+    headline: "Unlock Pro features. $9.99/month.",
+    sub: (n) => `You've used your ${n} free repairs. Pro unlocks the full toolkit.`,
+    cta: "Unlock Pro",
+    bullets: [
+      { icon: Wrench, iconBg: "bg-[#1F4E79]/10", iconColor: "text-[#1F4E79]", title: "Audio mode — hands-free repairs", sub: "Listen to the steps while you work" },
+      { icon: ShieldCheck, iconBg: "bg-[#2FA3A0]/10", iconColor: "text-[#2FA3A0]", title: "Florida-specific guides", sub: "Hurricane prep, humidity, pool, salt-air" },
+      { icon: Camera, iconBg: "bg-[#2FA3A0]/10", iconColor: "text-[#2FA3A0]", title: "Materials lists with every guide", sub: "Exact parts, sizes, and where to buy" },
+    ],
+  },
+  // Arm B — Volume-value framing.
+  // Hypothesis: users convert on price anchor ("less than a coffee") + library scale.
+  B: {
+    headline: "35 expert repair guides. $9.99/month.",
+    sub: () => "Less than a coffee a month. Cancel anytime.",
+    cta: "Get Unlimited Access",
+    bullets: [
+      { icon: Library, iconBg: "bg-[#1F4E79]/10", iconColor: "text-[#1F4E79]", title: "35+ repair guides", sub: "Plumbing, electrical, HVAC, appliances, safety" },
+      { icon: Camera, iconBg: "bg-[#2FA3A0]/10", iconColor: "text-[#2FA3A0]", title: "Unlimited AI diagnoses", sub: "Photo or text — as many as you need" },
+      { icon: Coffee, iconBg: "bg-[#2FA3A0]/10", iconColor: "text-[#2FA3A0]", title: "Less than $0.34 per day", sub: "One repair pays for the whole year" },
+    ],
+  },
+};
+
 export function PaywallModal({ onUpgrade, onDismiss, repairsUsed = 3, maxRepairs = 3 }: PaywallModalProps) {
   const [loading, setLoading] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [webRestoring, setWebRestoring] = useState(false);
   const [webRestoreMsg, setWebRestoreMsg] = useState<string | null>(null);
   const useNativeIap = isNative && isIOS;
+
+  // Resolve the A/B arm ONCE per modal mount. getPaywallArm() handles
+  // feature-flag gating + cookie persistence — returns 'control' when off.
+  const arm = useMemo<PaywallArm>(() => getPaywallArm(), []);
+  const variant = VARIANTS[arm];
+
+  // Fire paywall_view exactly once per mount with the resolved arm.
+  useEffect(() => {
+    trackPaywallView(arm);
+  }, [arm]);
 
   async function handleWebRestore() {
     // Tiny prompt-based UX for v1.0.0 — keeps the band-aid surface small.
@@ -51,6 +114,10 @@ export function PaywallModal({ onUpgrade, onDismiss, repairsUsed = 3, maxRepairs
   }
 
   async function handleUpgrade() {
+    // Tag the upgrade_click with the resolved arm so GA4 can compute
+    // arm-level paywall_view -> upgrade_click conversion.
+    trackPremiumUpgradeClick(arm);
+
     if (useNativeIap) {
       setLoading(true);
       try {
@@ -106,54 +173,39 @@ export function PaywallModal({ onUpgrade, onDismiss, repairsUsed = 3, maxRepairs
             <Zap className="w-8 h-8 text-[#2FA3A0]" />
           </div>
 
-          {/* Headline */}
+          {/* Headline (variant-driven) */}
           <h2 className="font-display text-2xl font-bold text-[#1B2430] text-center mb-2">
-            Unlimited repairs. $9.99/month.
+            {variant.headline}
           </h2>
           <p className="text-[#6E7A86] text-sm text-center mb-8">
-            You've used your {repairsUsed} free repairs. Go Pro to keep fixing.
+            {variant.sub(repairsUsed)}
           </p>
 
-          {/* Benefits */}
+          {/* Benefits (variant-driven) */}
           <div className="space-y-4 mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-[#2FA3A0]/10 flex items-center justify-center flex-shrink-0">
-                <Camera className="w-5 h-5 text-[#2FA3A0]" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-[#1B2430]">Unlimited photo diagnoses</p>
-                <p className="text-xs text-[#6E7A86]">Snap as many photos as you need</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-[#1F4E79]/10 flex items-center justify-center flex-shrink-0">
-                <Wrench className="w-5 h-5 text-[#1F4E79]" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-[#1B2430]">Full repair guides with audio</p>
-                <p className="text-xs text-[#6E7A86]">Hands-free step-by-step guidance</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-[#2FA3A0]/10 flex items-center justify-center flex-shrink-0">
-                <Zap className="w-5 h-5 text-[#2FA3A0]" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-[#1B2430]">Priority AI analysis</p>
-                <p className="text-xs text-[#6E7A86]">Faster, more accurate diagnoses</p>
-              </div>
-            </div>
+            {variant.bullets.map((b, i) => {
+              const Icon = b.icon;
+              return (
+                <div key={i} className="flex items-center gap-4">
+                  <div className={`w-10 h-10 rounded-xl ${b.iconBg} flex items-center justify-center flex-shrink-0`}>
+                    <Icon className={`w-5 h-5 ${b.iconColor}`} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[#1B2430]">{b.title}</p>
+                    <p className="text-xs text-[#6E7A86]">{b.sub}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
-          {/* CTA */}
+          {/* CTA (variant-driven label) */}
           <button
             onClick={handleUpgrade}
             disabled={loading}
             className="w-full h-14 rounded-xl bg-[#2FA3A0] text-white font-semibold text-base hover:bg-[#238785] disabled:opacity-60 transition-colors shadow-sm mb-3"
           >
-            {loading ? "Processing…" : "Start Pro"}
+            {loading ? "Processing…" : variant.cta}
           </button>
 
           {/* Dismiss */}
