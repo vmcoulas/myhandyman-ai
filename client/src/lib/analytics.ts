@@ -6,10 +6,11 @@
  *   1. page_view              — every SPA route change (wouter doesn't trigger reload)
  *   2. photo_upload           — user submits a photo or text description
  *   3. repair_plan_generated  — AI returns a repair plan
- *   4. premium_upgrade_click  — user clicks upgrade/checkout
- *   5. affiliate_click        — user clicks an Amazon affiliate link
- *   6. purchase_complete      — Stripe checkout success (thank-you page)
- *   7. email_capture          — user submits email for newsletter
+ *   4. paywall_view           — paywall modal shown (tagged with A/B arm if test enabled)
+ *   5. premium_upgrade_click  — user clicks upgrade/checkout (tagged with arm)
+ *   6. affiliate_click        — user clicks an Amazon affiliate link
+ *   7. purchase_complete      — Stripe checkout success (thank-you page)
+ *   8. email_capture          — user submits email for newsletter
  *
  * Event mapping:
  *   GA4               | Meta Pixel         | TikTok Pixel
@@ -17,6 +18,7 @@
  *   page_view         | PageView           | (auto via ttq.page)
  *   photo_upload      | Lead               | SubmitForm
  *   repair_plan_gen   | ViewContent        | ViewContent
+ *   paywall_view      | (custom)           | (custom)
  *   upgrade_click     | InitiateCheckout   | InitiateCheckout
  *   affiliate_click   | (custom)           | ClickButton
  *   purchase_complete | Purchase           | CompletePayment
@@ -100,7 +102,7 @@ export function trackAffiliateClick(source: string, material: string, search: st
   });
   tiktok('ClickButton', {
     content_type: 'affiliate_link',
-    description: `${source} → ${material}`,
+    description: `${source} -> ${material}`,
   });
 }
 
@@ -146,23 +148,54 @@ export function trackRepairPlanGenerated(repairType?: string) {
 }
 
 /**
+ * Paywall modal shown. Tagged with the A/B arm so we can measure
+ * arm-specific view -> click conversion in GA4.
+ *
+ * Pass `arm: 'control'` when the A/B feature flag is off.
+ */
+export function trackPaywallView(arm: 'A' | 'B' | 'control' = 'control') {
+  ga4('paywall_view', {
+    event_category: 'experiment',
+    event_label: `paywall_copy_v1_${arm}`,
+    experiment_id: 'paywall_copy_v1',
+    arm,
+  });
+  meta('PaywallView', {
+    content_name: 'paywall_modal',
+    arm,
+  });
+  tiktok('ViewContent', {
+    content_type: 'paywall_modal',
+    description: `paywall_copy_v1_${arm}`,
+  });
+}
+
+/**
  * User clicks to upgrade to premium.
  * Intent signal before Stripe checkout.
+ *
+ * Pass the A/B arm when shown from the paywall modal so we can attribute
+ * conversion to the right copy variant. Header-bar upgrade click can pass
+ * 'control' (not part of the experiment surface).
  */
-export function trackPremiumUpgradeClick() {
+export function trackPremiumUpgradeClick(arm: 'A' | 'B' | 'control' = 'control') {
   ga4('premium_upgrade_click', {
     event_category: 'ecommerce',
-    event_label: 'upgrade_button',
+    event_label: `upgrade_button_${arm}`,
+    experiment_id: 'paywall_copy_v1',
+    arm,
   });
   meta('InitiateCheckout', {
     content_name: 'premium_subscription',
     currency: 'USD',
     value: 9.99,
+    arm,
   });
   tiktok('InitiateCheckout', {
     content_type: 'premium_subscription',
     value: 9.99,
     currency: 'USD',
+    description: `paywall_copy_v1_${arm}`,
   });
 }
 
